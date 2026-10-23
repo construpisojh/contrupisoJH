@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <meta name="theme-color" content="#0f172a">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
 <title>Construpisos JH | Sistema de Cotizaciones</title>
 <style>
 :root {
@@ -75,6 +77,8 @@ body {
   transition: background-color .25s, color .25s;
 }
 .hidden { display: none !important; }
+.brand-logo { width: 40px; height: 40px; object-fit: contain; border-radius: 8px; flex-shrink: 0; }
+.login-logo { width: 120px; height: 120px; object-fit: contain; display: block; margin: 0 auto; }
 
 /* --- LOGIN --- */
 #loginScreen {
@@ -335,6 +339,8 @@ td input, td select {
 }
 td input:focus, td select:focus { border-color: var(--primary-500); background: var(--input-bg); }
 .pill { display: inline-block; background: var(--accent-light); color: var(--pill-text); border-radius: 99px; padding: 2px 10px; font-size: 11px; font-weight: 600; }
+.cloud-badge { display: inline-block; background: rgba(37,211,102,.15); color: #15803d; border: 1px solid rgba(37,211,102,.4); border-radius: 99px; padding: 2px 10px; font-size: 11px; font-weight: 700; }
+[data-theme="dark"] .cloud-badge { color: #4ade80; }
 
 footer { background: var(--primary-900); color: #64748b; text-align: center; padding: 20px; font-size: 12px; border-top: 1px solid var(--border); }
 footer a { color: var(--accent); text-decoration: none; }
@@ -406,7 +412,8 @@ footer a:hover { text-decoration: underline; }
 
 <div id="loginScreen">
   <div class="login-card">
-    <div id="loginLogo"></div>
+    <img src="logo.png" alt="Construpisos JH" class="login-logo" onerror="this.classList.add('hidden');document.getElementById('loginLogoSvg').classList.remove('hidden');">
+    <span id="loginLogoSvg" class="hidden"></span>
     <h1>CONSTRUPISOS JH</h1>
     <p class="sub">AVILSAL CONSTRUCCIONES SPA<br>RUT 78.057.771-1<br>Sistema de Cotizaciones Corporativo</p>
     <form id="loginForm">
@@ -414,7 +421,7 @@ footer a:hover { text-decoration: underline; }
       <input id="loginPass" type="password" placeholder="Contraseña" required autocomplete="current-password">
       <button class="btn btn-primary" style="width:100%" type="submit">Iniciar Sesión</button>
     </form>
-    <div class="login-hint">Credenciales de acceso: admin / admin</div>
+    <div class="login-hint" id="loginHint">Credenciales de acceso: admin / admin</div>
   </div>
 </div>
 
@@ -424,9 +431,10 @@ footer a:hover { text-decoration: underline; }
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
     </button>
     <div class="brand">
-      <span id="topLogo"></span>
+      <img src="logo.png" alt="" class="brand-logo" onerror="this.classList.add('hidden');document.getElementById('topLogoSvg').classList.remove('hidden');">
+      <span id="topLogoSvg" class="hidden"></span>
       <div style="min-width:0">
-        <h1>CONSTRUPISOS JH</h1>
+        <h1>CONSTRUPISOS JH <span class="cloud-badge hidden" id="cloudBadge">Nube activa</span></h1>
         <div class="legal">AVILSAL CONSTRUCCIONES SPA | RUT 78.057.771-1</div>
       </div>
     </div>
@@ -569,7 +577,7 @@ footer a:hover { text-decoration: underline; }
       <section id="view-proy" class="hidden">
         <div class="card">
           <h2>Proyectos Guardados</h2>
-          <p class="muted">Listado de cotizaciones almacenadas localmente en este dispositivo.</p>
+          <p class="muted">Listado de cotizaciones. Con la nube activa, se sincronizan entre todos sus dispositivos.</p>
           <button class="btn btn-ghost btn-sm" id="btnRefresh" style="margin-bottom:16px">Actualizar Listado</button>
           <div class="table-wrap">
             <table>
@@ -601,7 +609,7 @@ footer a:hover { text-decoration: underline; }
       <section id="view-tar" class="hidden">
         <div class="card">
           <h2>Gestión de Tarifas</h2>
-          <p class="muted">Todos los campos de la tabla son editables: tramos, tipo de cobro y precios. Los cambios se aplican inmediatamente al calculador.</p>
+          <p class="muted">Todos los campos de la tabla son editables: tramos, tipo de cobro y precios. Con la nube activa, se sincronizan entre dispositivos.</p>
           <div class="table-wrap">
             <table>
               <thead><tr><th>Desde (m²)</th><th>Hasta (m²)</th><th>Tipo de Cobro</th><th>Precio ($)</th><th></th></tr></thead>
@@ -678,6 +686,11 @@ footer a:hover { text-decoration: underline; }
 
 <div id="toast"></div>
 
+<!-- SDK de Firebase (solo se usa si pega su configuración más abajo) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <script>
 (function(){
 'use strict';
@@ -694,6 +707,33 @@ var LS={
   set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){memStore[k]=v;}}
 };
 function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2600);}
+
+/* =====================================================================
+   PEGUE AQUÍ SU CONFIGURACIÓN DE FIREBASE
+   Mientras diga PEGUE_AQUI, el sistema funciona en modo local.
+   ===================================================================== */
+var FIREBASE_CONFIG = {
+  apiKey: "PEGUE_AQUI_su_apiKey",
+  authDomain: "PEGUE_AQUI_su_proyecto.firebaseapp.com",
+  projectId: "PEGUE_AQUI_su_projectId",
+  storageBucket: "PEGUE_AQUI_su_proyecto.appspot.com",
+  messagingSenderId: "PEGUE_AQUI_su_messagingSenderId",
+  appId: "PEGUE_AQUI_su_appId"
+};
+var FIREBASE_ENABLED = !!FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey.indexOf('PEGUE_AQUI')===-1;
+var fb={enabled:false,db:null,auth:null,user:null,synced:false};
+function fbInit(){
+  if(!FIREBASE_ENABLED)return;
+  try{
+    if(typeof firebase==='undefined'){return;}
+    if(!firebase.apps.length){firebase.initializeApp(FIREBASE_CONFIG);}
+    fb.auth=firebase.auth();
+    fb.db=firebase.firestore();
+    fb.enabled=true;
+  }catch(e){fb.enabled=false;}
+}
+function fbAuthed(){return fb.enabled&&!!fb.user;}
+fbInit();
 
 /* --- TEMA --- */
 function applyTheme(t){
@@ -821,7 +861,6 @@ DEFAULT_EXTRAS.forEach(function(d){
   var exists=state.extrasTpl.some(function(t){return t.desc===d.desc;});
   if(!exists){state.extrasTpl.push({desc:d.desc,unit:d.unit,price:d.price});}
 });
-/* --- MIGRACIÓN DEL CATÁLOGO GUARDADO: sello protector + capa de ripio --- */
 (function(){
   var changed=false,i;
   for(i=0;i<state.catalog.length;i++){
@@ -836,9 +875,58 @@ DEFAULT_EXTRAS.forEach(function(d){
   }
   if(changed){LS.set('jh_catalog',state.catalog);}
 })();
-function persist(){LS.set('jh_rates',state.rates);LS.set('jh_catalog',state.catalog);
- LS.set('jh_extras',state.extrasTpl);LS.set('jh_projects',state.projects);
- LS.set('jh_trash',state.trash);LS.set('jh_inv',state.inv);LS.set('jh_seq',state.seq);}
+function persist(){
+  LS.set('jh_rates',state.rates);LS.set('jh_catalog',state.catalog);
+  LS.set('jh_extras',state.extrasTpl);LS.set('jh_projects',state.projects);
+  LS.set('jh_trash',state.trash);LS.set('jh_inv',state.inv);LS.set('jh_seq',state.seq);
+  cloudPutConfig();
+}
+
+/* --- NUBE --- */
+function cloudPutConfig(){
+  if(!fbAuthed())return;
+  try{
+    fb.db.doc('panel/main').set({rates:state.rates,catalog:state.catalog,extrasTpl:state.extrasTpl,seq:state.seq,updatedAt:Date.now()});
+  }catch(e){}
+}
+function cloudPutProject(p){
+  if(!fbAuthed())return;
+  try{ p.savedAt=Date.now(); fb.db.collection('projects').doc(String(p.id)).set(p); }catch(e){}
+}
+function cloudDelProject(id){ if(!fbAuthed())return; try{ fb.db.collection('projects').doc(String(id)).delete(); }catch(e){} }
+function cloudPutTrash(p){ if(!fbAuthed())return; try{ fb.db.collection('trash').doc(String(p.id)).set(p); }catch(e){} }
+function cloudDelTrash(id){ if(!fbAuthed())return; try{ fb.db.collection('trash').doc(String(id)).delete(); }catch(e){} }
+
+function startSync(){
+  if(!fbAuthed()||fb.synced)return;
+  fb.synced=true;
+  $('#cloudBadge').classList.remove('hidden');
+  fb.db.collection('projects').onSnapshot(function(snap){
+    var arr=[];snap.forEach(function(d){arr.push(d.data());});
+    arr.sort(function(a,b){return (b.savedAt||b.id||0)-(a.savedAt||a.id||0);});
+    state.projects=arr;LS.set('jh_projects',arr);
+    if(!$('#view-proy').classList.contains('hidden'))renderProjects();
+  },function(){});
+  fb.db.collection('trash').onSnapshot(function(snap){
+    var arr=[];snap.forEach(function(d){arr.push(d.data());});
+    state.trash=arr;LS.set('jh_trash',arr);
+    if(!$('#view-pape').classList.contains('hidden'))renderTrash();
+  },function(){});
+  fb.db.doc('panel/main').onSnapshot(function(doc){
+    if(doc&&doc.exists){
+      var c=doc.data();
+      if(c.rates)state.rates=c.rates;
+      if(c.catalog)state.catalog=c.catalog;
+      if(c.extrasTpl)state.extrasTpl=c.extrasTpl;
+      if(c.seq)state.seq=c.seq;
+      LS.set('jh_rates',state.rates);LS.set('jh_catalog',state.catalog);
+      LS.set('jh_extras',state.extrasTpl);LS.set('jh_seq',state.seq);
+      renderRateHint();
+      if(!$('#view-tar').classList.contains('hidden'))renderRates();
+      if(!$('#view-inv').classList.contains('hidden'))renderInventory();
+    }
+  },function(){});
+}
 
 /* --- EXTRAS EN CURSO + NUMERO --- */
 var currentExtras=[];
@@ -882,6 +970,7 @@ $('#demoChk').addEventListener('change',function(){uiToDemo();recalc();});
 $('#demoQty').addEventListener('input',function(){uiToDemo();recalc();});
 $('#demoPrice').addEventListener('input',function(){uiToDemo();recalc();});
 
+/* --- LOGO REAL (imagen con respaldo SVG y versión embebida para PDF) --- */
 var logoSeq=0;
 function logoSVG(w,withText){
  var id='jhG'+(logoSeq++);
@@ -897,19 +986,70 @@ function logoSVG(w,withText){
  '<rect x="82" y="8" width="22" height="86" rx="4"/>'+
  '<line x1="8" y1="102" x2="112" y2="102"/></g>'+txt+'</svg>';
 }
-$('#loginLogo').innerHTML=logoSVG(100,true);
-$('#topLogo').innerHTML=logoSVG(40,false);
+$('#loginLogoSvg').innerHTML=logoSVG(100,true);
+$('#topLogoSvg').innerHTML=logoSVG(40,false);
+
+var LOGO_DATA='';
+var logoPromise=null;
+function ensureLogo(){
+  if(logoPromise)return logoPromise;
+  logoPromise=new Promise(function(res){
+    if(LOGO_DATA){res(LOGO_DATA);return;}
+    try{
+      var img=new Image();
+      img.onload=function(){
+        try{
+          var c=document.createElement('canvas');
+          c.width=img.naturalWidth;c.height=img.naturalHeight;
+          c.getContext('2d').drawImage(img,0,0);
+          LOGO_DATA=c.toDataURL('image/png');
+          res(LOGO_DATA);
+        }catch(e){res('');}
+      };
+      img.onerror=function(){res('');};
+      img.src='logo.png';
+    }catch(e){res('');}
+  });
+  return logoPromise;
+}
 
 function showApp(){$('#loginScreen').classList.add('hidden');$('#app').classList.remove('hidden');initQuoteView();}
 function showLogin(){$('#app').classList.add('hidden');$('#loginScreen').classList.remove('hidden');}
+
+if(fb.enabled){
+  $('#loginUser').placeholder='Correo del panel';
+  $('#loginPass').placeholder='Contraseña del panel';
+  $('#loginHint').textContent='Use el correo y contraseña creados en Firebase Authentication.';
+}else{
+  $('#loginHint').textContent='Credenciales de acceso: admin / admin (modo local)';
+}
 $('#loginForm').addEventListener('submit',function(e){
  e.preventDefault();
- if($('#loginUser').value.trim()==='admin'&&$('#loginPass').value==='admin'){
-   LS.set('jh_session','1');showApp();toast('Sesión iniciada correctamente');
- }else{toast('Credenciales incorrectas');}
+ var u=$('#loginUser').value.trim(),p=$('#loginPass').value;
+ if(fb.enabled){
+   if(!u||!p){toast('Ingrese correo y contraseña');return;}
+   toast('Verificando acceso...');
+   fb.auth.signInWithEmailAndPassword(u,p).catch(function(){toast('Credenciales incorrectas o sin conexión');});
+ }else{
+   if(u==='admin'&&p==='admin'){LS.set('jh_session','1');showApp();toast('Sesión iniciada (modo local)');}
+   else{toast('Credenciales incorrectas');}
+ }
 });
-$('#btnSalir').addEventListener('click',function(){LS.set('jh_session','0');showLogin();});
-if(LS.get('jh_session','0')==='1'){showApp();}
+$('#btnSalir').addEventListener('click',function(){
+  if(fb.enabled){fb.auth.signOut();}
+  else{LS.set('jh_session','0');showLogin();}
+});
+function initAuth(){
+  if(fb.enabled){
+    fb.auth.onAuthStateChanged(function(u){
+      fb.user=u;
+      if(u){startSync();showApp();}
+      else{showLogin();}
+    });
+  }else{
+    if(LS.get('jh_session','0')==='1'){showApp();}else{showLogin();}
+  }
+}
 
 function closeSidebar(){$('#sidebar').classList.remove('open');$('#sidebarOverlay').classList.remove('show');}
 $('#menuBtn').addEventListener('click',function(){
@@ -958,7 +1098,7 @@ $('#chkIva').addEventListener('change',recalc);
 $('#cSeller').value=LS.get('jh_seller','');
 $('#cSeller').addEventListener('input',function(){LS.set('jh_seller',$('#cSeller').value);});
 
-/* --- MODAL (sin demolición) --- */
+/* --- MODAL --- */
 function mrowHTML(x){
  return '<div class="mrow'+(x.checked?' included':'')+'">'+
  '<label class="chk m-chk"><input type="checkbox" class="m-inc"'+(x.checked?' checked':'')+'></label>'+
@@ -1014,7 +1154,7 @@ $('#btnApplyExtras').addEventListener('click',function(){
  toast('Trabajos extras aplicados');
 });
 
-/* --- LISTA COMPACTA (sin demolición, ya tiene su tarjeta) --- */
+/* --- LISTA COMPACTA --- */
 function renderExtrasCompact(c){
  var ex=c.extras.filter(function(x){return !isDemo(x.desc);});
  $('#extrasCount').textContent=ex.length+(ex.length===1?' incluido':' incluidos');
@@ -1107,7 +1247,9 @@ function saveProject(){
    toast('Cotización '+d.num+' guardada exitosamente');
  }
  $('#sumNum').textContent=d.num;
- persist();renderProjects();
+ persist();
+ cloudPutProject(d);
+ renderProjects();
 }
 function loadProject(p){
  state.editingId=p.id;
@@ -1179,31 +1321,51 @@ $('#btnMail').addEventListener('click',function(){
  window.location.href='mailto:'+d.client.email+'?subject='+encodeURIComponent('Cotización '+(d.num||'')+ ' - Construpisos JH')+'&body='+encodeURIComponent(fullMessage(d));
 });
 
-/* --- PDF --- */
+/* =====================================================================
+   PDF: páginas A4 exactas, sin encabezado/pie del navegador
+   (por eso desaparece "about:blank" de todas las hojas),
+   con el logo original embebido tal cual.
+   ===================================================================== */
 function generatePDF(d){
+ ensureLogo().then(function(logoData){ buildPDF(d,logoData); });
+}
+function buildPDF(d,logoData){
  var extrasRows=(d.extras||[]).filter(function(x){return x.checked&&x.desc.trim();}).map(function(x){
   return '<tr><td>'+esc(x.desc)+'</td><td style="text-align:center">'+x.qty+' '+esc(x.unit)+'</td><td style="text-align:right">'+fmt(x.price)+'</td><td style="text-align:right">'+fmt(x.qty*x.price)+'</td></tr>';
  }).join('');
  var itemsUl=(d.items||[]).length?'<ul style="margin:6px 0 0 18px">'+d.items.map(function(i){return '<li style="margin-bottom:4px">'+esc(i)+'</li>';}).join('')+'</ul>':'<p>Sin items seleccionados.</p>';
- var html='<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Cotización '+(d.num||'')+' - Construpisos JH</title><style>'+
- '@page{margin:12mm}'+
- 'body{font-family:Arial,Helvetica,sans-serif;color:#0f172a;margin:0;font-size:14px;line-height:1.55}'+
- '.head{background:#0f172a;color:#fff;border-radius:8px;padding:16px 20px;display:flex;gap:18px;align-items:center;-webkit-print-color-adjust:exact;print-color-adjust:exact;page-break-inside:avoid}'+
- '.head h1{margin:0;font-size:24px;letter-spacing:1px}.head .sm{font-size:12.5px;color:#94a3b8;margin-top:4px}'+
- '.head .num{margin-left:auto;text-align:right}.head .num span{font-size:12px}.head .num strong{display:block;font-size:24px;color:#0ea5e9;margin-top:3px}'+
- 'h3{color:#1d4ed8;font-size:15px;text-transform:uppercase;letter-spacing:0.5px;margin:16px 0 8px;border-bottom:2px solid #e2e8f0;padding-bottom:4px;page-break-after:avoid}'+
- '.box{border:1px solid #e2e8f0;border-radius:8px;padding:12px 16px;margin-top:8px;background:#f8fafc;page-break-inside:avoid;font-size:14px}'+
- 'table{width:100%;border-collapse:collapse;margin-top:8px;page-break-inside:avoid}th{background:#f1f5f9;color:#475569;padding:8px 12px;text-align:left;font-size:12px;text-transform:uppercase}'+
- 'td{padding:8px 12px;border-bottom:1px solid #e2e8f0;font-size:13.5px}'+
- '.tot{margin-left:auto;width:310px;margin-top:12px;page-break-inside:avoid}.tot td{border:none;padding:4px 8px;font-size:14px}.tot .g{font-size:18px;font-weight:700;color:#0f172a}'+
+ var logoTag=logoData
+   ?'<img src="'+logoData+'" style="width:70px;height:70px;object-fit:contain;border-radius:10px;flex-shrink:0">'
+   :logoSVG(58,false);
+ var iconTag=logoData?'<link rel="icon" href="'+logoData+'">':'<link rel="icon" href="logo.png">';
+ var cond1=CONDICIONES.slice(0,9).map(function(c){return '<li>'+c+'</li>';}).join('');
+ var cond2=CONDICIONES.slice(9).map(function(c){return '<li>'+c+'</li>';}).join('');
+ var html='<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">'+iconTag+
+ '<title>Cotización '+(d.num||'')+' - Construpisos JH</title><style>'+
+ '@page{size:A4;margin:0}'+
+ 'body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#0f172a;font-size:13px;line-height:1.5}'+
+ '.page{width:210mm;height:296mm;padding:12mm 12mm 14mm;box-sizing:border-box;page-break-after:always;position:relative;overflow:visible}'+
+ '.page:last-child{page-break-after:auto}'+
+ '.pagenum{position:absolute;bottom:6mm;right:12mm;font-size:10px;color:#94a3b8}'+
+ '.head{background:#0f172a;color:#fff;border-radius:10px;padding:14px 18px;display:flex;gap:16px;align-items:center;-webkit-print-color-adjust:exact;print-color-adjust:exact}'+
+ '.head h1{margin:0;font-size:23px;letter-spacing:1px}.head .sm{font-size:12px;color:#94a3b8;margin-top:3px}'+
+ '.head .num{margin-left:auto;text-align:right}.head .num span{font-size:11px}.head .num strong{display:block;font-size:23px;color:#0ea5e9;margin-top:3px}'+
+ 'h3{color:#1d4ed8;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin:14px 0 6px;border-bottom:2px solid #e2e8f0;padding-bottom:3px}'+
+ '.box{border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-top:8px;background:#f8fafc;font-size:13px}'+
+ 'table{width:100%;border-collapse:collapse;margin-top:6px}th{background:#f1f5f9;color:#475569;padding:7px 10px;text-align:left;font-size:11px;text-transform:uppercase}'+
+ 'td{padding:7px 10px;border-bottom:1px solid #e2e8f0;font-size:12.5px}'+
+ '.tot{margin-left:auto;width:300px;margin-top:10px}.tot td{border:none;padding:3px 8px;font-size:13px}.tot .g{font-size:17px;font-weight:700;color:#0f172a}'+
  '.tot .g td{border-top:2px solid #0f172a;color:#0f172a}'+
- 'pre{white-space:pre-wrap;font-family:inherit;font-size:13px;line-height:1.6;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin:8px 0}'+
- 'ol.cond{margin:6px 0 0 18px;padding-left:4px}ol.cond li{margin-bottom:8px;text-align:justify;page-break-inside:avoid;font-size:13.5px}'+
- 'ul.srv{margin:6px 0 0 18px}ul.srv li{margin-bottom:5px;page-break-inside:avoid;font-size:14px}'+
- '.mkt p{margin:8px 0;text-align:justify;page-break-inside:avoid;font-size:14px}'+
- '.foot{margin-top:18px;font-size:11.5px;color:#64748b;text-align:center;border-top:1px solid #e2e8f0;padding-top:10px}'+
+ 'pre{white-space:pre-wrap;font-family:inherit;font-size:12px;line-height:1.55;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;margin:6px 0}'+
+ 'ol.cond{margin:4px 0 0 16px;padding-left:4px}ol.cond li{margin-bottom:7px;text-align:justify;font-size:12.5px}'+
+ 'ul.srv{margin:4px 0 0 16px}ul.srv li{margin-bottom:4px;font-size:13px}'+
+ '.mkt p{margin:6px 0;text-align:justify;font-size:13px}'+
+ '.foot{margin-top:14px;font-size:11px;color:#64748b;text-align:center;border-top:1px solid #e2e8f0;padding-top:8px}'+
  '</style></head><body>'+
- '<header class="head">'+logoSVG(58,false)+'<div><h1>CONSTRUPISOS JH</h1>'+
+
+ /* ---- PÁGINA 1 ---- */
+ '<div class="page">'+
+ '<header class="head">'+logoTag+'<div><h1>CONSTRUPISOS JH</h1>'+
  '<div class="sm">AVILSAL CONSTRUCCIONES SPA | RUT 78.057.771-1</div>'+
  '<div class="sm">'+COMPANY.address+' | '+COMPANY.phone+'</div>'+
  '<div class="sm">'+COMPANY.email+' | Instagram: '+COMPANY.ig+'</div></div>'+
@@ -1221,15 +1383,43 @@ function generatePDF(d){
  (d.totals.iva?'<tr><td>IVA 19%</td><td style="text-align:right">'+fmt(d.totals.iva)+'</td></tr>':'<tr><td>IVA</td><td style="text-align:right">No incluido</td></tr>')+
  '<tr class="g"><td>TOTAL A COBRAR</td><td style="text-align:right">'+fmt(d.totals.total)+'</td></tr></table>'+
  (d.obs?'<div class="box"><strong>Observaciones:</strong> '+esc(d.obs)+'</div>':'')+
- '<h3>Condiciones y Ofertas del Trabajo</h3><ol class="cond">'+CONDICIONES.map(function(c){return '<li>'+c+'</li>';}).join('')+'</ol>'+
+ '<div class="pagenum">Página 1 de 5</div>'+
+ '</div>'+
+
+ /* ---- PÁGINA 2 ---- */
+ '<div class="page">'+
+ '<h3>Condiciones y Ofertas del Trabajo</h3><ol class="cond">'+cond1+'</ol>'+
+ '<div class="pagenum">Página 2 de 5</div>'+
+ '</div>'+
+
+ /* ---- PÁGINA 3 ---- */
+ '<div class="page">'+
+ '<h3>Condiciones y Ofertas del Trabajo (continuación)</h3><ol class="cond" start="10">'+cond2+'</ol>'+
  '<h3>Valores de Otros Servicios Agregados</h3><ul class="srv">'+SERVICIOS_AGREGADOS.map(function(s,i){return '<li>'+(i+1)+'.- '+s+'</li>';}).join('')+'</ul>'+
+ '<div class="pagenum">Página 3 de 5</div>'+
+ '</div>'+
+
+ /* ---- PÁGINA 4 ---- */
+ '<div class="page">'+
  '<h3>Mensaje de Envío y Datos de Pago</h3><pre>'+MSG_TEMPLATE+'</pre>'+
+ '<div class="pagenum">Página 4 de 5</div>'+
+ '</div>'+
+
+ /* ---- PÁGINA 5 ---- */
+ '<div class="page">'+
  '<h3>¿Qué es el Hormigón Estampado?</h3><div class="mkt">'+MKT_QUE.map(function(p){return '<p>'+p+'</p>';}).join('')+'</div>'+
  '<h3>Ventajas del Hormigón Estampado</h3><ol class="cond">'+MKT_VENTAJAS.map(function(v,i){return '<li><strong>'+(i+1)+'. '+v[0]+':</strong> '+v[1]+'</li>';}).join('')+'</ol>'+
  '<h3>Por Qué Preferir el Hormigón Estampado</h3><div class="mkt">'+MKT_PORQUE.map(function(p){return '<p>'+p+'</p>';}).join('')+'</div>'+
  '<div class="foot">CONSTRUPISOS JH | AVILSAL CONSTRUCCIONES SPA | RUT 78.057.771-1 | '+COMPANY.address+' | '+COMPANY.phone+' | '+COMPANY.email+'</div>'+
- '<script>window.onload=function(){setTimeout(function(){window.print()},400)};<\/script></body></html>';
- var w=window.open('','_blank');w.document.write(html);w.document.close();w.focus();
+ '<div class="pagenum">Página 5 de 5</div>'+
+ '</div>'+
+
+ '</body></html>';
+ var w=window.open('','_blank');
+ w.document.write(html);
+ w.document.close();
+ w.focus();
+ setTimeout(function(){try{w.print();}catch(e){}},450);
 }
 $('#btnPdf').addEventListener('click',function(){
  var d=collect();if(!d.client.name){toast('Complete al menos el nombre del cliente');return;}
@@ -1256,8 +1446,12 @@ $('#proyBody').addEventListener('click',function(e){
  var p=state.projects.filter(function(x){return x.id==b.dataset.id;})[0];if(!p)return;
  if(b.dataset.act==='load')loadProject(p);
  if(b.dataset.act==='pdf')generatePDF(p);
- if(b.dataset.act==='del'){state.projects=state.projects.filter(function(x){return x.id!==p.id;});
-  p.deletedAt=new Date().toISOString();state.trash.unshift(p);persist();renderProjects();toast('Movido a la papelera');}
+ if(b.dataset.act==='del'){
+   state.projects=state.projects.filter(function(x){return x.id!==p.id;});
+   p.deletedAt=new Date().toISOString();
+   state.trash.unshift(p);
+   persist();cloudDelProject(p.id);cloudPutTrash(p);renderProjects();toast('Movido a la papelera');
+ }
 });
 $('#btnRefresh').addEventListener('click',renderProjects);
 
@@ -1273,19 +1467,20 @@ function selIds(){return Array.prototype.map.call(document.querySelectorAll('.t-
 $('#btnSelAll').addEventListener('click',function(){document.querySelectorAll('.t-sel').forEach(function(c){c.checked=true;});});
 $('#btnRestore').addEventListener('click',function(){
  var ids=selIds();if(!ids.length)return toast('Seleccione al menos un proyecto');
- state.trash.filter(function(p){return ids.indexOf(p.id)>=0;}).forEach(function(p){state.projects.unshift(p);});
+ state.trash.filter(function(p){return ids.indexOf(p.id)>=0;}).forEach(function(p){state.projects.unshift(p);cloudDelTrash(p.id);cloudPutProject(p);});
  state.trash=state.trash.filter(function(p){return ids.indexOf(p.id)<0;});persist();renderTrash();toast('Proyectos restaurados');
 });
 $('#btnPurge').addEventListener('click',function(){
  var ids=selIds();if(!ids.length)return toast('Seleccione al menos un proyecto');
  if(!confirm('¿Está seguro de eliminar estos proyectos definitivamente? Esta acción no se puede deshacer.'))return;
+ state.trash.filter(function(p){return ids.indexOf(p.id)>=0;}).forEach(function(p){cloudDelTrash(p.id);});
  state.trash=state.trash.filter(function(p){return ids.indexOf(p.id)<0;});persist();renderTrash();toast('Proyectos eliminados definitivamente');
 });
 $('#papeBody').addEventListener('click',function(e){
  var b=e.target.closest('button');if(!b)return;
  var p=state.trash.filter(function(x){return x.id==b.dataset.id;})[0];if(!p)return;
- if(b.dataset.act==='res'){state.trash=state.trash.filter(function(x){return x.id!==p.id;});state.projects.unshift(p);persist();renderTrash();}
- if(b.dataset.act==='pur'){if(confirm('¿Eliminar definitivamente?')){state.trash=state.trash.filter(function(x){return x.id!==p.id;});persist();renderTrash();}}
+ if(b.dataset.act==='res'){state.trash=state.trash.filter(function(x){return x.id!==p.id;});state.projects.unshift(p);persist();cloudDelTrash(p.id);cloudPutProject(p);renderTrash();}
+ if(b.dataset.act==='pur'){if(confirm('¿Eliminar definitivamente?')){state.trash=state.trash.filter(function(x){return x.id!==p.id;});persist();cloudDelTrash(p.id);renderTrash();}}
 });
 
 function renderRates(){
@@ -1308,7 +1503,7 @@ $('#btnSaveRates').addEventListener('click',function(){
    max:tr.querySelector('.r-max').value===''?99999:num(tr.querySelector('.r-max').value),
    type:tr.querySelector('.r-type').value,price:num(tr.querySelector('.r-price').value)};
  });
- persist();renderRateHint();onAreaChange();toast('Tarifas actualizadas correctamente');
+ persist();renderRateHint();onAreaChange();toast('Tarifas actualizadas y sincronizadas');
 });
 
 function renderExtrasCat(){
@@ -1364,6 +1559,7 @@ $('#invBody').addEventListener('click',function(e){var b=e.target.closest('butto
 $('#btnAddInv').addEventListener('click',function(){state.inv.push({name:'Nuevo item',qty:1,unit:'und',price:0});persist();renderInventory();});
 
 renderRateHint();
+initAuth();
 })();
 </script>
 </body>
