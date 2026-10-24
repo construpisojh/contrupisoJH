@@ -708,9 +708,7 @@ var esc=function(s){return String(s||'').replace(/"/g,'&quot;').replace(/</g,'&l
 var today=function(){return new Date().toISOString().slice(0,10);};
 var isDemo=function(d){return /demolici/i.test(d||'');};
 
-/* =====================================================================
-   CREDENCIALES ÚNICAS DEL PANEL (modo en línea automático)
-   ===================================================================== */
+/* CREDENCIALES ÚNICAS DEL PANEL */
 var LOCAL_USER='admin';
 var LOCAL_PASS='admin123';
 
@@ -725,9 +723,7 @@ var LS={
 };
 function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2600);}
 
-/* =====================================================================
-   CONFIGURACIÓN DE FIREBASE DEL PROYECTO ContrupisosJH
-   ===================================================================== */
+/* CONFIGURACIÓN DE FIREBASE DEL PROYECTO ContrupisosJH */
 var FIREBASE_CONFIG = {
   apiKey: "AIzaSyCBBvUHVWJMO4-3XqdR7k9FAu67fcDE6SE",
   authDomain: "contrupisosjh.firebaseapp.com",
@@ -913,12 +909,22 @@ function cloudDelProject(id){ if(!fbAuthed())return; try{ fb.db.collection('proj
 function cloudPutTrash(p){ if(!fbAuthed())return; try{ fb.db.collection('trash').doc(String(p.id)).set(p); }catch(e){} }
 function cloudDelTrash(id){ if(!fbAuthed())return; try{ fb.db.collection('trash').doc(String(id)).delete(); }catch(e){} }
 
+/* --- SINCRONIZACIÓN + MIGRACIÓN AUTOMÁTICA DE DATOS LOCALES --- */
 function startSync(){
   if(!fbAuthed()||fb.synced)return;
   fb.synced=true;
   $('#cloudBadge').classList.remove('hidden');
+  var migratedProjects=LS.get('jh_migrated_projects','0')==='1';
+  var migratedConfig=LS.get('jh_migrated_config','0')==='1';
   fb.db.collection('projects').onSnapshot(function(snap){
     var arr=[];snap.forEach(function(d){arr.push(d.data());});
+    if(!migratedProjects){
+      migratedProjects=true;LS.set('jh_migrated_projects','1');
+      var cloudIds={};arr.forEach(function(p){cloudIds[String(p.id)]=1;});
+      LS.get('jh_projects',[]).forEach(function(p){if(!cloudIds[String(p.id)]){cloudPutProject(p);}});
+      LS.get('jh_trash',[]).forEach(function(p){if(!cloudIds[String(p.id)]){cloudPutTrash(p);}});
+      if(LS.get('jh_projects',[]).length){toast('Sincronizando proyectos locales con la nube...');}
+    }
     arr.sort(function(a,b){return (b.savedAt||b.id||0)-(a.savedAt||a.id||0);});
     state.projects=arr;LS.set('jh_projects',arr);
     if(!$('#view-proy').classList.contains('hidden'))renderProjects();
@@ -940,6 +946,9 @@ function startSync(){
       renderRateHint();
       if(!$('#view-tar').classList.contains('hidden'))renderRates();
       if(!$('#view-inv').classList.contains('hidden'))renderInventory();
+    }else if(!migratedConfig){
+      migratedConfig=true;LS.set('jh_migrated_config','1');
+      cloudPutConfig();
     }
   },function(){});
 }
@@ -1046,10 +1055,7 @@ function refreshLoginHint(){
 }
 refreshLoginHint();
 
-/* =====================================================================
-   INGRESO: solo admin / admin123 -> entra directo en MODO EN LÍNEA
-   (conexión anónima a Firebase; si no hay nube, modo local)
-   ===================================================================== */
+/* --- INGRESO: admin / admin123 -> modo en línea automático --- */
 $('#loginForm').addEventListener('submit',function(e){
  e.preventDefault();
  var u=$('#loginUser').value.trim(),p=$('#loginPass').value;
@@ -1059,7 +1065,7 @@ $('#loginForm').addEventListener('submit',function(e){
      fb.auth.signInAnonymously().catch(function(err){
        var code=(err&&err.code)||'';
        if(code==='auth/operation-not-allowed'||code==='auth/admin-restricted-operation'){
-         toast('Habilite el proveedor Anónimo en Firebase: Authentication > Sign-in method');
+         toast('Habilite el proveedor Anónimo en Firebase: Authentication > Método de acceso');
        }else{
          toast('Sin conexión con la nube: entrando en modo local');
        }
@@ -1361,9 +1367,7 @@ $('#btnMail').addEventListener('click',function(){
  window.location.href='mailto:'+d.client.email+'?subject='+encodeURIComponent('Cotización '+(d.num||'')+ ' - Construpisos JH')+'&body='+encodeURIComponent(fullMessage(d));
 });
 
-/* =====================================================================
-   PDF: se DESCARGA como archivo .pdf (5 páginas A4 con logo original)
-   ===================================================================== */
+/* --- PDF: se DESCARGA como archivo .pdf (5 páginas A4 con logo original) --- */
 function pdfCSS(){
  return 'body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#0f172a;font-size:13px;line-height:1.5;background:#fff}'+
  '.page{width:210mm;height:296mm;padding:12mm 12mm 14mm;box-sizing:border-box;page-break-after:always;position:relative;overflow:visible;background:#fff}'+
