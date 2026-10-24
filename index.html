@@ -709,17 +709,13 @@ var today=function(){return new Date().toISOString().slice(0,10);};
 var isDemo=function(d){return /demolici/i.test(d||'');};
 
 /* =====================================================================
-   CREDENCIALES LOCALES DEL PANEL
+   CREDENCIALES ÚNICAS DEL PANEL (modo en línea automático)
    ===================================================================== */
 var LOCAL_USER='admin';
 var LOCAL_PASS='admin123';
 
-/* =====================================================================
-   MENCIÓN DE CREDENCIALES EN EL LOGIN:
-   Se muestra hasta esta fecha y luego se borra automáticamente.
-   Calculado: mañana (24/10/2026) + 7 días = 31/10/2026.
-   Para cambiar el plazo, edite solo esta línea.
-   ===================================================================== */
+/* La mención de credenciales se oculta sola después de esta fecha
+   (mañana 24/10/2026 + 7 días). Para cambiar el plazo, edite esta línea. */
 var CRED_HINT_UNTIL=new Date('2026-10-31T23:59:59');
 
 var memStore={};
@@ -1042,7 +1038,7 @@ function refreshLoginHint(){
   if(Date.now()<=CRED_HINT_UNTIL.getTime()){
     el.classList.remove('hidden');
     el.innerHTML='Acceso al panel:<br>Usuario: <b>'+LOCAL_USER+'</b> &nbsp;·&nbsp; Clave: <b>'+LOCAL_PASS+'</b>'+
-      (fb.enabled?'<br><span style="font-size:11px">Para sincronizar entre dispositivos también puede entrar con el correo del panel.</span>':'');
+      '<br><span style="font-size:11px">Al ingresar, el panel se conecta y sincroniza automáticamente entre todos sus dispositivos.</span>';
   }else{
     el.classList.add('hidden');
     el.innerHTML='';
@@ -1050,23 +1046,32 @@ function refreshLoginHint(){
 }
 refreshLoginHint();
 
-/* --- LOGIN: admin/admin123 siempre; correo del panel para sincronizar --- */
+/* =====================================================================
+   INGRESO: solo admin / admin123 -> entra directo en MODO EN LÍNEA
+   (conexión anónima a Firebase; si no hay nube, modo local)
+   ===================================================================== */
 $('#loginForm').addEventListener('submit',function(e){
  e.preventDefault();
  var u=$('#loginUser').value.trim(),p=$('#loginPass').value;
  if(u===LOCAL_USER&&p===LOCAL_PASS){
-   LS.set('jh_session','1');
-   showApp();
-   toast(fb.enabled&&!fb.user?'Sesión iniciada en modo local':('Sesión iniciada correctamente'));
+   if(fb.enabled){
+     toast('Conectando con la nube...');
+     fb.auth.signInAnonymously().catch(function(err){
+       var code=(err&&err.code)||'';
+       if(code==='auth/operation-not-allowed'||code==='auth/admin-restricted-operation'){
+         toast('Habilite el proveedor Anónimo en Firebase: Authentication > Sign-in method');
+       }else{
+         toast('Sin conexión con la nube: entrando en modo local');
+       }
+       LS.set('jh_session','1');showApp();
+     });
+   }else{
+     LS.set('jh_session','1');showApp();
+     toast('Modo local (Firebase sin configurar)');
+   }
    return;
  }
- if(fb.enabled){
-   if(u.indexOf('@')===-1){toast('Credenciales incorrectas');return;}
-   toast('Verificando acceso...');
-   fb.auth.signInWithEmailAndPassword(u,p).catch(function(){toast('Credenciales incorrectas o sin conexión');});
- }else{
-   toast('Credenciales incorrectas');
- }
+ toast('Credenciales incorrectas');
 });
 $('#btnSalir').addEventListener('click',function(){
   LS.set('jh_session','0');
