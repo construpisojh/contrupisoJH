@@ -8,1617 +8,735 @@
 <link rel="apple-touch-icon" href="logo.png">
 <title>Construpisos JH | Sistema de Cotizaciones</title>
 <style>
-:root {
-  color-scheme: light;
-  --primary-900: #0f172a;
-  --primary-800: #1e293b;
-  --primary-700: #1d4ed8;
-  --primary-600: #2563eb;
-  --primary-500: #3b82f6;
-  --accent: #0ea5e9;
-  --accent-light: #e0f2fe;
-  --danger: #dc2626;
-  --danger-border: #fecaca;
-  --danger-hover: #fef2f2;
-  --bg: #f8fafc;
-  --surface: #ffffff;
-  --border: #e2e8f0;
-  --border-strong: #cbd5e1;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --row-hover: #f8fafc;
-  --heading: #0f172a;
-  --heading-accent: #1d4ed8;
-  --hint-text: #1e40af;
-  --pill-text: #1d4ed8;
-  --nav-active-text: #1d4ed8;
-  --input-bg: #ffffff;
-  --summary-bg: #0f172a;
-  --summary-border: transparent;
-  --thumb: #cbd5e1;
-  --track: #f1f5f9;
-  --radius: 8px;
-  --radius-lg: 12px;
-  --shadow: 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
-  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+:root{color-scheme:light;--primary-900:#0f172a;--primary-800:#1e293b;--primary-700:#1d4ed8;--primary-600:#2563eb;--primary-500:#3b82f6;--accent:#0ea5e9;--accent-light:#e0f2fe;--danger:#dc2626;--danger-border:#fecaca;--danger-hover:#fef2f2;--ok:#059669;--bg:#f8fafc;--surface:#ffffff;--border:#e2e8f0;--border-strong:#cbd5e1;--text-main:#0f172a;--text-muted:#64748b;--row-hover:#f8fafc;--heading:#0f172a;--heading-accent:#1d4ed8;--hint-text:#1e40af;--pill-text:#1d4ed8;--nav-active-text:#1d4ed8;--input-bg:#ffffff;--summary-bg:#0f172a;--summary-border:transparent;--thumb:#cbd5e1;--track:#f1f5f9;--radius:8px;--radius-lg:12px;--shadow:0 1px 3px 0 rgba(0,0,0,0.1),0 1px 2px -1px rgba(0,0,0,0.1);--shadow-lg:0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -4px rgba(0,0,0,0.1);--shadow-xl:0 20px 25px -5px rgba(0,0,0,0.1),0 8px 10px -6px rgba(0,0,0,0.1)}
+[data-theme="dark"]{color-scheme:dark;--accent-light:rgba(14,165,233,.16);--danger:#f87171;--danger-border:rgba(248,113,113,.35);--danger-hover:rgba(248,113,113,.12);--ok:#34d399;--bg:#0b1220;--surface:#121a2b;--border:#263349;--border-strong:#3b4a63;--text-main:#e2e8f0;--text-muted:#94a3b8;--row-hover:#182236;--heading:#f1f5f9;--heading-accent:#7dd3fc;--hint-text:#bae6fd;--pill-text:#7dd3fc;--nav-active-text:#7dd3fc;--input-bg:#0f172a;--summary-bg:#0a1322;--summary-border:#1e3a8a;--thumb:#334155;--track:#0b1220}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background-color:var(--bg);color:var(--text-main);line-height:1.5;font-size:clamp(13px,1.5vw,14px);min-height:100vh;overflow-x:hidden;transition:background-color .25s,color .25s}
+.hidden{display:none!important}
+.brand-logo{width:40px;height:40px;object-fit:contain;border-radius:8px;flex-shrink:0}
+.login-logo{width:120px;height:120px;object-fit:contain;display:block;margin:0 auto}
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary-900) 0%,var(--primary-700) 100%);padding:20px}
+.login-card{background:var(--surface);border-radius:var(--radius-lg);padding:clamp(24px,5vw,40px);width:100%;max-width:400px;box-shadow:var(--shadow-xl);text-align:center}
+.login-card h1{font-size:clamp(18px,4vw,22px);font-weight:700;color:var(--heading);margin:16px 0 4px;letter-spacing:-0.5px}
+.login-card .sub{color:var(--text-muted);font-size:13px;margin-bottom:24px;line-height:1.5}
+.login-card input{width:100%;margin-bottom:12px;padding:12px;border:1px solid var(--border);border-radius:var(--radius);font-size:16px;transition:border-color 0.2s;background:var(--input-bg);color:var(--text-main)}
+.login-card input:focus{outline:none;border-color:var(--primary-500);box-shadow:0 0 0 3px var(--accent-light)}
+.login-hint{font-size:12.5px;color:var(--hint-text);margin-top:16px;background:var(--accent-light);border:1px dashed var(--accent);border-radius:8px;padding:10px 12px;line-height:1.6}
+.topbar{background:var(--primary-900);color:white;padding:0 16px;height:60px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+.topbar .brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.brand-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.topbar h1{font-size:clamp(14px,3vw,18px);font-weight:600;letter-spacing:-0.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .legal{font-size:11px;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.status-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:10.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;border:1px solid transparent;white-space:nowrap}
+.status-badge .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 2s infinite}
+.status-badge.online{color:#15803d;background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.35)}
+.status-badge.offline{color:#b45309;background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.35)}
+[data-theme="dark"] .status-badge.online{color:#4ade80}
+[data-theme="dark"] .status-badge.offline{color:#fbbf24}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.35)}70%{box-shadow:0 0 0 6px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+.contact-chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:#e2e8f0;text-decoration:none;font-size:12px;padding:6px 10px;border-radius:6px;transition:background 0.2s;white-space:nowrap}
+.chip:hover{background:rgba(255,255,255,0.2)}
+#menuBtn,.theme-toggle{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.25);color:#e2e8f0;border-radius:6px;padding:0;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s}
+#menuBtn:hover,.theme-toggle:hover{background:rgba(255,255,255,0.18)}
+#menuBtn{display:none}
+.layout{display:flex;min-height:calc(100vh - 60px)}
+aside{width:240px;background:var(--surface);border-right:1px solid var(--border);padding:16px 12px;flex-shrink:0;display:flex;flex-direction:column;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;transition:background-color .25s}
+.nav-btn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;color:var(--text-muted);padding:12px;margin-bottom:4px;border-radius:6px;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s}
+.nav-btn:hover{background:var(--bg);color:var(--text-main)}
+.nav-btn.active{background:var(--accent-light);color:var(--nav-active-text);font-weight:600}
+.nav-btn.exit{margin-top:auto;color:var(--danger)}
+.nav-btn.exit:hover{background:var(--danger-hover)}
+.nav-icon{width:18px;height:18px;flex-shrink:0}
+main{flex:1;padding:clamp(16px,3vw,24px);max-width:1400px;margin:0 auto;width:100%;min-width:0}
+#sidebarOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:90;backdrop-filter:blur(2px)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:clamp(16px,3vw,24px);box-shadow:var(--shadow);margin-bottom:20px;transition:background-color .25s,border-color .25s}
+.card h2{font-size:clamp(16px,3vw,18px);font-weight:600;color:var(--heading);margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3{font-size:13px;font-weight:600;color:var(--heading-accent);text-transform:uppercase;letter-spacing:0.5px;margin:24px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.card h3:first-of-type{margin-top:0}
+.muted{color:var(--text-muted);font-size:13px;margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+label.f{display:block;font-size:12px;font-weight:600;color:var(--text-main);margin-bottom:6px}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-size:16px;background:var(--input-bg);color:var(--text-main);transition:border-color 0.2s,box-shadow 0.2s,background-color .25s;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary-500);box-shadow:0 0 0 3px var(--accent-light)}
+input[readonly]{background:var(--bg);color:var(--text-muted);cursor:default}
+.hint-sm{font-size:11px;color:var(--text-muted);margin-top:4px}
+input[type="checkbox"]{-webkit-appearance:none;appearance:none;width:18px;height:18px;flex-shrink:0;margin:0;padding:0;border:1.5px solid var(--border-strong);border-radius:4px;background:var(--input-bg);cursor:pointer;position:relative;transition:background-color .15s,border-color .15s}
+input[type="checkbox"]:hover{border-color:var(--primary-500)}
+input[type="checkbox"]:checked{background:var(--primary-600);border-color:var(--primary-600)}
+input[type="checkbox"]:checked::after{content:'';position:absolute;left:5px;top:1.5px;width:5px;height:9px;border:solid #ffffff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+input[type="checkbox"]:focus-visible{outline:none;box-shadow:0 0 0 3px var(--accent-light)}
+.rate-hint{background:var(--accent-light);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;padding:12px 16px;font-size:13px;color:var(--hint-text);margin:16px 0;line-height:1.5}
+.btn{border:none;border-radius:6px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;letter-spacing:0.2px;min-height:40px;touch-action:manipulation}
+.btn-primary{background:var(--primary-700);color:white}
+.btn-primary:hover{background:var(--primary-800)}
+.btn-accent{background:var(--accent);color:white}
+.btn-accent:hover{background:#0284c7}
+.btn-whatsapp{background:#25D366;color:#ffffff;border:1px solid #25D366}
+.btn-whatsapp:hover{background:#1da851;border-color:#1da851}
+.btn-whatsapp svg{flex-shrink:0}
+.btn-ghost{background:var(--surface);border:1px solid var(--border);color:var(--text-main)}
+.btn-ghost:hover{background:var(--bg);border-color:var(--text-muted)}
+.btn-danger{background:var(--surface);border:1px solid var(--danger-border);color:var(--danger)}
+.btn-danger:hover{background:var(--danger-hover)}
+.btn-danger-solid{background:var(--danger);color:#fff;border:1px solid var(--danger)}
+.btn-danger-solid:hover{filter:brightness(.9)}
+.btn-sm{padding:8px 12px;font-size:13px;min-height:36px}
+.btn-extras{background:var(--primary-700);color:#fff;border:1px solid var(--primary-700);padding:13px 28px;font-size:15px;font-weight:700;letter-spacing:1px;min-height:50px;box-shadow:0 0 0 3px var(--accent-light),0 2px 10px rgba(29,78,216,.25)}
+.btn-extras:hover{background:var(--primary-800);box-shadow:0 0 0 3px var(--accent-light),0 4px 14px rgba(29,78,216,.35)}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.cot-wrap{display:grid;grid-template-columns:minmax(0,1fr) 340px;grid-template-areas:"form summary" "actions summary";gap:24px;align-items:start}
+.cot-form{grid-area:form;min-width:0}
+.cot-form .card{margin-bottom:0}
+.cot-actions{grid-area:actions}
+.cot-actions .card{margin-bottom:0}
+.summary{grid-area:summary;background:var(--summary-bg);border:1px solid var(--summary-border);color:white;border-radius:var(--radius);padding:24px;position:sticky;top:84px;box-shadow:var(--shadow-lg)}
+.summary h2{color:white;font-size:14px;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.1)}
+.summary .row{display:flex;justify-content:space-between;gap:12px;font-size:13px;margin-bottom:10px}
+.summary .row span:first-child{color:#94a3b8}
+.summary .row strong{color:white;text-align:right;font-weight:500}
+.summary .total{margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.2);display:flex;justify-content:space-between;align-items:baseline}
+.summary .total span{font-size:14px;font-weight:600;letter-spacing:0.5px}
+.summary .total strong{font-size:24px;font-weight:700;color:var(--accent)}
+.extras-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.extras-bar strong{margin-left:auto;font-size:14px;color:var(--heading-accent)}
+.extras-compact{margin-top:10px}
+.xc-item{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 4px;border-bottom:1px dashed var(--border);font-size:13px}
+.xc-item .xc-name{flex:1;min-width:120px;font-weight:600;color:var(--text-main)}
+.xc-item .xc-calc{color:var(--text-muted);font-size:12px;white-space:nowrap}
+.xc-item strong{white-space:nowrap}
+.xc-del{background:none;border:none;color:var(--text-muted);font-size:17px;cursor:pointer;line-height:1;padding:2px 6px}
+.xc-del:hover{color:var(--danger)}
+.demo-card{border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:12px 14px;margin-top:16px;background:var(--surface);transition:border-color .15s,background-color .15s}
+.demo-card.on{border-color:var(--primary-500);background:var(--accent-light)}
+.demo-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.demo-head span{font-weight:600}
+.demo-head strong{font-size:14px;color:var(--heading-accent);white-space:nowrap}
+.demo-row{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end}
+.demo-unit{font-size:12px;color:var(--text-muted);padding-bottom:10px;white-space:nowrap}
+.items-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:14px}
+.items-count{font-size:11.5px;color:var(--text-muted);font-weight:600;white-space:nowrap}
+.items-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;padding:4px 2px}
+.mrow.priced{border-left:3px solid var(--ok);background:rgba(5,150,105,.06)}
+[data-theme="dark"] .mrow.priced{background:rgba(52,211,153,.08)}
+tr.row-priced td{background:rgba(5,150,105,.06)}
+[data-theme="dark"] tr.row-priced td{background:rgba(52,211,153,.08)}
+.pill-ok{background:rgba(5,150,105,.12);color:var(--ok);border:1px solid rgba(5,150,105,.35);margin-left:6px}
+@media (max-width:640px){.demo-row{grid-template-columns:1fr 1fr}.demo-unit{display:none}.items-grid{grid-template-columns:1fr}}
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(3px);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);max-width:780px;width:100%;max-height:86vh;display:flex;flex-direction:column;box-shadow:var(--shadow-xl);animation:pop .18s ease}
+.modal-sm{max-width:430px}
+@keyframes pop{from{transform:scale(.96);opacity:0}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+.modal-head h2{font-size:16px;font-weight:600;color:var(--heading)}
+.modal-close{background:none;border:none;font-size:24px;color:var(--text-muted);cursor:pointer;line-height:1;padding:0 4px}
+.modal-close:hover{color:var(--danger)}
+.modal-sub{padding:12px 20px 0;color:var(--text-muted);font-size:12.5px}
+.modal-body{overflow-y:auto;padding:14px 20px}
+.modal-foot{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+.msec{margin-bottom:12px}
+.msec-head{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--heading-accent);border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:10px}
+.msec-head strong{font-size:13px}
+.mrow{display:grid;gap:10px;align-items:center;grid-template-areas:"chk desc qty unit price del";grid-template-columns:32px 1.6fr 90px 92px 116px 32px;padding:10px;border:1px solid var(--border);border-radius:8px;margin-bottom:10px;background:var(--surface);transition:border-color .15s,background-color .15s}
+.mrow.included{border-color:var(--primary-500);background:var(--accent-light)}
+.m-chk{grid-area:chk}.m-desc{grid-area:desc}.m-qty{grid-area:qty}.m-unit{grid-area:unit}.m-price{grid-area:price}
+.m-del{grid-area:del;background:none;border:none;color:var(--text-muted);font-size:18px;cursor:pointer;line-height:1}
+.m-del:hover{color:var(--danger)}
+@media (max-width:640px){.mrow{grid-template-areas:"chk desc del" "qty unit price";grid-template-columns:32px 1fr 32px}}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:600px}
+th{background:var(--bg);color:var(--text-muted);padding:10px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text-main)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--row-hover)}
+td input,td select{padding:7px 9px;font-size:13px;min-height:34px;border:1px solid var(--border);background:var(--input-bg);border-radius:6px}
+td input:focus,td select:focus{border-color:var(--primary-500);background:var(--input-bg)}
+.pill{display:inline-block;background:var(--accent-light);color:var(--pill-text);border-radius:99px;padding:2px 10px;font-size:11px;font-weight:600}
+footer{background:var(--primary-900);color:#64748b;text-align:center;padding:20px;font-size:12px;border-top:1px solid var(--border)}
+footer a{color:var(--accent);text-decoration:none}
+footer a:hover{text-decoration:underline}
+#toast{position:fixed;bottom:24px;right:24px;left:24px;background:var(--primary-800);color:white;padding:14px 20px;border-radius:8px;box-shadow:var(--shadow-lg);font-size:14px;font-weight:500;z-index:999;opacity:0;transform:translateY(12px);transition:all 0.3s;pointer-events:none;max-width:400px;margin:0 auto}
+#toast.show{opacity:1;transform:translateY(0)}
+@media (max-width:1024px){.cot-wrap{grid-template-columns:1fr;grid-template-areas:"form" "summary" "actions"}.summary{position:static}.contact-chips{display:none}.grid3{grid-template-columns:1fr 1fr}}
+@media (max-width:768px){
+#menuBtn{display:flex}
+.topbar .legal{display:none}
+aside{position:fixed;left:0;top:0;bottom:0;z-index:95;transform:translateX(-100%);transition:transform 0.3s ease;width:280px;max-width:85vw;padding-top:70px;box-shadow:var(--shadow-xl);height:100vh;height:100dvh}
+aside.open{transform:translateX(0)}
+#sidebarOverlay.show{display:block}
+.grid2,.grid3{grid-template-columns:1fr;gap:12px}
+.actions{flex-direction:column}
+.actions .btn{width:100%}
+.summary{padding:16px}
+.summary .total strong{font-size:20px}
+.card{padding:16px}
+main{padding:12px}
+#toast{left:16px;right:16px;bottom:16px}
+.modal-foot .btn{flex:1}
+.btn-extras{width:100%}
+.nav-btn.exit{margin-top:16px;border-top:1px solid var(--border);border-radius:0 0 6px 6px;padding-top:14px}
 }
-[data-theme="dark"] {
-  color-scheme: dark;
-  --accent-light: rgba(14,165,233,.16);
-  --danger: #f87171;
-  --danger-border: rgba(248,113,113,.35);
-  --danger-hover: rgba(248,113,113,.12);
-  --bg: #0b1220;
-  --surface: #121a2b;
-  --border: #263349;
-  --border-strong: #3b4a63;
-  --text-main: #e2e8f0;
-  --text-muted: #94a3b8;
-  --row-hover: #182236;
-  --heading: #f1f5f9;
-  --heading-accent: #7dd3fc;
-  --hint-text: #bae6fd;
-  --pill-text: #7dd3fc;
-  --nav-active-text: #7dd3fc;
-  --input-bg: #0f172a;
-  --summary-bg: #0a1322;
-  --summary-border: #1e3a8a;
-  --thumb: #334155;
-  --track: #0b1220;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  background-color: var(--bg); color: var(--text-main);
-  line-height: 1.5; font-size: clamp(13px, 1.5vw, 14px);
-  min-height: 100vh; overflow-x: hidden;
-  transition: background-color .25s, color .25s;
-}
-.hidden { display: none !important; }
-.brand-logo { width: 40px; height: 40px; object-fit: contain; border-radius: 8px; flex-shrink: 0; }
-.login-logo { width: 120px; height: 120px; object-fit: contain; display: block; margin: 0 auto; }
-
-/* --- LOGIN --- */
-#loginScreen {
-  min-height: 100vh; display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, var(--primary-900) 0%, var(--primary-700) 100%);
-  padding: 20px;
-}
-.login-card {
-  background: var(--surface); border-radius: var(--radius-lg);
-  padding: clamp(24px, 5vw, 40px); width: 100%; max-width: 400px;
-  box-shadow: var(--shadow-xl); text-align: center;
-}
-.login-card h1 { font-size: clamp(18px, 4vw, 22px); font-weight: 700; color: var(--heading); margin: 16px 0 4px; letter-spacing: -0.5px; }
-.login-card .sub { color: var(--text-muted); font-size: 13px; margin-bottom: 24px; line-height: 1.5; }
-.login-card input {
-  width: 100%; margin-bottom: 12px; padding: 12px;
-  border: 1px solid var(--border); border-radius: var(--radius);
-  font-size: 16px; transition: border-color 0.2s; background: var(--input-bg); color: var(--text-main);
-}
-.login-card input:focus { outline: none; border-color: var(--primary-500); box-shadow: 0 0 0 3px var(--accent-light); }
-.login-hint {
-  font-size: 12.5px; color: var(--hint-text); margin-top: 16px;
-  background: var(--accent-light); border: 1px dashed var(--accent);
-  border-radius: 8px; padding: 10px 12px; line-height: 1.6;
-}
-
-/* --- TOPBAR --- */
-.topbar {
-  background: var(--primary-900); color: white; padding: 0 16px; height: 60px;
-  display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-.topbar .brand { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
-.topbar h1 { font-size: clamp(14px, 3vw, 18px); font-weight: 600; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.topbar .legal { font-size: 11px; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.contact-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-.chip {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
-  color: #e2e8f0; text-decoration: none; font-size: 12px;
-  padding: 6px 10px; border-radius: 6px; transition: background 0.2s; white-space: nowrap;
-}
-.chip:hover { background: rgba(255,255,255,0.2); }
-#menuBtn, .theme-toggle {
-  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.25); color: #e2e8f0;
-  border-radius: 6px; padding: 0; cursor: pointer; width: 36px; height: 36px;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .2s;
-}
-#menuBtn:hover, .theme-toggle:hover { background: rgba(255,255,255,0.18); }
-#menuBtn { display: none; }
-
-/* --- LAYOUT --- */
-.layout { display: flex; min-height: calc(100vh - 60px); }
-aside {
-  width: 240px; background: var(--surface); border-right: 1px solid var(--border);
-  padding: 16px 12px; flex-shrink: 0; display: flex; flex-direction: column;
-  position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto;
-  transition: background-color .25s;
-}
-.nav-btn {
-  display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
-  background: none; border: none; color: var(--text-muted); padding: 12px; margin-bottom: 4px;
-  border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s;
-}
-.nav-btn:hover { background: var(--bg); color: var(--text-main); }
-.nav-btn.active { background: var(--accent-light); color: var(--nav-active-text); font-weight: 600; }
-.nav-btn.exit { margin-top: auto; color: var(--danger); }
-.nav-btn.exit:hover { background: var(--danger-hover); }
-.nav-icon { width: 18px; height: 18px; flex-shrink: 0; }
-main { flex: 1; padding: clamp(16px, 3vw, 24px); max-width: 1400px; margin: 0 auto; width: 100%; min-width: 0; }
-#sidebarOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 90; backdrop-filter: blur(2px); }
-
-/* --- COMPONENTS --- */
-.card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: clamp(16px, 3vw, 24px); box-shadow: var(--shadow); margin-bottom: 20px;
-  transition: background-color .25s, border-color .25s;
-}
-.card h2 { font-size: clamp(16px, 3vw, 18px); font-weight: 600; color: var(--heading); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.card h3 { font-size: 13px; font-weight: 600; color: var(--heading-accent); text-transform: uppercase; letter-spacing: 0.5px; margin: 24px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
-.card h3:first-of-type { margin-top: 0; }
-.muted { color: var(--text-muted); font-size: 13px; margin-bottom: 16px; }
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-label.f { display: block; font-size: 12px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
-input, select, textarea {
-  width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px;
-  font-size: 16px; background: var(--input-bg); color: var(--text-main);
-  transition: border-color 0.2s, box-shadow 0.2s, background-color .25s; font-family: inherit;
-}
-input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary-500); box-shadow: 0 0 0 3px var(--accent-light); }
-input[readonly] { background: var(--bg); color: var(--text-muted); cursor: default; }
-.hint-sm { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
-
-/* --- CHECKBOX PERSONALIZADO --- */
-input[type="checkbox"] {
-  -webkit-appearance: none; appearance: none;
-  width: 18px; height: 18px; flex-shrink: 0; margin: 0; padding: 0;
-  border: 1.5px solid var(--border-strong); border-radius: 4px;
-  background: var(--input-bg); cursor: pointer; position: relative;
-  transition: background-color .15s, border-color .15s;
-}
-input[type="checkbox"]:hover { border-color: var(--primary-500); }
-input[type="checkbox"]:checked { background: var(--primary-600); border-color: var(--primary-600); }
-input[type="checkbox"]:checked::after {
-  content: ''; position: absolute; left: 5px; top: 1.5px; width: 5px; height: 9px;
-  border: solid #ffffff; border-width: 0 2px 2px 0; transform: rotate(45deg);
-}
-input[type="checkbox"]:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--accent-light); }
-
-.rate-hint {
-  background: var(--accent-light); border-left: 3px solid var(--accent);
-  border-radius: 0 6px 6px 0; padding: 12px 16px; font-size: 13px;
-  color: var(--hint-text); margin: 16px 0; line-height: 1.5;
-}
-.btn {
-  border: none; border-radius: 6px; padding: 10px 16px; font-size: 14px; font-weight: 600;
-  cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  transition: all 0.2s; letter-spacing: 0.2px; min-height: 40px; touch-action: manipulation;
-}
-.btn-primary { background: var(--primary-700); color: white; }
-.btn-primary:hover { background: var(--primary-800); }
-.btn-accent { background: var(--accent); color: white; }
-.btn-accent:hover { background: #0284c7; }
-.btn-whatsapp { background: #25D366; color: #ffffff; border: 1px solid #25D366; }
-.btn-whatsapp:hover { background: #1da851; border-color: #1da851; }
-.btn-whatsapp svg { flex-shrink: 0; }
-.btn-ghost { background: var(--surface); border: 1px solid var(--border); color: var(--text-main); }
-.btn-ghost:hover { background: var(--bg); border-color: var(--text-muted); }
-.btn-danger { background: var(--surface); border: 1px solid var(--danger-border); color: var(--danger); }
-.btn-danger:hover { background: var(--danger-hover); }
-.btn-sm { padding: 8px 12px; font-size: 13px; min-height: 36px; }
-.btn-extras {
-  background: var(--primary-700); color: #fff; border: 1px solid var(--primary-700);
-  padding: 13px 28px; font-size: 15px; font-weight: 700; letter-spacing: 1px;
-  min-height: 50px; box-shadow: 0 0 0 3px var(--accent-light), 0 2px 10px rgba(29,78,216,.25);
-}
-.btn-extras:hover { background: var(--primary-800); box-shadow: 0 0 0 3px var(--accent-light), 0 4px 14px rgba(29,78,216,.35); }
-.actions { display: flex; gap: 10px; flex-wrap: wrap; }
-
-/* --- LAYOUT COTIZACIÓN --- */
-.cot-wrap {
-  display: grid;
-  grid-template-columns: minmax(0,1fr) 340px;
-  grid-template-areas:
-    "form summary"
-    "actions summary";
-  gap: 24px; align-items: start;
-}
-.cot-form { grid-area: form; min-width: 0; }
-.cot-form .card { margin-bottom: 0; }
-.cot-actions { grid-area: actions; }
-.cot-actions .card { margin-bottom: 0; }
-.summary {
-  grid-area: summary;
-  background: var(--summary-bg); border: 1px solid var(--summary-border); color: white;
-  border-radius: var(--radius); padding: 24px; position: sticky; top: 84px; box-shadow: var(--shadow-lg);
-}
-.summary h2 { color: white; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.summary .row { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; margin-bottom: 10px; }
-.summary .row span:first-child { color: #94a3b8; }
-.summary .row strong { color: white; text-align: right; font-weight: 500; }
-.summary .total { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: space-between; align-items: baseline; }
-.summary .total span { font-size: 14px; font-weight: 600; letter-spacing: 0.5px; }
-.summary .total strong { font-size: 24px; font-weight: 700; color: var(--accent); }
-
-/* --- EXTRAS COMPACTO + DEMOLICION --- */
-.extras-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.extras-bar strong { margin-left: auto; font-size: 14px; color: var(--heading-accent); }
-.extras-compact { margin-top: 10px; }
-.xc-item {
-  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-  padding: 8px 4px; border-bottom: 1px dashed var(--border); font-size: 13px;
-}
-.xc-item .xc-name { flex: 1; min-width: 120px; font-weight: 600; color: var(--text-main); }
-.xc-item .xc-calc { color: var(--text-muted); font-size: 12px; white-space: nowrap; }
-.xc-item strong { white-space: nowrap; }
-.xc-del { background: none; border: none; color: var(--text-muted); font-size: 17px; cursor: pointer; line-height: 1; padding: 2px 6px; }
-.xc-del:hover { color: var(--danger); }
-.demo-card {
-  border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px;
-  padding: 12px 14px; margin-top: 16px; background: var(--surface);
-  transition: border-color .15s, background-color .15s;
-}
-.demo-card.on { border-color: var(--primary-500); background: var(--accent-light); }
-.demo-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
-.demo-head span { font-weight: 600; }
-.demo-head strong { font-size: 14px; color: var(--heading-accent); white-space: nowrap; }
-.demo-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: end; }
-.demo-unit { font-size: 12px; color: var(--text-muted); padding-bottom: 10px; white-space: nowrap; }
-@media (max-width: 640px) {
-  .demo-row { grid-template-columns: 1fr 1fr; }
-  .demo-unit { display: none; }
-}
-
-/* --- MODAL --- */
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(15,23,42,.55); backdrop-filter: blur(3px);
-  z-index: 200; display: flex; align-items: center; justify-content: center; padding: 16px;
-}
-.modal {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
-  max-width: 780px; width: 100%; max-height: 86vh; display: flex; flex-direction: column;
-  box-shadow: var(--shadow-xl); animation: pop .18s ease;
-}
-@keyframes pop { from { transform: scale(.96); opacity: 0; } }
-.modal-head {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 20px; border-bottom: 1px solid var(--border);
-}
-.modal-head h2 { font-size: 16px; font-weight: 600; color: var(--heading); }
-.modal-close { background: none; border: none; font-size: 24px; color: var(--text-muted); cursor: pointer; line-height: 1; padding: 0 4px; }
-.modal-close:hover { color: var(--danger); }
-.modal-sub { padding: 12px 20px 0; color: var(--text-muted); font-size: 12.5px; }
-.modal-body { overflow-y: auto; padding: 14px 20px; }
-.modal-foot {
-  padding: 14px 20px; border-top: 1px solid var(--border);
-  display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap;
-}
-.msec { margin-bottom: 12px; }
-.msec-head {
-  display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px;
-  color: var(--heading-accent); border-bottom: 1px solid var(--border);
-  padding-bottom: 6px; margin-bottom: 10px;
-}
-.msec-head strong { font-size: 13px; }
-.mrow {
-  display: grid; gap: 10px; align-items: center;
-  grid-template-areas: "chk desc qty unit price del";
-  grid-template-columns: 32px 1.6fr 90px 92px 116px 32px;
-  padding: 10px; border: 1px solid var(--border); border-radius: 8px;
-  margin-bottom: 10px; background: var(--surface); transition: border-color .15s, background-color .15s;
-}
-.mrow.included { border-color: var(--primary-500); background: var(--accent-light); }
-.m-chk { grid-area: chk; }
-.m-desc { grid-area: desc; }
-.m-qty { grid-area: qty; }
-.m-unit { grid-area: unit; }
-.m-price { grid-area: price; }
-.m-del { grid-area: del; background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; line-height: 1; }
-.m-del:hover { color: var(--danger); }
-@media (max-width: 640px) {
-  .mrow {
-    grid-template-areas:
-      "chk desc del"
-      "qty unit price";
-    grid-template-columns: 32px 1fr 32px;
-  }
-}
-
-/* --- TABLES --- */
-.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 600px; }
-th { background: var(--bg); color: var(--text-muted); padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); white-space: nowrap; }
-td { padding: 8px 10px; border-bottom: 1px solid var(--border); color: var(--text-main); }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: var(--row-hover); }
-td input, td select {
-  padding: 7px 9px; font-size: 13px; min-height: 34px;
-  border: 1px solid var(--border); background: var(--input-bg); border-radius: 6px;
-}
-td input:focus, td select:focus { border-color: var(--primary-500); background: var(--input-bg); }
-.pill { display: inline-block; background: var(--accent-light); color: var(--pill-text); border-radius: 99px; padding: 2px 10px; font-size: 11px; font-weight: 600; }
-.cloud-badge { display: inline-block; background: rgba(37,211,102,.15); color: #15803d; border: 1px solid rgba(37,211,102,.4); border-radius: 99px; padding: 2px 10px; font-size: 11px; font-weight: 700; }
-[data-theme="dark"] .cloud-badge { color: #4ade80; }
-
-footer { background: var(--primary-900); color: #64748b; text-align: center; padding: 20px; font-size: 12px; border-top: 1px solid var(--border); }
-footer a { color: var(--accent); text-decoration: none; }
-footer a:hover { text-decoration: underline; }
-#toast {
-  position: fixed; bottom: 24px; right: 24px; left: 24px; background: var(--primary-800); color: white;
-  padding: 14px 20px; border-radius: 8px; box-shadow: var(--shadow-lg); font-size: 14px; font-weight: 500;
-  z-index: 999; opacity: 0; transform: translateY(12px); transition: all 0.3s; pointer-events: none;
-  max-width: 400px; margin: 0 auto;
-}
-#toast.show { opacity: 1; transform: translateY(0); }
-
-/* --- RESPONSIVE --- */
-@media (max-width: 1024px) {
-  .cot-wrap {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "form"
-      "summary"
-      "actions";
-  }
-  .summary { position: static; }
-  .contact-chips { display: none; }
-  .grid3 { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 768px) {
-  #menuBtn { display: flex; }
-  .topbar .legal { display: none; }
-  aside {
-    position: fixed; left: 0; top: 0; bottom: 0; z-index: 95; transform: translateX(-100%);
-    transition: transform 0.3s ease; width: 280px; max-width: 85vw; padding-top: 70px;
-    box-shadow: var(--shadow-xl); height: 100vh;
-  }
-  aside.open { transform: translateX(0); }
-  #sidebarOverlay.show { display: block; }
-  .grid2, .grid3 { grid-template-columns: 1fr; gap: 12px; }
-  .actions { flex-direction: column; }
-  .actions .btn { width: 100%; }
-  .summary { padding: 16px; }
-  .summary .total strong { font-size: 20px; }
-  .card { padding: 16px; }
-  main { padding: 12px; }
-  #toast { left: 16px; right: 16px; bottom: 16px; }
-  .modal-foot .btn { flex: 1; }
-  .btn-extras { width: 100%; }
-}
-@media (max-width: 480px) {
-  .topbar h1 { font-size: 14px; }
-  .login-card { padding: 20px; }
-  .btn { font-size: 13px; padding: 10px 14px; }
-  .summary .row { font-size: 12px; }
-  .summary .total strong { font-size: 18px; }
-}
-@media (min-width: 1400px) { main { padding: 32px; } .card { padding: 32px; } }
-@media (hover: none) and (pointer: coarse) {
-  .btn { min-height: 44px; }
-  .nav-btn { min-height: 48px; }
-  input, select, textarea { min-height: 44px; }
-  input[type="checkbox"] { min-height: 0; width: 22px; height: 22px; }
-  input[type="checkbox"]:checked::after { left: 7px; top: 3px; }
-  .chip { min-height: 36px; }
-}
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: var(--track); }
-::-webkit-scrollbar-thumb { background: var(--thumb); border-radius: 4px; }
+@media (max-width:480px){.topbar h1{font-size:14px}.login-card{padding:20px}.btn{font-size:13px;padding:10px 14px}.summary .row{font-size:12px}.summary .total strong{font-size:18px}}
+@media (min-width:1400px){main{padding:32px}.card{padding:32px}}
+@media (hover:none) and (pointer:coarse){.btn{min-height:44px}.nav-btn{min-height:48px}input,select,textarea{min-height:44px}input[type="checkbox"]{min-height:0;width:22px;height:22px}input[type="checkbox"]:checked::after{left:7px;top:3px}.chip{min-height:36px}}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:var(--track)}
+::-webkit-scrollbar-thumb{background:var(--thumb);border-radius:4px}
 </style>
 </head>
 <body>
-
 <div id="loginScreen">
-  <div class="login-card">
-    <img src="logo.png" alt="Construpisos JH" class="login-logo" onerror="this.classList.add('hidden');document.getElementById('loginLogoSvg').classList.remove('hidden');">
-    <span id="loginLogoSvg" class="hidden"></span>
-    <h1>CONSTRUPISOS JH</h1>
-    <p class="sub">AVILSAL CONSTRUCCIONES SPA<br>RUT 78.057.771-1<br>Sistema de Cotizaciones Corporativo</p>
-    <form id="loginForm">
-      <input id="loginUser" placeholder="Usuario" required autocomplete="username">
-      <input id="loginPass" type="password" placeholder="Contraseña" required autocomplete="current-password">
-      <button class="btn btn-primary" style="width:100%" type="submit">Iniciar Sesión</button>
-    </form>
-    <div class="login-hint" id="loginHint"></div>
-  </div>
+<div class="login-card">
+<img src="logo.png" alt="Construpisos JH" class="login-logo" onerror="this.classList.add('hidden');document.getElementById('loginLogoSvg').classList.remove('hidden');">
+<span id="loginLogoSvg" class="hidden"></span>
+<h1>CONSTRUPISOS JH</h1>
+<p class="sub">AVILSAL CONSTRUCCIONES SPA<br>RUT 78.057.771-1<br>Sistema de Cotizaciones Corporativo</p>
+<form id="loginForm">
+<input id="loginUser" placeholder="Usuario" required autocomplete="username">
+<input id="loginPass" type="password" placeholder="Contraseña" required autocomplete="current-password">
+<button class="btn btn-primary" style="width:100%" type="submit">Iniciar Sesión</button>
+</form>
+<div class="login-hint" id="loginHint"></div>
 </div>
-
+</div>
 <div id="app" class="hidden">
-  <header class="topbar">
-    <button id="menuBtn" aria-label="Menú">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-    </button>
-    <div class="brand">
-      <img src="logo.png" alt="" class="brand-logo" onerror="this.classList.add('hidden');document.getElementById('topLogoSvg').classList.remove('hidden');">
-      <span id="topLogoSvg" class="hidden"></span>
-      <div style="min-width:0">
-        <h1>CONSTRUPISOS JH <span class="cloud-badge hidden" id="cloudBadge">Nube activa</span></h1>
-        <div class="legal">AVILSAL CONSTRUCCIONES SPA | RUT 78.057.771-1</div>
-      </div>
-    </div>
-    <div class="contact-chips">
-      <a class="chip" href="https://wa.me/56984748293" target="_blank">+56 9 8474 8293</a>
-      <a class="chip" href="mailto:Construpisosjh@gmail.com">Email</a>
-      <a class="chip" href="https://instagram.com/Construpisosjh" target="_blank">@Construpisosjh</a>
-    </div>
-    <button class="theme-toggle" id="themeBtn" title="Cambiar tema" aria-label="Cambiar tema claro u oscuro">
-      <svg id="iconMoon" class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      <svg id="iconSun" class="nav-icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-    </button>
-  </header>
-
-  <div id="sidebarOverlay"></div>
-
-  <div class="layout">
-    <aside id="sidebar">
-      <button data-view="cot" class="nav-btn active">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        Nueva Cotización
-      </button>
-      <button data-view="proy" class="nav-btn">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-        Proyectos
-      </button>
-      <button data-view="pape" class="nav-btn">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        Papelera
-      </button>
-      <button data-view="tar" class="nav-btn">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        Tarifas
-      </button>
-      <button data-view="inv" class="nav-btn">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-        Inventario
-      </button>
-      <button id="btnSalir" class="nav-btn exit">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Cerrar Sesión
-      </button>
-    </aside>
-
-    <main>
-      <section id="view-cot">
-        <div class="cot-wrap">
-          <div class="cot-form">
-            <div class="card">
-              <h2>Nueva Cotización <span id="editBadge" class="pill hidden">Modo edición</span></h2>
-              <p class="muted">Complete los datos del cliente y la superficie para calcular el presupuesto automáticamente.</p>
-
-              <h3>Datos del Cliente</h3>
-              <div class="grid2">
-                <div><label class="f">Nombre Cliente *</label><input id="cName" placeholder="Nombre completo o razón social"></div>
-                <div>
-                  <label class="f">Teléfono *</label>
-                  <input id="cPhone" placeholder="9 8474 8293" type="tel">
-                  <div class="hint-sm">El prefijo +56 se agrega automáticamente al enviar por WhatsApp.</div>
-                </div>
-                <div><label class="f">Email</label><input id="cEmail" type="email" placeholder="correo@ejemplo.com"></div>
-                <div><label class="f">Dirección del Proyecto</label><input id="cAddr" placeholder="Dirección completa"></div>
-                <div>
-                  <label class="f">Ejecutivo de Venta</label>
-                  <input id="cSeller" placeholder="Nombre del ejecutivo">
-                  <div class="hint-sm">El nombre que escriba quedará guardado para próximas cotizaciones.</div>
-                </div>
-                <div><label class="f">Fecha</label><input id="cDate" type="date"></div>
-              </div>
-              <div style="margin-top:12px">
-                <label class="f">Observaciones (opcional, se imprime en el PDF)</label>
-                <textarea id="cObs" rows="2" placeholder="Notas de la obra, cámaras incluidas, focos, etc."></textarea>
-              </div>
-
-              <h3>Cálculo por Metro Cuadrado</h3>
-              <div class="rate-hint" id="rateHint"></div>
-              <div class="grid3">
-                <div><label class="f">Superficie (m²) * (Mínimo 30 m²)</label><input id="inArea" type="number" min="30" placeholder="Ej: 85"></div>
-                <div><label class="f">Tarifa Aplicada</label><input id="lblTarifa" readonly></div>
-                <div><label class="f">Precio m² (Ajuste manual)</label><input id="inPrice" type="number" min="0"></div>
-              </div>
-              <label class="chk" style="margin-top:16px"><input type="checkbox" id="chkIva"> <span>Aplicar IVA 19% al total final</span></label>
-
-              <h3>Trabajos Extras</h3>
-              <p class="muted">Presione el botón para abrir la ventana de trabajos extras. La demolición se configura aquí mismo, en su propia tarjeta. Solo lo marcado se suma al total y aparece en el PDF.</p>
-              <div class="extras-bar">
-                <button class="btn btn-extras" id="btnOpenExtras">TRABAJOS EXTRAS</button>
-                <span class="pill" id="extrasCount">0 incluidos</span>
-                <strong id="extrasCompactTotal">$0</strong>
-              </div>
-              <div id="extrasCompact" class="extras-compact"></div>
-
-              <div class="demo-card" id="demoCard">
-                <div class="demo-head">
-                  <label class="chk"><input type="checkbox" id="demoChk"> <span>Demolición de pavimento existente</span></label>
-                  <strong id="demoTotalInline">$0</strong>
-                </div>
-                <div class="demo-row">
-                  <div><label class="f">m² a demoler</label><input id="demoQty" type="number" min="0" placeholder="0"></div>
-                  <div><label class="f">Precio por m² ($)</label><input id="demoPrice" type="number" min="0" placeholder="5000"></div>
-                  <div class="demo-unit">Unidad: m²</div>
-                </div>
-                <div class="hint-sm">Se configura directamente en el formulario, fuera de la ventana de trabajos extras. Si está marcada, se suma al total.</div>
-              </div>
-
-              <h3>Items Incluidos en el Precio Base</h3>
-              <label class="chk" style="margin-bottom:12px"><input type="checkbox" id="chkAllItems" checked> <span><strong>Seleccionar / Deseleccionar Todo</strong></span></label>
-              <div id="itemsList" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
-            </div>
-          </div>
-
-          <div class="summary">
-            <h2>Resumen de Cotización</h2>
-            <div class="row"><span>N° Cotización</span><strong id="sumNum">Se asigna al guardar</strong></div>
-            <div class="row"><span>Cliente</span><strong id="sumClient">-</strong></div>
-            <div class="row"><span>Superficie</span><strong id="sumArea">0 m²</strong></div>
-            <div class="row"><span>Precio m²</span><strong id="sumPrice">$0</strong></div>
-            <div class="row"><span>Subtotal Pavimento</span><strong id="sumSub">$0</strong></div>
-            <div class="row"><span>Items Incluidos</span><strong id="sumItems" style="font-size:12px;text-align:right;max-width:180px">Ninguno</strong></div>
-            <div class="row"><span>Trabajos Extras</span><strong id="sumExtras" style="font-size:12px;text-align:right;max-width:180px">Ninguno</strong></div>
-            <div class="row"><span>Total Extras</span><strong id="sumTotExtras">$0</strong></div>
-            <div class="row"><span>IVA</span><strong id="sumIva">No incluido</strong></div>
-            <div class="total"><span>TOTAL A COBRAR</span><strong id="sumTotal">$0</strong></div>
-          </div>
-
-          <div class="cot-actions">
-            <div class="card">
-              <div class="actions">
-                <button class="btn btn-primary" id="btnSave">Guardar Proyecto</button>
-                <button class="btn btn-accent" id="btnPdf">Generar PDF</button>
-                <button class="btn btn-whatsapp" id="btnWa"><svg style="width:18px;height:18px" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Enviar por WhatsApp</button>
-                <button class="btn btn-ghost" id="btnMail">Enviar por Correo</button>
-                <button class="btn btn-danger hidden" id="btnCancel">Cancelar Edición</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="view-proy" class="hidden">
-        <div class="card">
-          <h2>Proyectos Guardados</h2>
-          <p class="muted">Listado de cotizaciones. Con la nube activa, se sincronizan entre todos sus dispositivos.</p>
-          <button class="btn btn-ghost btn-sm" id="btnRefresh" style="margin-bottom:16px">Actualizar Listado</button>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>#</th><th>N° Cot.</th><th>Cliente</th><th>Superficie</th><th>Total</th><th>Fecha</th><th>Acciones</th></tr></thead>
-              <tbody id="proyBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <section id="view-pape" class="hidden">
-        <div class="card">
-          <h2>Papelera de Reciclaje</h2>
-          <p class="muted">Proyectos eliminados. Puede restaurarlos o eliminarlos definitivamente.</p>
-          <div style="margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn btn-ghost btn-sm" id="btnSelAll">Seleccionar Todo</button>
-            <button class="btn btn-ghost btn-sm" id="btnRestore">Restaurar Seleccionados</button>
-            <button class="btn btn-danger btn-sm" id="btnPurge">Eliminar Definitivamente</button>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th></th><th>#</th><th>N° Cot.</th><th>Cliente</th><th>Superficie</th><th>Total</th><th>Fecha</th><th>Acciones</th></tr></thead>
-              <tbody id="papeBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <section id="view-tar" class="hidden">
-        <div class="card">
-          <h2>Gestión de Tarifas</h2>
-          <p class="muted">Todos los campos de la tabla son editables: tramos, tipo de cobro y precios. Con la nube activa, se sincronizan entre dispositivos.</p>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Desde (m²)</th><th>Hasta (m²)</th><th>Tipo de Cobro</th><th>Precio ($)</th><th></th></tr></thead>
-              <tbody id="tarBody"></tbody>
-            </table>
-          </div>
-          <div class="actions" style="margin-top:20px">
-            <button class="btn btn-ghost btn-sm" id="btnAddRate">+ Agregar Tramo</button>
-            <button class="btn btn-primary" id="btnSaveRates">Guardar Cambios de Tarifas</button>
-          </div>
-        </div>
-      </section>
-
-      <section id="view-inv" class="hidden">
-        <div class="card">
-          <h2>Catálogo de Trabajos Extras</h2>
-          <p class="muted">Fije el precio por defecto de cada trabajo extra (incluida la demolición). Estos precios se cargan automáticamente al crear una cotización nueva y pueden ajustarse por cliente.</p>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Descripción</th><th>Unidad</th><th>Precio por Defecto ($)</th><th></th></tr></thead>
-              <tbody id="extrasCatBody"></tbody>
-            </table>
-          </div>
-          <button class="btn btn-ghost btn-sm" id="btnAddExtraCat" style="margin-top:12px">+ Agregar Trabajo Extra al Catálogo</button>
-        </div>
-        <div class="card">
-          <h2>Catálogo de Items Incluidos</h2>
-          <p class="muted">Edite o agregue los conceptos que aparecen como incluidos en el precio base de la cotización.</p>
-          <div id="catList" style="max-width:600px"></div>
-          <button class="btn btn-ghost btn-sm" id="btnAddCat" style="margin-top:12px">+ Agregar Item al Catálogo</button>
-        </div>
-        <div class="card">
-          <h2>Control de Inventario</h2>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Item</th><th>Cantidad</th><th>Unidad</th><th>Precio Unit.</th><th>Valor Total</th><th></th></tr></thead>
-              <tbody id="invBody"></tbody>
-            </table>
-          </div>
-          <button class="btn btn-ghost btn-sm" id="btnAddInv" style="margin-top:16px">+ Agregar Item de Inventario</button>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <footer>
-    CONSTRUPISOS JH | AVILSAL CONSTRUCCIONES SPA | RUT 78.057.771-1<br>
-    Av. Nueva Providencia 1881, oficina 230 | +56 9 8474 8293 | Construpisosjh@gmail.com<br>
-    Desarrollado por <a href="https://instagram.com/digitalmarketing.cl" target="_blank">@digitalmarketing.cl</a>
-  </footer>
+<header class="topbar">
+<button id="menuBtn" aria-label="Menú"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+<div class="brand">
+<img src="logo.png" alt="" class="brand-logo" onerror="this.classList.add('hidden');document.getElementById('topLogoSvg').classList.remove('hidden');">
+<span id="topLogoSvg" class="hidden"></span>
+<div style="min-width:0">
+<div class="brand-title">
+<h1>CONSTRUPISOS JH</h1>
+<span class="status-badge offline" id="statusBadge"><span class="dot"></span><span id="statusText">Modo local</span></span>
 </div>
-
-<!-- ================= MODAL TRABAJOS EXTRAS ================= -->
+<div class="legal">AVILSAL CONSTRUCCIONES SPA | RUT 78.057.771-1</div>
+</div>
+</div>
+<div class="contact-chips">
+<a class="chip" href="https://wa.me/56984748293" target="_blank">+56 9 8474 8293</a>
+<a class="chip" href="mailto:Construpisosjh@gmail.com">Email</a>
+<a class="chip" href="https://instagram.com/Construpisosjh" target="_blank">@Construpisosjh</a>
+</div>
+<button class="theme-toggle" id="themeBtn" title="Cambiar tema" aria-label="Cambiar tema claro u oscuro">
+<svg id="iconMoon" class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+<svg id="iconSun" class="nav-icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+</button>
+</header>
+<div id="sidebarOverlay"></div>
+<div class="layout">
+<aside id="sidebar">
+<button data-view="cot" class="nav-btn active"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Nueva Cotización</button>
+<button data-view="proy" class="nav-btn"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Proyectos</button>
+<button data-view="pape" class="nav-btn"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Papelera</button>
+<button data-view="tar" class="nav-btn"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Tarifas</button>
+<button data-view="inv" class="nav-btn"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>Inventario</button>
+<button id="btnSalir" class="nav-btn exit"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Cerrar Sesión</button>
+</aside>
+<main>
+<section id="view-cot">
+<div class="cot-wrap">
+<div class="cot-form">
+<div class="card">
+<h2>Nueva Cotización <span id="editBadge" class="pill hidden">Modo edición</span></h2>
+<p class="muted">Complete los datos del cliente y la superficie para calcular el presupuesto automáticamente.</p>
+<h3>Datos del Cliente</h3>
+<div class="grid2">
+<div><label class="f">Nombre Cliente *</label><input id="cName" placeholder="Nombre completo o razón social"></div>
+<div><label class="f">Teléfono *</label><input id="cPhone" placeholder="9 8474 8293" type="tel"><div class="hint-sm">El prefijo +56 se agrega automáticamente al enviar por WhatsApp.</div></div>
+<div><label class="f">Email</label><input id="cEmail" type="email" placeholder="correo@ejemplo.com"></div>
+<div><label class="f">Dirección del Proyecto</label><input id="cAddr" placeholder="Dirección completa"></div>
+<div><label class="f">Ejecutivo de Venta</label><input id="cSeller" placeholder="Nombre del ejecutivo"><div class="hint-sm">El nombre que escriba quedará guardado para próximas cotizaciones.</div></div>
+<div><label class="f">Fecha</label><input id="cDate" type="date"></div>
+</div>
+<div style="margin-top:12px"><label class="f">Observaciones (opcional, se imprime en el PDF)</label><textarea id="cObs" rows="2" placeholder="Notas de la obra, cámaras incluidas, focos, etc."></textarea></div>
+<h3>Cálculo por Metro Cuadrado</h3>
+<div class="rate-hint" id="rateHint"></div>
+<div class="grid3">
+<div><label class="f">Superficie (m²) * (Mínimo 30 m²)</label><input id="inArea" type="number" min="30" placeholder="Ej: 85"></div>
+<div><label class="f">Tarifa Aplicada</label><input id="lblTarifa" readonly></div>
+<div><label class="f">Precio m² (Ajuste manual)</label><input id="inPrice" type="number" min="0"></div>
+</div>
+<label class="chk" style="margin-top:16px"><input type="checkbox" id="chkIva"> <span>Aplicar IVA 19% al total final</span></label>
+<h3>Trabajos Extras</h3>
+<p class="muted">Presione el botón para abrir la ventana de trabajos extras. Los trabajos con precio establecido aparecen primero y destacados en verde. La demolición se configura en su propia tarjeta.</p>
+<div class="extras-bar">
+<button class="btn btn-extras" id="btnOpenExtras">TRABAJOS EXTRAS</button>
+<span class="pill" id="extrasCount">0 incluidos</span>
+<strong id="extrasCompactTotal">$0</strong>
+</div>
+<div id="extrasCompact" class="extras-compact"></div>
+<div class="demo-card" id="demoCard">
+<div class="demo-head"><label class="chk"><input type="checkbox" id="demoChk"> <span>Demolición de pavimento existente</span></label><strong id="demoTotalInline">$0</strong></div>
+<div class="demo-row">
+<div><label class="f">m² a demoler</label><input id="demoQty" type="number" min="0" placeholder="0"></div>
+<div><label class="f">Precio por m² ($)</label><input id="demoPrice" type="number" min="0" placeholder="5000"></div>
+<div class="demo-unit">Unidad: m²</div>
+</div>
+<div class="hint-sm">Se configura directamente en el formulario, fuera de la ventana de trabajos extras. Si está marcada, se suma al total.</div>
+</div>
+<h3>Items Incluidos en el Precio Base</h3>
+<div class="items-toolbar">
+<label class="chk"><input type="checkbox" id="chkAllItems" checked> <span><strong>Seleccionar / Deseleccionar Todo</strong></span></label>
+<span class="items-count" id="itemsCount"></span>
+</div>
+<div id="itemsList" class="items-grid"></div>
+</div>
+</div>
+<div class="summary">
+<h2>Resumen de Cotización</h2>
+<div class="row"><span>N° Cotización</span><strong id="sumNum">Se asigna al guardar</strong></div>
+<div class="row"><span>Cliente</span><strong id="sumClient">-</strong></div>
+<div class="row"><span>Superficie</span><strong id="sumArea">0 m²</strong></div>
+<div class="row"><span>Precio m²</span><strong id="sumPrice">$0</strong></div>
+<div class="row"><span>Subtotal Pavimento</span><strong id="sumSub">$0</strong></div>
+<div class="row"><span>Items Incluidos</span><strong id="sumItems" style="font-size:12px;text-align:right;max-width:180px">Ninguno</strong></div>
+<div class="row"><span>Trabajos Extras</span><strong id="sumExtras" style="font-size:12px;text-align:right;max-width:180px">Ninguno</strong></div>
+<div class="row"><span>Total Extras</span><strong id="sumTotExtras">$0</strong></div>
+<div class="row"><span>IVA</span><strong id="sumIva">No incluido</strong></div>
+<div class="total"><span>TOTAL A COBRAR</span><strong id="sumTotal">$0</strong></div>
+</div>
+<div class="cot-actions">
+<div class="card">
+<div class="actions">
+<button class="btn btn-primary" id="btnSave">Guardar Proyecto</button>
+<button class="btn btn-accent" id="btnPdf">Generar PDF</button>
+<button class="btn btn-whatsapp" id="btnWa"><svg style="width:18px;height:18px" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Enviar por WhatsApp</button>
+<button class="btn btn-ghost" id="btnMail">Enviar por Correo</button>
+<button class="btn btn-ghost" id="btnClean">Limpiar</button>
+<button class="btn btn-danger hidden" id="btnCancel">Cancelar Edición</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="view-proy" class="hidden">
+<div class="card">
+<h2>Proyectos Guardados</h2>
+<p class="muted">Listado de cotizaciones. Con la nube activa, se sincronizan entre todos sus dispositivos.</p>
+<button class="btn btn-ghost btn-sm" id="btnRefresh" style="margin-bottom:16px">Actualizar Listado</button>
+<div class="table-wrap"><table><thead><tr><th>#</th><th>N° Cot.</th><th>Cliente</th><th>Superficie</th><th>Total</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody id="proyBody"></tbody></table></div>
+</div>
+</section>
+<section id="view-pape" class="hidden">
+<div class="card">
+<h2>Papelera de Reciclaje</h2>
+<p class="muted">Proyectos eliminados. Puede restaurarlos o eliminarlos definitivamente.</p>
+<div style="margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap">
+<button class="btn btn-ghost btn-sm" id="btnSelAll">Seleccionar Todo</button>
+<button class="btn btn-ghost btn-sm" id="btnRestore">Restaurar Seleccionados</button>
+<button class="btn btn-danger btn-sm" id="btnPurge">Eliminar Definitivamente</button>
+</div>
+<div class="table-wrap"><table><thead><tr><th></th><th>#</th><th>N° Cot.</th><th>Cliente</th><th>Superficie</th><th>Total</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody id="papeBody"></tbody></table></div>
+</div>
+</section>
+<section id="view-tar" class="hidden">
+<div class="card">
+<h2>Gestión de Tarifas</h2>
+<p class="muted">Todos los campos de la tabla son editables: tramos, tipo de cobro y precios. Con la nube activa, se sincronizan entre dispositivos.</p>
+<div class="table-wrap"><table><thead><tr><th>Desde (m²)</th><th>Hasta (m²)</th><th>Tipo de Cobro</th><th>Precio ($)</th><th></th></tr></thead><tbody id="tarBody"></tbody></table></div>
+<div class="actions" style="margin-top:20px">
+<button class="btn btn-ghost btn-sm" id="btnAddRate">+ Agregar Tramo</button>
+<button class="btn btn-primary" id="btnSaveRates">Guardar Cambios de Tarifas</button>
+</div>
+</div>
+</section>
+<section id="view-inv" class="hidden">
+<div class="card">
+<h2>Catálogo de Trabajos Extras</h2>
+<p class="muted">Los trabajos con precio establecido aparecen primero y destacados en verde. Estos precios se cargan automáticamente al crear una cotización nueva.</p>
+<div class="table-wrap"><table><thead><tr><th>Descripción</th><th>Unidad</th><th>Precio por Defecto ($)</th><th></th></tr></thead><tbody id="extrasCatBody"></tbody></table></div>
+<button class="btn btn-ghost btn-sm" id="btnAddExtraCat" style="margin-top:12px">+ Agregar Trabajo Extra al Catálogo</button>
+</div>
+<div class="card">
+<h2>Catálogo de Items Incluidos</h2>
+<p class="muted">Edite o agregue los conceptos que aparecen como incluidos en el precio base de la cotización.</p>
+<div id="catList" style="max-width:600px"></div>
+<button class="btn btn-ghost btn-sm" id="btnAddCat" style="margin-top:12px">+ Agregar Item al Catálogo</button>
+</div>
+<div class="card">
+<h2>Control de Inventario</h2>
+<div class="table-wrap"><table><thead><tr><th>Item</th><th>Cantidad</th><th>Unidad</th><th>Precio Unit.</th><th>Valor Total</th><th></th></tr></thead><tbody id="invBody"></tbody></table></div>
+<button class="btn btn-ghost btn-sm" id="btnAddInv" style="margin-top:16px">+ Agregar Item de Inventario</button>
+</div>
+</section>
+</main>
+</div>
+<footer>CONSTRUPISOS JH | AVILSAL CONSTRUCCIONES SPA | RUT 78.057.771-1<br>Av. Nueva Providencia 1881, oficina 230 | +56 9 8474 8293 | Construpisosjh@gmail.com<br>Desarrollado por <a href="https://instagram.com/digitalmarketing.cl" target="_blank">@digitalmarketing.cl</a></footer>
+</div>
 <div id="extrasModal" class="modal-overlay hidden">
-  <div class="modal" role="dialog" aria-modal="true" aria-label="Trabajos Extras">
-    <div class="modal-head">
-      <h2>Trabajos Extras</h2>
-      <button class="modal-close" id="btnCloseExtras" aria-label="Cerrar">&times;</button>
-    </div>
-    <p class="modal-sub">Marque los trabajos a incluir y ajuste cantidad, unidad y precio. La demolición se configura directamente en el formulario, fuera de esta ventana.</p>
-    <div class="modal-body">
-      <div class="msec">
-        <div class="msec-head"><span>Trabajos Extras</span><strong id="othersTotal">$0</strong></div>
-        <div id="extrasModalList"></div>
-        <button class="btn btn-ghost btn-sm" id="btnAddExtraModal">+ Agregar Trabajo Extra</button>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" id="btnCancelExtras">Cancelar</button>
-      <button class="btn btn-primary" id="btnApplyExtras">Aplicar</button>
-    </div>
-  </div>
+<div class="modal" role="dialog" aria-modal="true" aria-label="Trabajos Extras">
+<div class="modal-head"><h2>Trabajos Extras</h2><button class="modal-close" id="btnCloseExtras" aria-label="Cerrar">&times;</button></div>
+<p class="modal-sub">Los trabajos con precio establecido aparecen primero y destacados en verde. Marque los que desea incluir y ajuste cantidad y precio.</p>
+<div class="modal-body">
+<div class="msec">
+<div class="msec-head"><span>Trabajos Extras</span><strong id="othersTotal">$0</strong></div>
+<div id="extrasModalList"></div>
+<button class="btn btn-ghost btn-sm" id="btnAddExtraModal">+ Agregar Trabajo Extra</button>
 </div>
-
+</div>
+<div class="modal-foot">
+<button class="btn btn-ghost" id="btnCancelExtras">Cancelar</button>
+<button class="btn btn-primary" id="btnApplyExtras">Aplicar</button>
+</div>
+</div>
+</div>
+<div id="confirmModal" class="modal-overlay hidden">
+<div class="modal modal-sm" role="dialog" aria-modal="true" aria-label="Confirmar eliminación">
+<div class="modal-head"><h2>Confirmar eliminación</h2><button class="modal-close" id="confirmClose" aria-label="Cerrar">&times;</button></div>
+<div class="modal-body"><p id="confirmMsg" style="font-size:14px;line-height:1.6"></p></div>
+<div class="modal-foot">
+<button class="btn btn-ghost" id="confirmCancel">Cancelar</button>
+<button class="btn btn-danger-solid" id="confirmOk">Sí, eliminar</button>
+</div>
+</div>
+</div>
 <div id="toast"></div>
-
-<!-- SDK de Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<!-- Librerías para descargar el PDF directamente -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <script>
-(function(){
-'use strict';
+(function(){'use strict';
 var $=function(s){return document.querySelector(s);};
 var fmt=function(n){return '$'+Math.round(n||0).toLocaleString('es-CL');};
 var num=function(v){var n=parseFloat(String(v).replace(/[^\d.-]/g,''));return isNaN(n)?0:n;};
 var esc=function(s){return String(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;');};
 var today=function(){return new Date().toISOString().slice(0,10);};
 var isDemo=function(d){return /demolici/i.test(d||'');};
-
-/* CREDENCIALES ÚNICAS DEL PANEL */
 var LOCAL_USER='admin';
 var LOCAL_PASS='admin123';
-
-/* La mención de credenciales se oculta sola después de esta fecha
-   (mañana 24/10/2026 + 7 días). Para cambiar el plazo, edite esta línea. */
 var CRED_HINT_UNTIL=new Date('2026-10-31T23:59:59');
-
 var memStore={};
-var LS={
-  get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return memStore[k]!==undefined?memStore[k]:d;}},
-  set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){memStore[k]=v;}}
-};
+var LS={get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return memStore[k]!==undefined?memStore[k]:d;}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){memStore[k]=v;}}};
 function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2600);}
-
-/* CONFIGURACIÓN DE FIREBASE DEL PROYECTO ContrupisosJH */
-var FIREBASE_CONFIG = {
-  apiKey: "AIzaSyCBBvUHVWJMO4-3XqdR7k9FAu67fcDE6SE",
-  authDomain: "contrupisosjh.firebaseapp.com",
-  projectId: "contrupisosjh",
-  storageBucket: "contrupisosjh.firebasestorage.app",
-  messagingSenderId: "694991039551",
-  appId: "1:694991039551:web:f3fe9982df38fff8fe19c8a"
-};
-var FIREBASE_ENABLED = !!FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey.indexOf('PEGUE_AQUI')===-1;
+var FIREBASE_CONFIG={apiKey:"AIzaSyCBBvUHVWJMO4-3XqdR7k9FAu67fcDE6SE",authDomain:"contrupisosjh.firebaseapp.com",projectId:"contrupisosjh",storageBucket:"contrupisosjh.firebasestorage.app",messagingSenderId:"694991039551",appId:"1:694991039551:web:f3fe9982df38fff8fe19c8a"};
+var FIREBASE_ENABLED=!!FIREBASE_CONFIG.apiKey&&FIREBASE_CONFIG.apiKey.indexOf('PEGUE_AQUI')===-1;
 var fb={enabled:false,db:null,auth:null,user:null,synced:false};
-function fbInit(){
-  if(!FIREBASE_ENABLED)return;
-  try{
-    if(typeof firebase==='undefined'){return;}
-    if(!firebase.apps.length){firebase.initializeApp(FIREBASE_CONFIG);}
-    fb.auth=firebase.auth();
-    fb.db=firebase.firestore();
-    fb.enabled=true;
-  }catch(e){fb.enabled=false;}
-}
+function fbInit(){if(!FIREBASE_ENABLED)return;try{if(typeof firebase==='undefined'){return;}if(!firebase.apps.length){firebase.initializeApp(FIREBASE_CONFIG);}fb.auth=firebase.auth();fb.db=firebase.firestore();fb.enabled=true;}catch(e){fb.enabled=false;}}
 function fbAuthed(){return fb.enabled&&!!fb.user;}
 fbInit();
-
-/* --- TEMA --- */
-function applyTheme(t){
-  document.documentElement.setAttribute('data-theme',t);
-  LS.set('jh_theme',t);
-  $('#iconMoon').classList.toggle('hidden',t==='dark');
-  $('#iconSun').classList.toggle('hidden',t!=='dark');
-}
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);LS.set('jh_theme',t);$('#iconMoon').classList.toggle('hidden',t==='dark');$('#iconSun').classList.toggle('hidden',t!=='dark');}
 applyTheme(LS.get('jh_theme','light'));
-$('#themeBtn').addEventListener('click',function(){
-  var cur=document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light';
-  applyTheme(cur==='dark'?'light':'dark');
-});
-
-var COMPANY={brand:'CONSTRUPISOS JH',legal:'AVILSAL CONSTRUCCIONES SPA',rut:'78.057.771-1',
- email:'Construpisosjh@gmail.com',phone:'+56984748293',wa:'56984748293',
- ig:'@Construpisosjh',address:'Av. Nueva Providencia 1881, oficina 230'};
-
-var MSG_TEMPLATE=
-'Buenas noches, junto con saludarle. Le adjunto la cotización para el proyecto: Hormigón estampado.\n\n'+
-'Reserva de fecha: Para la reserva de fechas; deberá abonar $100.000 y enviar el comprobante a este correo, el dinero quedará abonado como parte de pago y se le descontará del valor total.\n\n'+
-'También contamos con la instalación de pasto natural, valor por m2 sería de $13.500, incluye instalación, emparejamiento de terreno, materiales para la instalación y pasto natural.\n\n'+
-'Pasto sintético valor por m2: $17.990, incluye pasto sintético premium 40mm, instalación y todos los materiales para su instalación.\n\n'+
-'NOTA: Todos nuestros proyectos son ejecutados por jefes de obra altamente capacitados en el tema de la elaboración de pavimentos, ellos estarán en todo momento supervisando cada paso en la ejecución del proyecto y respondiendo todas las consultas o dudas que tenga el cliente respecto a la elaboración de su pavimento en hormigón estampado.\n\n'+
-'Muchas gracias por preferirnos.\n\n'+
-'Atte.: Luisana Herrera\n\n'+
-'Datos a transferir:\n'+
-'AVILSAL CONSTRUCCIONES SPA\n'+
-'78.057.771-1\n'+
-'Banco de Chile\n'+
-'Cuenta Corriente\n'+
-'00-821-07131-09\n'+
-'Construpisosjh@gmail.com\n\n'+
-'Construpisos JH\n'+
-'RUT: 78.057.771-1\n'+
-'Dirección: Av. Nueva Providencia 1881, oficina 230\n'+
-'Teléfono: +56984748293';
-
-var CONDICIONES=[
-'Respecto a los pagos: Los pagos serán 90% al segundo día de trabajo (día del hormigón y estampado del pavimento) y el otro 10% al finalizar el proyecto. Se considera cada ítem del presupuesto para lograr la mayor efectividad a la hora de la ejecución de la obra; de no cancelar el pago del 90% al segundo día de trabajo, la empresa estará en todo su derecho de detener el proyecto. Para la habilitación de pagos en transferencia de altos montos, se le recomienda al cliente transferir el primer día de trabajo $1.000 pesos chilenos (este quedará abonado como pago) y así en 24 horas estará habilitada la cuenta para transferir montos mayores permitidos por los bancos. Se aceptan pagos con efectivo, transferencia, tarjeta de débito y tarjeta de crédito (una sola cuota).',
-'Respecto a la Duración: La duración aproximada del proyecto será de 3 a 5 días hábiles, dependiendo de la complejidad del terreno.',
-'Nota Precio: Los precios corresponden a obra vendida, es decir, todo incluido; nos encargamos de gestionar todas las compras de materiales e insumos, traslados, fletes, retiro de escombros y todo lo necesario para cumplir con lo especificado en este presupuesto. De no requerir factura se respetará el valor neto.',
-'Nota Sanitaria: Tomaremos todas las precauciones sanitarias pertinentes, manteniendo el menor contacto con el interior de la vivienda y cumpliendo siempre el protocolo sanitario.',
-'Nota de Trabajo: La empresa no se hace responsable por tuberías, pisos, electricidad, cables, muros y estructuras que no se le hayan notificado o estén en mal estado en el sitio de la obra, al no presentar planos y detalles de la estructura actual ya existente.',
-'Una vez concluidos los trabajos: CONSTRUPISOSESTAMPADOSJH retirará todo tipo de desechos producto del trabajo realizado, así como también maquinarias, equipos, herramientas y elementos de seguridad; quedando entendido que de ninguna manera se realizarán daños al medio ambiente.',
-'CONSTRUPISOSESTAMPADOSJH se compromete a mantener constante comunicación y propiciar un trato armónico con el cliente, de tal manera que ambos se beneficien del producto.',
-'Diseño y color del estampado: Esta cotización contempla elección del molde, color base, color del desmoldante, tipo de pavimento y color a potestad del cliente. Algunos moldes suelen marcar menos por temas de diseños y formas realizadas por las fábricas; esto no afectará lo estético, ya que los diseños están creados para exponer una estética de texturas variadas y así su pavimento se vea creativamente natural.',
-'Sello acrílico: Queda de parte de CONSTRUPISOSESTAMPADOSJH el día en que efectuará el lavado del piso y el día de su vitrificación. El sello acrílico es un protector que impermeabiliza el pavimento estampado; la durabilidad del brillo es visible hasta que el concreto absorba completamente el sello y cumpla su función.',
-'CONSTRUPISOSESTAMPADOSJH se compromete a que, una vez terminados los trabajos, no existirán desniveles que provoquen aposamientos de agua, excepto los que por la naturaleza del trabajo se produzcan debido a las formas hechas por los moldes.',
-'Si la cotización contempla focos LED: CONSTRUPISOSESTAMPADOSJH contempla la recepción de los trabajos al enchufe más próximo a los mismos, siendo responsabilidad del cliente cualquier otro tipo de interruptor; es responsabilidad de CONSTRUPISOSESTAMPADOSJH demostrar el perfecto funcionamiento de estos. Los focos serán embutidos en tubería PVC sellados con silicona, dejando en la parte inferior un subdrenaje.',
-'Cuidado del pavimento estampado: El cliente debe regar el piso con abundante agua durante 28 días continuos desde el siguiente día de hacer el radier, exceptuando un día antes del vitrificado, de tal manera que el secado interior no se produzca de forma brusca y se puedan presentar fisuras refractarias. Se recomienda mantención para evitar daños por movimientos sísmicos y otros factores ambientales.',
-'Debido a la naturaleza del trabajo: Los clientes en su mayoría son particulares; queda de parte del cliente cancelar sólo el monto neto por no requerir factura.',
-'Grietas superficiales: El radier, por temas de temperatura en épocas de verano y movimientos sísmicos, puede sufrir exposición superficial de grietas; estas, por ser poco profundas, no afectan la resistencia ni durabilidad del radier.',
-'Garantía: CONSTRUPISOSESTAMPADOSJH se compromete a dar garantía a todo pavimento realizado por nuestra empresa, siempre que el motivo sea una fisura profunda que dañe la calidad o resistencia del mismo y pueda ocasionar daños colaterales al cliente. La garantía tendrá validez si las fisuras profundas son ocasionadas de manera natural (no por sismos, objetos de gran peso o daños ocasionados por trabajos externos de terceros). La empresa asignará una fecha de reparación en acuerdo con el cliente.',
-'De concretar parcial o totalmente la cotización: El cliente acepta las condiciones informadas en esta cotización.',
-'Cotización: Este presupuesto es válido por 10 días hábiles; después de transcurridos los 10 días hábiles para confirmar fecha de inicio del proyecto, la cotización estará sujeta a cambios por costos del hormigón de planta y otros materiales que varían con el transcurrir de los días.'
-];
-
-var SERVICIOS_AGREGADOS=[
-'Valor de focos LED para pisos: $30.000 c/u.',
-'Demolición: $5.000 por m² (sujeta a cambios por dificultad del pavimento a demoler).',
-'Cenefa por metro lineal: precio varía según la cantidad de metros lineales.',
-'Tapa de cámara: $80.000 c/u.',
-'Figuras de diseño: $80.000 c/u.',
-'Trabajos de gasfitería: valor acordado en terreno previa evaluación.'
-];
-
-var MKT_QUE=[
-'El pavimento de hormigón estampado es una técnica decorativa que permite aplicar texturas, relieves, estampados y formas. De este modo, sus aplicaciones favorecen la resistencia y la creación de diseños atractivos.',
-'El cemento, siendo uno de los principales componentes del hormigón, permite desarrollar la capacidad de adherirse a otros materiales. Así, su sencilla aplicación lo convierte en el material perfecto para crear proyectos en jardines, pisos, terrazas, garajes y más.',
-'Dentro del gran abanico de posibilidades constructivas que hay en la actualidad, entra en juego el hormigón y sus diferentes aplicaciones. Entre ellas destaca el pavimento de hormigón estampado, un material resistente, versátil y estéticamente superior.'
-];
-var MKT_VENTAJAS=[
-['MÚLTIPLES DISEÑOS','Las posibilidades de aplicar patrones geométricos en un piso estampado, texturas y colores en las terminaciones son casi infinitas, permitiendo formas y patrones personalizados con diseños únicos e irrepetibles.'],
-['RÁPIDA EJECUCIÓN','La elaboración es más rápida y fácil que el adoquinado tradicional, cerámicas u otros pavimentos de menos resistencia, lo que mejora los tiempos de elaboración del proyecto.'],
-['EVITA EL CRECIMIENTO DE MALEZA','La resistencia, peso y durabilidad del hormigón estampado lo hacen el complemento ideal de espacios verdes y estéticos, evitando la maleza que crece en las juntas de otros pavimentos.'],
-['POCO MANTENIMIENTO','Es un material que no necesita cuidados especiales y su larga vida útil lo convierte en una apuesta segura; su desgaste tarda décadas, siendo la obra un proyecto eficiente y próspero.'],
-['ALTA RESISTENCIA Y DURABILIDAD','Su gran resistencia frente a las condiciones climáticas y golpes lo hace ideal, focalizando el daño en un solo punto y limitando deterioros en comparación con adoquines, baldosas o cerámicas.']
-];
-var MKT_PORQUE=[
-'Es evidente que la gama de materiales en el sector de la construcción es enorme. No obstante, este tipo de hormigón es toda una oportunidad económica: su bajo costo hace su instalación más accesible, siendo una opción idónea frente a otros materiales.',
-'La posibilidad de personalizar los patrones y figuras en el hormigón hace que cada diseño sea único, creando espacios duraderos, resistentes y con un alto valor arquitectónico.',
-'Se trata de un material muy apreciado que destaca la belleza natural del lugar en el que se utiliza, dando un aspecto rústico pero sin restricciones de color, con gran ventaja sobre el clásico pavimento de baldosas o adoquines tradicionales.',
-'En conclusión, el pavimento de hormigón estampado es robusto, permite renovar su aspecto cuando se desee con la aplicación del sello acrílico sobre la superficie, es de rápida elaboración y económicamente más accesible que otros trabajos de pavimentación. No dude en contactar a CONSTRUPISOSESTAMPADOSJH: somos expertos en este y otros materiales.'
-];
-
-var DEFAULT_RATES=[
- {min:80,max:99999,type:'m2',price:28500},
- {min:50,max:79,type:'m2',price:29500},
- {min:30,max:49,type:'fijo',price:1550000}
-];
-var DEFAULT_EXTRAS=[
- {desc:'Demolición de pavimento existente',unit:'m²',price:5000},
- {desc:'Tapa de cámara',unit:'und',price:0},
- {desc:'Focos LED',unit:'und',price:0},
- {desc:'Solerilla',unit:'m lineal',price:0},
- {desc:'Tuberías de desagüe',unit:'m lineal',price:0},
- {desc:'Bordes de cenefa',unit:'m lineal',price:0},
- {desc:'Figuras de diseño',unit:'und',price:0},
- {desc:'Trabajos de gasfitería',unit:'und',price:0}
-];
-var DEFAULT_CATALOG=[
- 'Hormigón H25 (espesor 10 cm)',
- 'Malla de acero Acma C92',
- 'Endurecedor de color (stamp color)',
- 'Desmoldante en polvo',
- 'Sello protector',
- 'Capa de ripio o estabilizado',
- 'Cortes de dilatación y juntas de expansión',
- 'Mano de obra especializada',
- 'Supervisión permanente de jefe de obra'
-];
-
-var state={
- editingId:null,
- rates:LS.get('jh_rates',DEFAULT_RATES),
- catalog:LS.get('jh_catalog',DEFAULT_CATALOG),
- extrasTpl:LS.get('jh_extras',DEFAULT_EXTRAS),
- projects:LS.get('jh_projects',[]),
- trash:LS.get('jh_trash',[]),
- inv:LS.get('jh_inv',[]),
- seq:LS.get('jh_seq',1)
-};
-DEFAULT_EXTRAS.forEach(function(d){
-  var exists=state.extrasTpl.some(function(t){return t.desc===d.desc;});
-  if(!exists){state.extrasTpl.push({desc:d.desc,unit:d.unit,price:d.price});}
-});
-(function(){
-  var changed=false,i;
-  for(i=0;i<state.catalog.length;i++){
-    if(/sellador brillante/i.test(state.catalog[i])){state.catalog[i]='Sello protector';changed=true;}
-  }
-  var hasSello=state.catalog.some(function(c){return c==='Sello protector';});
-  if(!hasSello){state.catalog.push('Sello protector');changed=true;}
-  var hasRipio=state.catalog.some(function(c){return /ripio|estabilizado/i.test(c);});
-  if(!hasRipio){
-    var idx=state.catalog.indexOf('Sello protector');
-    state.catalog.splice(idx+1,0,'Capa de ripio o estabilizado');changed=true;
-  }
-  if(changed){LS.set('jh_catalog',state.catalog);}
-})();
-function persist(){
-  LS.set('jh_rates',state.rates);LS.set('jh_catalog',state.catalog);
-  LS.set('jh_extras',state.extrasTpl);LS.set('jh_projects',state.projects);
-  LS.set('jh_trash',state.trash);LS.set('jh_inv',state.inv);LS.set('jh_seq',state.seq);
-  cloudPutConfig();
-}
-
-/* --- NUBE --- */
-function cloudPutConfig(){
-  if(!fbAuthed())return;
-  try{
-    fb.db.doc('panel/main').set({rates:state.rates,catalog:state.catalog,extrasTpl:state.extrasTpl,seq:state.seq,updatedAt:Date.now()});
-  }catch(e){}
-}
-function cloudPutProject(p){
-  if(!fbAuthed())return;
-  try{ p.savedAt=Date.now(); fb.db.collection('projects').doc(String(p.id)).set(p); }catch(e){}
-}
-function cloudDelProject(id){ if(!fbAuthed())return; try{ fb.db.collection('projects').doc(String(id)).delete(); }catch(e){} }
-function cloudPutTrash(p){ if(!fbAuthed())return; try{ fb.db.collection('trash').doc(String(p.id)).set(p); }catch(e){} }
-function cloudDelTrash(id){ if(!fbAuthed())return; try{ fb.db.collection('trash').doc(String(id)).delete(); }catch(e){} }
-
-/* --- SINCRONIZACIÓN + MIGRACIÓN AUTOMÁTICA DE DATOS LOCALES --- */
-function startSync(){
-  if(!fbAuthed()||fb.synced)return;
-  fb.synced=true;
-  $('#cloudBadge').classList.remove('hidden');
-  var migratedProjects=LS.get('jh_migrated_projects','0')==='1';
-  var migratedConfig=LS.get('jh_migrated_config','0')==='1';
-  fb.db.collection('projects').onSnapshot(function(snap){
-    var arr=[];snap.forEach(function(d){arr.push(d.data());});
-    if(!migratedProjects){
-      migratedProjects=true;LS.set('jh_migrated_projects','1');
-      var cloudIds={};arr.forEach(function(p){cloudIds[String(p.id)]=1;});
-      LS.get('jh_projects',[]).forEach(function(p){if(!cloudIds[String(p.id)]){cloudPutProject(p);}});
-      LS.get('jh_trash',[]).forEach(function(p){if(!cloudIds[String(p.id)]){cloudPutTrash(p);}});
-      if(LS.get('jh_projects',[]).length){toast('Sincronizando proyectos locales con la nube...');}
-    }
-    arr.sort(function(a,b){return (b.savedAt||b.id||0)-(a.savedAt||a.id||0);});
-    state.projects=arr;LS.set('jh_projects',arr);
-    if(!$('#view-proy').classList.contains('hidden'))renderProjects();
-  },function(){});
-  fb.db.collection('trash').onSnapshot(function(snap){
-    var arr=[];snap.forEach(function(d){arr.push(d.data());});
-    state.trash=arr;LS.set('jh_trash',arr);
-    if(!$('#view-pape').classList.contains('hidden'))renderTrash();
-  },function(){});
-  fb.db.doc('panel/main').onSnapshot(function(doc){
-    if(doc&&doc.exists){
-      var c=doc.data();
-      if(c.rates)state.rates=c.rates;
-      if(c.catalog)state.catalog=c.catalog;
-      if(c.extrasTpl)state.extrasTpl=c.extrasTpl;
-      if(c.seq)state.seq=c.seq;
-      LS.set('jh_rates',state.rates);LS.set('jh_catalog',state.catalog);
-      LS.set('jh_extras',state.extrasTpl);LS.set('jh_seq',state.seq);
-      renderRateHint();
-      if(!$('#view-tar').classList.contains('hidden'))renderRates();
-      if(!$('#view-inv').classList.contains('hidden'))renderInventory();
-    }else if(!migratedConfig){
-      migratedConfig=true;LS.set('jh_migrated_config','1');
-      cloudPutConfig();
-    }
-  },function(){});
-}
-
-/* --- EXTRAS EN CURSO + NUMERO --- */
-var currentExtras=[];
-var currentNum=null;
-function seedExtras(){
-  return state.extrasTpl.map(function(x){return {desc:x.desc,unit:x.unit,price:x.price,qty:'',checked:false};});
-}
+$('#themeBtn').addEventListener('click',function(){var cur=document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light';applyTheme(cur==='dark'?'light':'dark');});
+function setConnStatus(on){var b=$('#statusBadge');b.className='status-badge '+(on?'online':'offline');$('#statusText').textContent=on?'Nube activa':'Modo local';}
+var COMPANY={brand:'CONSTRUPISOS JH',legal:'AVILSAL CONSTRUCCIONES SPA',rut:'78.057.771-1',email:'Construpisosjh@gmail.com',phone:'+56984748293',wa:'56984748293',ig:'@Construpisosjh',address:'Av. Nueva Providencia 1881, oficina 230'};
+var MSG_TEMPLATE='Buenas noches, junto con saludarle. Le adjunto la cotización para el proyecto: Hormigón estampado.\n\nReserva de fecha: Para la reserva de fechas; deberá abonar $100.000 y enviar el comprobante a este correo, el dinero quedará abonado como parte de pago y se le descontará del valor total.\n\nTambién contamos con la instalación de pasto natural, valor por m2 sería de $13.500, incluye instalación, emparejamiento de terreno, materiales para la instalación y pasto natural.\n\nPasto sintético valor por m2: $17.990, incluye pasto sintético premium 40mm, instalación y todos los materiales para su instalación.\n\nNOTA: Todos nuestros proyectos son ejecutados por jefes de obra altamente capacitados en el tema de la elaboración de pavimentos, ellos estarán en todo momento supervisando cada paso en la ejecución del proyecto y respondiendo todas las consultas o dudas que tenga el cliente respecto a la elaboración de su pavimento en hormigón estampado.\n\nMuchas gracias por preferirnos.\n\nAtte.: Luisana Herrera\n\nDatos a transferir:\nAVILSAL CONSTRUCCIONES SPA\n78.057.771-1\nBanco de Chile\nCuenta Corriente\n00-821-07131-09\nConstrupisosjh@gmail.com\n\nConstrupisos JH\nRUT: 78.057.771-1\nDirección: Av. Nueva Providencia 1881, oficina 230\nTeléfono: +56984748293';
+var CONDICIONES=['Respecto a los pagos: Los pagos serán 90% al segundo día de trabajo (día del hormigón y estampado del pavimento) y el otro 10% al finalizar el proyecto. Se considera cada ítem del presupuesto para lograr la mayor efectividad a la hora de la ejecución de la obra; de no cancelar el pago del 90% al segundo día de trabajo, la empresa estará en todo su derecho de detener el proyecto. Para la habilitación de pagos en transferencia de altos montos, se le recomienda al cliente transferir el primer día de trabajo $1.000 pesos chilenos (este quedará abonado como pago) y así en 24 horas estará habilitada la cuenta para transferir montos mayores permitidos por los bancos. Se aceptan pagos con efectivo, transferencia, tarjeta de débito y tarjeta de crédito (una sola cuota).','Respecto a la Duración: La duración aproximada del proyecto será de 3 a 5 días hábiles, dependiendo de la complejidad del terreno.','Nota Precio: Los precios corresponden a obra vendida, es decir, todo incluido; nos encargamos de gestionar todas las compras de materiales e insumos, traslados, fletes, retiro de escombros y todo lo necesario para cumplir con lo especificado en este presupuesto. De no requerir factura se respetará el valor neto.','Nota Sanitaria: Tomaremos todas las precauciones sanitarias pertinentes, manteniendo el menor contacto con el interior de la vivienda y cumpliendo siempre el protocolo sanitario.','Nota de Trabajo: La empresa no se hace responsable por tuberías, pisos, electricidad, cables, muros y estructuras que no se le hayan notificado o estén en mal estado en el sitio de la obra, al no presentar planos y detalles de la estructura actual ya existente.','Una vez concluidos los trabajos: CONSTRUPISOSESTAMPADOSJH retirará todo tipo de desechos producto del trabajo realizado, así como también maquinarias, equipos, herramientas y elementos de seguridad; quedando entendido que de ninguna manera se realizarán daños al medio ambiente.','CONSTRUPISOSESTAMPADOSJH se compromete a mantener constante comunicación y propiciar un trato armónico con el cliente, de tal manera que ambos se beneficien del producto.','Diseño y color del estampado: Esta cotización contempla elección del molde, color base, color del desmoldante, tipo de pavimento y color a potestad del cliente. Algunos moldes suelen marcar menos por temas de diseños y formas realizadas por las fábricas; esto no afectará lo estético, ya que los diseños están creados para exponer una estética de texturas variadas y así su pavimento se vea creativamente natural.','Sello acrílico: Queda de parte de CONSTRUPISOSESTAMPADOSJH el día en que efectuará el lavado del piso y el día de su vitrificación. El sello acrílico es un protector que impermeabiliza el pavimento estampado; la durabilidad del brillo es visible hasta que el concreto absorba completamente el sello y cumpla su función.','CONSTRUPISOSESTAMPADOSJH se compromete a que, una vez terminados los trabajos, no existirán desniveles que provoquen aposamientos de agua, excepto los que por la naturaleza del trabajo se produzcan debido a las formas hechas por los moldes.','Si la cotización contempla focos LED: CONSTRUPISOSESTAMPADOSJH contempla la recepción de los trabajos al enchufe más próximo a los mismos, siendo responsabilidad del cliente cualquier otro tipo de interruptor; es responsabilidad de CONSTRUPISOSESTAMPADOSJH demostrar el perfecto funcionamiento de estos. Los focos serán embutidos en tubería PVC sellados con silicona, dejando en la parte inferior un subdrenaje.','Cuidado del pavimento estampado: El cliente debe regar el piso con abundante agua durante 28 días continuos desde el siguiente día de hacer el radier, exceptuando un día antes del vitrificado, de tal manera que el secado interior no se produzca de forma brusca y se puedan presentar fisuras refractarias. Se recomienda mantención para evitar daños por movimientos sísmicos y otros factores ambientales.','Debido a la naturaleza del trabajo: Los clientes en su mayoría son particulares; queda de parte del cliente cancelar sólo el monto neto por no requerir factura.','Grietas superficiales: El radier, por temas de temperatura en épocas de verano y movimientos sísmicos, puede sufrir exposición superficial de grietas; estas, por ser poco profundas, no afectan la resistencia ni durabilidad del radier.','Garantía: CONSTRUPISOSESTAMPADOSJH se compromete a dar garantía a todo pavimento realizado por nuestra empresa, siempre que el motivo sea una fisura profunda que dañe la calidad o resistencia del mismo y pueda ocasionar daños colaterales al cliente. La garantía tendrá validez si las fisuras profundas son ocasionadas de manera natural (no por sismos, objetos de gran peso o daños ocasionados por trabajos externos de terceros). La empresa asignará una fecha de reparación en acuerdo con el cliente.','De concretar parcial o totalmente la cotización: El cliente acepta las condiciones informadas en esta cotización.','Cotización: Este presupuesto es válido por 10 días hábiles; después de transcurridos los 10 días hábiles para confirmar fecha de inicio del proyecto, la cotización estará sujeta a cambios por costos del hormigón de planta y otros materiales que varían con el transcurrir de los días.'];
+var SERVICIOS_AGREGADOS=['Valor de focos LED para pisos: $30.000 c/u.','Demolición: $5.000 por m² (sujeta a cambios por dificultad del pavimento a demoler).','Cenefa por metro lineal: precio varía según la cantidad de metros lineales.','Tapa de cámara: $80.000 c/u.','Figuras de diseño: $80.000 c/u.','Trabajos de gasfitería: valor acordado en terreno previa evaluación.'];
+var MKT_QUE=['El pavimento de hormigón estampado es una técnica decorativa que permite aplicar texturas, relieves, estampados y formas. De este modo, sus aplicaciones favorecen la resistencia y la creación de diseños atractivos.','El cemento, siendo uno de los principales componentes del hormigón, permite desarrollar la capacidad de adherirse a otros materiales. Así, su sencilla aplicación lo convierte en el material perfecto para crear proyectos en jardines, pisos, terrazas, garajes y más.','Dentro del gran abanico de posibilidades constructivas que hay en la actualidad, entra en juego el hormigón y sus diferentes aplicaciones. Entre ellas destaca el pavimento de hormigón estampado, un material resistente, versátil y estéticamente superior.'];
+var MKT_VENTAJAS=[['MÚLTIPLES DISEÑOS','Las posibilidades de aplicar patrones geométricos en un piso estampado, texturas y colores en las terminaciones son casi infinitas, permitiendo formas y patrones personalizados con diseños únicos e irrepetibles.'],['RÁPIDA EJECUCIÓN','La elaboración es más rápida y fácil que el adoquinado tradicional, cerámicas u otros pavimentos de menos resistencia, lo que mejora los tiempos de elaboración del proyecto.'],['EVITA EL CRECIMIENTO DE MALEZA','La resistencia, peso y durabilidad del hormigón estampado lo hacen el complemento ideal de espacios verdes y estéticos, evitando la maleza que crece en las juntas de otros pavimentos.'],['POCO MANTENIMIENTO','Es un material que no necesita cuidados especiales y su larga vida útil lo convierte en una apuesta segura; su desgaste tarda décadas, siendo la obra un proyecto eficiente y próspero.'],['ALTA RESISTENCIA Y DURABILIDAD','Su gran resistencia frente a las condiciones climáticas y golpes lo hace ideal, focalizando el daño en un solo punto y limitando deterioros en comparación con adoquines, baldosas o cerámicas.']];
+var MKT_PORQUE=['Es evidente que la gama de materiales en el sector de la construcción es enorme. No obstante, este tipo de hormigón es toda una oportunidad económica: su bajo costo hace su instalación más accesible, siendo una opción idónea frente a otros materiales.','La posibilidad de personalizar los patrones y figuras en el hormigón hace que cada diseño sea único, creando espacios duraderos, resistentes y con un alto valor arquitectónico.','Se trata de un material muy apreciado que destaca la belleza natural del lugar en el que se utiliza, dando un aspecto rústico pero sin restricciones de color, con gran ventaja sobre el clásico pavimento de baldosas o adoquines tradicionales.','En conclusión, el pavimento de hormigón estampado es robusto, permite renovar su aspecto cuando se desee con la aplicación del sello acrílico sobre la superficie, es de rápida elaboración y económicamente más accesible que otros trabajos de pavimentación. No dude en contactar a CONSTRUPISOSESTAMPADOSJH: somos expertos en este y otros materiales.'];
+var DEFAULT_RATES=[{min:80,max:99999,type:'m2',price:28500},{min:50,max:79,type:'m2',price:29500},{min:30,max:49,type:'fijo',price:1550000}];
+var DEFAULT_EXTRAS=[{desc:'Demolición de pavimento existente',unit:'m²',price:5000},{desc:'Focos LED',unit:'und',price:30000},{desc:'Tapa de cámara',unit:'und',price:80000},{desc:'Figuras de diseño',unit:'und',price:80000},{desc:'Solerilla',unit:'m lineal',price:0},{desc:'Tuberías de desagüe',unit:'m lineal',price:0},{desc:'Bordes de cenefa',unit:'m lineal',price:0},{desc:'Trabajos de gasfitería',unit:'und',price:0}];
+var PRICE_FIX={'Demolición de pavimento existente':5000,'Focos LED':30000,'Tapa de cámara':80000,'Figuras de diseño':80000};
+var DEFAULT_CATALOG=['Hormigón H25 (espesor 10 cm)','Malla de acero Acma C92','Endurecedor de color (stamp color)','Desmoldante en polvo','Sello protector','Capa de ripio o estabilizado','Cortes de dilatación y juntas de expansión','Mano de obra especializada','Supervisión permanente de jefe de obra'];
+var state={editingId:null,rates:LS.get('jh_rates',DEFAULT_RATES),catalog:LS.get('jh_catalog',DEFAULT_CATALOG),extrasTpl:LS.get('jh_extras',DEFAULT_EXTRAS),projects:LS.get('jh_projects',[]),trash:LS.get('jh_trash',[]),inv:LS.get('jh_inv',[]),seq:LS.get('jh_seq',1)};
+DEFAULT_EXTRAS.forEach(function(d){var ex=state.extrasTpl.some(function(t){return t.desc===d.desc;});if(!ex){state.extrasTpl.push({desc:d.desc,unit:d.unit,price:d.price});}});
+function applyPriceFix(){var ch=false;state.extrasTpl.forEach(function(t){if(PRICE_FIX.hasOwnProperty(t.desc)&&t.price!==PRICE_FIX[t.desc]){t.price=PRICE_FIX[t.desc];ch=true;}});return ch;}
+(function(){var ch=false,i;for(i=0;i<state.catalog.length;i++){if(/sellador brillante/i.test(state.catalog[i])){state.catalog[i]='Sello protector';ch=true;}}
+var hs=state.catalog.some(function(c){return c==='Sello protector';});if(!hs){state.catalog.push('Sello protector');ch=true;}
+var hr=state.catalog.some(function(c){return /ripio|estabilizado/i.test(c);});if(!hr){var ix=state.catalog.indexOf('Sello protector');state.catalog.splice(ix+1,0,'Capa de ripio o estabilizado');ch=true;}
+if(ch){LS.set('jh_catalog',state.catalog);}
+if(applyPriceFix()){ch=true;}
+if(ch){LS.set('jh_extras',state.extrasTpl);}})();
+function hasPrice(x){return num(x.price)>0;}
+function sortExtras(list){return list.slice().sort(function(a,b){return (hasPrice(b)?1:0)-(hasPrice(a)?1:0);});}
+function persist(){LS.set('jh_rates',state.rates);LS.set('jh_catalog',state.catalog);LS.set('jh_extras',state.extrasTpl);LS.set('jh_projects',state.projects);LS.set('jh_trash',state.trash);LS.set('jh_inv',state.inv);LS.set('jh_seq',state.seq);cloudPutConfig();}
+function cloudPutConfig(){if(!fbAuthed())return;try{fb.db.doc('panel/main').set({rates:state.rates,catalog:state.catalog,extrasTpl:state.extrasTpl,seq:state.seq,updatedAt:Date.now()});}catch(e){}}
+function cloudPutProject(p){if(!fbAuthed())return;try{p.savedAt=Date.now();fb.db.collection('projects').doc(String(p.id)).set(p);}catch(e){}}
+function cloudDelProject(id){if(!fbAuthed())return;try{fb.db.collection('projects').doc(String(id)).delete();}catch(e){}}
+function cloudPutTrash(p){if(!fbAuthed())return;try{fb.db.collection('trash').doc(String(p.id)).set(p);}catch(e){}}
+function cloudDelTrash(id){if(!fbAuthed())return;try{fb.db.collection('trash').doc(String(id)).delete();}catch(e){}}
+function startSync(){if(!fbAuthed()||fb.synced)return;fb.synced=true;setConnStatus(true);
+var migP=LS.get('jh_migrated_projects','0')==='1';var migC=LS.get('jh_migrated_config','0')==='1';
+fb.db.collection('projects').onSnapshot(function(snap){var arr=[];snap.forEach(function(d){arr.push(d.data());});
+if(!migP){migP=true;LS.set('jh_migrated_projects','1');var ids={};arr.forEach(function(p){ids[String(p.id)]=1;});
+LS.get('jh_projects',[]).forEach(function(p){if(!ids[String(p.id)]){cloudPutProject(p);}});
+LS.get('jh_trash',[]).forEach(function(p){if(!ids[String(p.id)]){cloudPutTrash(p);}});
+if(LS.get('jh_projects',[]).length){toast('Sincronizando proyectos locales con la nube...');}}
+arr.sort(function(a,b){return (b.savedAt||b.id||0)-(a.savedAt||a.id||0);});
+state.projects=arr;LS.set('jh_projects',arr);
+if(!$('#view-proy').classList.contains('hidden'))renderProjects();},function(){});
+fb.db.collection('trash').onSnapshot(function(snap){var arr=[];snap.forEach(function(d){arr.push(d.data());});state.trash=arr;LS.set('jh_trash',arr);if(!$('#view-pape').classList.contains('hidden'))renderTrash();},function(){});
+fb.db.doc('panel/main').onSnapshot(function(doc){if(doc&&doc.exists){var c=doc.data();
+if(c.rates)state.rates=c.rates;if(c.catalog)state.catalog=c.catalog;if(c.extrasTpl)state.extrasTpl=c.extrasTpl;if(c.seq)state.seq=c.seq;
+var fixed=applyPriceFix();
+LS.set('jh_rates',state.rates);LS.set('jh_catalog',state.catalog);LS.set('jh_extras',state.extrasTpl);LS.set('jh_seq',state.seq);
+renderRateHint();
+if(!$('#view-tar').classList.contains('hidden'))renderRates();
+if(!$('#view-inv').classList.contains('hidden'))renderInventory();
+if(fixed){cloudPutConfig();}}
+else if(!migC){migC=true;LS.set('jh_migrated_config','1');cloudPutConfig();}},function(){});}
+var currentExtras=[];var currentNum=null;
+function seedExtras(){return state.extrasTpl.map(function(x){return {desc:x.desc,unit:x.unit,price:x.price,qty:'',checked:false};});}
 function nextNum(){var n='COT-'+String(state.seq).padStart(4,'0');state.seq++;persist();return n;}
-function demoEntry(){
-  for(var i=0;i<currentExtras.length;i++){if(isDemo(currentExtras[i].desc))return currentExtras[i];}
-  return null;
-}
-function ensureDemo(){
-  if(demoEntry())return;
-  var t=null;
-  for(var j=0;j<state.extrasTpl.length;j++){if(isDemo(state.extrasTpl[j].desc)){t=state.extrasTpl[j];break;}}
-  currentExtras.unshift(t?{desc:t.desc,unit:t.unit,price:t.price,qty:'',checked:false}
-    :{desc:'Demolición de pavimento existente',unit:'m²',price:5000,qty:'',checked:false});
-}
-function demoToUI(){
-  var d=demoEntry();if(!d)return;
-  $('#demoChk').checked=!!d.checked;
-  $('#demoQty').value=d.qty||'';
-  $('#demoPrice').value=d.price||'';
-  paintDemo();
-}
-function uiToDemo(){
-  var d=demoEntry();if(!d)return;
-  d.checked=$('#demoChk').checked;
-  d.qty=num($('#demoQty').value);
-  d.unit='m²';
-  d.price=num($('#demoPrice').value);
-  paintDemo();
-}
-function paintDemo(){
-  var d=demoEntry();if(!d)return;
-  $('#demoTotalInline').textContent=fmt(num(d.qty)*num(d.price));
-  $('#demoCard').classList.toggle('on',!!d.checked);
-}
+function demoEntry(){for(var i=0;i<currentExtras.length;i++){if(isDemo(currentExtras[i].desc))return currentExtras[i];}return null;}
+function ensureDemo(){if(demoEntry())return;var t=null;for(var j=0;j<state.extrasTpl.length;j++){if(isDemo(state.extrasTpl[j].desc)){t=state.extrasTpl[j];break;}}
+currentExtras.unshift(t?{desc:t.desc,unit:t.unit,price:t.price,qty:'',checked:false}:{desc:'Demolición de pavimento existente',unit:'m²',price:5000,qty:'',checked:false});}
+function demoToUI(){var d=demoEntry();if(!d)return;$('#demoChk').checked=!!d.checked;$('#demoQty').value=d.qty||'';$('#demoPrice').value=d.price||'';paintDemo();}
+function uiToDemo(){var d=demoEntry();if(!d)return;d.checked=$('#demoChk').checked;d.qty=num($('#demoQty').value);d.unit='m²';d.price=num($('#demoPrice').value);paintDemo();}
+function paintDemo(){var d=demoEntry();if(!d)return;$('#demoTotalInline').textContent=fmt(num(d.qty)*num(d.price));$('#demoCard').classList.toggle('on',!!d.checked);}
 $('#demoChk').addEventListener('change',function(){uiToDemo();recalc();});
 $('#demoQty').addEventListener('input',function(){uiToDemo();recalc();});
 $('#demoPrice').addEventListener('input',function(){uiToDemo();recalc();});
-
-/* --- LOGO REAL --- */
 var logoSeq=0;
-function logoSVG(w,withText){
- var id='jhG'+(logoSeq++);
- var h=withText?w*1.42:w;
- var vb=withText?'0 0 120 170':'0 0 120 112';
- var txt=withText?'<text x="60" y="152" text-anchor="middle" font-family="Arial, sans-serif" font-size="46" font-weight="900" fill="none" stroke="#ffffff" stroke-width="3">JH</text>':'';
- return '<svg width="'+w+'" height="'+h+'" viewBox="'+vb+'" xmlns="http://www.w3.org/2000/svg">'+
- '<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="0" y2="1">'+
- '<stop offset="0%" stop-color="#3ef0b0"/><stop offset="100%" stop-color="#0ea5e9"/></linearGradient></defs>'+
- '<g fill="none" stroke="url(#'+id+')" stroke-width="9" stroke-linejoin="round" stroke-linecap="round">'+
- '<rect x="16" y="50" width="22" height="44" rx="4"/>'+
- '<rect x="49" y="30" width="22" height="64" rx="4"/>'+
- '<rect x="82" y="8" width="22" height="86" rx="4"/>'+
- '<line x1="8" y1="102" x2="112" y2="102"/></g>'+txt+'</svg>';
-}
+function logoSVG(w,withText){var id='jhG'+(logoSeq++);var h=withText?w*1.42:w;var vb=withText?'0 0 120 170':'0 0 120 112';
+var txt=withText?'<text x="60" y="152" text-anchor="middle" font-family="Arial, sans-serif" font-size="46" font-weight="900" fill="none" stroke="#ffffff" stroke-width="3">JH</text>':'';
+return '<svg width="'+w+'" height="'+h+'" viewBox="'+vb+'" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3ef0b0"/><stop offset="100%" stop-color="#0ea5e9"/></linearGradient></defs><g fill="none" stroke="url(#'+id+')" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"><rect x="16" y="50" width="22" height="44" rx="4"/><rect x="49" y="30" width="22" height="64" rx="4"/><rect x="82" y="8" width="22" height="86" rx="4"/><line x1="8" y1="102" x2="112" y2="102"/></g>'+txt+'</svg>';}
 $('#loginLogoSvg').innerHTML=logoSVG(100,true);
 $('#topLogoSvg').innerHTML=logoSVG(40,false);
-
-var LOGO_DATA='';
-var logoPromise=null;
-function ensureLogo(){
-  if(logoPromise)return logoPromise;
-  logoPromise=new Promise(function(res){
-    if(LOGO_DATA){res(LOGO_DATA);return;}
-    try{
-      var img=new Image();
-      img.onload=function(){
-        try{
-          var c=document.createElement('canvas');
-          c.width=img.naturalWidth;c.height=img.naturalHeight;
-          c.getContext('2d').drawImage(img,0,0);
-          LOGO_DATA=c.toDataURL('image/png');
-          res(LOGO_DATA);
-        }catch(e){res('');}
-      };
-      img.onerror=function(){res('');};
-      img.src='logo.png';
-    }catch(e){res('');}
-  });
-  return logoPromise;
-}
-
-function showApp(){$('#loginScreen').classList.add('hidden');$('#app').classList.remove('hidden');initQuoteView();}
+var LOGO_DATA='';var logoPromise=null;
+function ensureLogo(){if(logoPromise)return logoPromise;logoPromise=new Promise(function(res){if(LOGO_DATA){res(LOGO_DATA);return;}
+try{var img=new Image();img.onload=function(){try{var c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;c.getContext('2d').drawImage(img,0,0);LOGO_DATA=c.toDataURL('image/png');res(LOGO_DATA);}catch(e){res('');}};img.onerror=function(){res('');};img.src='logo.png';}catch(e){res('');}});return logoPromise;}
+function showApp(){$('#loginScreen').classList.add('hidden');$('#app').classList.remove('hidden');if(!fbAuthed()){setConnStatus(false);}initQuoteView();}
 function showLogin(){$('#app').classList.add('hidden');$('#loginScreen').classList.remove('hidden');refreshLoginHint();}
-
-/* --- MENCIÓN DE CREDENCIALES CON VENCIMIENTO --- */
-function refreshLoginHint(){
-  var el=$('#loginHint');
-  if(Date.now()<=CRED_HINT_UNTIL.getTime()){
-    el.classList.remove('hidden');
-    el.innerHTML='Acceso al panel:<br>Usuario: <b>'+LOCAL_USER+'</b> &nbsp;·&nbsp; Clave: <b>'+LOCAL_PASS+'</b>'+
-      '<br><span style="font-size:11px">Al ingresar, el panel se conecta y sincroniza automáticamente entre todos sus dispositivos.</span>';
-  }else{
-    el.classList.add('hidden');
-    el.innerHTML='';
-  }
-}
+function refreshLoginHint(){var el=$('#loginHint');
+if(Date.now()<=CRED_HINT_UNTIL.getTime()){el.classList.remove('hidden');el.innerHTML='Acceso al panel:<br>Usuario: <b>'+LOCAL_USER+'</b> &nbsp;·&nbsp; Clave: <b>'+LOCAL_PASS+'</b><br><span style="font-size:11px">Al ingresar, el panel se conecta y sincroniza automáticamente entre todos sus dispositivos.</span>';}
+else{el.classList.add('hidden');el.innerHTML='';}}
 refreshLoginHint();
-
-/* --- INGRESO: admin / admin123 -> modo en línea automático --- */
-$('#loginForm').addEventListener('submit',function(e){
- e.preventDefault();
- var u=$('#loginUser').value.trim(),p=$('#loginPass').value;
- if(u===LOCAL_USER&&p===LOCAL_PASS){
-   if(fb.enabled){
-     toast('Conectando con la nube...');
-     fb.auth.signInAnonymously().catch(function(err){
-       var code=(err&&err.code)||'';
-       if(code==='auth/operation-not-allowed'||code==='auth/admin-restricted-operation'){
-         toast('Habilite el proveedor Anónimo en Firebase: Authentication > Método de acceso');
-       }else{
-         toast('Sin conexión con la nube: entrando en modo local');
-       }
-       LS.set('jh_session','1');showApp();
-     });
-   }else{
-     LS.set('jh_session','1');showApp();
-     toast('Modo local (Firebase sin configurar)');
-   }
-   return;
- }
- toast('Credenciales incorrectas');
-});
-$('#btnSalir').addEventListener('click',function(){
-  LS.set('jh_session','0');
-  if(fb.enabled&&fb.user){fb.auth.signOut();}
-  else{showLogin();}
-});
-function initAuth(){
-  if(fb.enabled){
-    fb.auth.onAuthStateChanged(function(u){
-      fb.user=u;
-      if(u){LS.set('jh_session','0');startSync();showApp();}
-      else if(LS.get('jh_session','0')==='1'){showApp();}
-      else{showLogin();}
-    });
-  }else{
-    if(LS.get('jh_session','0')==='1'){showApp();}else{showLogin();}
-  }
-}
-
+var confirmCb=null;
+function askConfirm(msg,cb){$('#confirmMsg').textContent=msg;confirmCb=cb;$('#confirmModal').classList.remove('hidden');document.body.style.overflow='hidden';}
+function closeConfirm(){$('#confirmModal').classList.add('hidden');document.body.style.overflow='';confirmCb=null;}
+$('#confirmClose').addEventListener('click',closeConfirm);
+$('#confirmCancel').addEventListener('click',closeConfirm);
+$('#confirmOk').addEventListener('click',function(){var cb=confirmCb;closeConfirm();if(cb){cb();}});
+$('#confirmModal').addEventListener('click',function(e){if(e.target===this)closeConfirm();});
+$('#loginForm').addEventListener('submit',function(e){e.preventDefault();var u=$('#loginUser').value.trim(),p=$('#loginPass').value;
+if(u===LOCAL_USER&&p===LOCAL_PASS){if(fb.enabled){toast('Conectando con la nube...');
+fb.auth.signInAnonymously().catch(function(err){var code=(err&&err.code)||'';
+if(code==='auth/operation-not-allowed'||code==='auth/admin-restricted-operation'){toast('Habilite el proveedor Anónimo en Firebase: Authentication > Método de acceso');}
+else{toast('Sin conexión con la nube: entrando en modo local');}
+LS.set('jh_session','1');showApp();});}
+else{LS.set('jh_session','1');showApp();toast('Modo local (Firebase sin configurar)');}return;}
+toast('Credenciales incorrectas');});
+$('#btnSalir').addEventListener('click',function(){LS.set('jh_session','0');if(fb.enabled&&fb.user){fb.auth.signOut();}else{showLogin();}});
+function initAuth(){if(fb.enabled){fb.auth.onAuthStateChanged(function(u){fb.user=u;
+if(u){LS.set('jh_session','0');startSync();showApp();}
+else if(LS.get('jh_session','0')==='1'){showApp();}
+else{showLogin();}});}
+else{if(LS.get('jh_session','0')==='1'){showApp();}else{showLogin();}}}
 function closeSidebar(){$('#sidebar').classList.remove('open');$('#sidebarOverlay').classList.remove('show');}
-$('#menuBtn').addEventListener('click',function(){
-  $('#sidebar').classList.toggle('open');
-  $('#sidebarOverlay').classList.toggle('show');
-});
+$('#menuBtn').addEventListener('click',function(){$('#sidebar').classList.toggle('open');$('#sidebarOverlay').classList.toggle('show');});
 $('#sidebarOverlay').addEventListener('click',closeSidebar);
-
 var views={cot:'#view-cot',proy:'#view-proy',pape:'#view-pape',tar:'#view-tar',inv:'#view-inv'};
-document.querySelectorAll('#sidebar .nav-btn[data-view]').forEach(function(b){
- b.addEventListener('click',function(){
-  document.querySelectorAll('#sidebar .nav-btn[data-view]').forEach(function(x){x.classList.remove('active');});
-  b.classList.add('active');
-  Object.keys(views).forEach(function(k){$(views[k]).classList.add('hidden');});
-  $(views[b.dataset.view]).classList.remove('hidden');
-  closeSidebar();
-  if(b.dataset.view==='proy')renderProjects();
-  if(b.dataset.view==='pape')renderTrash();
-  if(b.dataset.view==='tar')renderRates();
-  if(b.dataset.view==='inv')renderInventory();
-  window.scrollTo({top:0,behavior:'smooth'});
- });
-});
-
+function switchView(v){document.querySelectorAll('#sidebar .nav-btn[data-view]').forEach(function(x){x.classList.toggle('active',x.dataset.view===v);});
+Object.keys(views).forEach(function(k){$(views[k]).classList.add('hidden');});
+$(views[v]).classList.remove('hidden');closeSidebar();
+if(v==='proy')renderProjects();if(v==='pape')renderTrash();if(v==='tar')renderRates();if(v==='inv')renderInventory();
+window.scrollTo({top:0,behavior:'smooth'});}
+document.querySelectorAll('#sidebar .nav-btn[data-view]').forEach(function(b){b.addEventListener('click',function(){
+if(b.dataset.view==='cot'){resetQuote();}
+switchView(b.dataset.view);});});
 function findRate(a){for(var i=0;i<state.rates.length;i++){var r=state.rates[i];if(a>=r.min&&a<=r.max)return r;}return null;}
-function rateLabel(r){var max=r.max>=99999?'o más':' - '+r.max;return r.min+' a '+max+' m²';}
-function renderRateHint(){
- $('#rateHint').innerHTML='<strong>Tarifas Vigentes:</strong> '+state.rates.map(function(r){
-   return rateLabel(r)+': '+(r.type==='fijo'?'Precio fijo '+fmt(r.price):fmt(r.price)+' por m²');
- }).join(' | ')+' | Mínimo 30 m².';
-}
-function onAreaChange(){
- var a=num($('#inArea').value);var r=findRate(a);
- if(a>0&&a<30){$('#lblTarifa').value='Mínimo 30 m²';}
- else if(r){
-   if(r.type==='fijo'){$('#lblTarifa').value='Tramo '+rateLabel(r)+' -> Precio fijo '+fmt(r.price);if(num($('#inPrice').value)!==r.price&&$('#inPrice').dataset.auto==='1'){$('#inPrice').value='';}}
-   else{$('#lblTarifa').value='Tramo '+rateLabel(r)+' -> '+fmt(r.price)+' por m²';if($('#inPrice').dataset.auto!=='0'){$('#inPrice').value=r.price;$('#inPrice').dataset.auto='1';}}
- }else if(a>0){$('#lblTarifa').value='Fuera de tramos: ingrese precio manual';}
- else{$('#lblTarifa').value='';}
- recalc();
-}
+function rateLabel(r){var mx=r.max>=99999?'o más':' - '+r.max;return r.min+' a '+mx+' m²';}
+function renderRateHint(){$('#rateHint').innerHTML='<strong>Tarifas Vigentes:</strong> '+state.rates.map(function(r){return rateLabel(r)+': '+(r.type==='fijo'?'Precio fijo '+fmt(r.price):fmt(r.price)+' por m²');}).join(' | ')+' | Mínimo 30 m².';}
+function onAreaChange(){var a=num($('#inArea').value);var r=findRate(a);
+if(a>0&&a<30){$('#lblTarifa').value='Mínimo 30 m²';}
+else if(r){if(r.type==='fijo'){$('#lblTarifa').value='Tramo '+rateLabel(r)+' -> Precio fijo '+fmt(r.price);if(num($('#inPrice').value)!==r.price&&$('#inPrice').dataset.auto==='1'){$('#inPrice').value='';}}
+else{$('#lblTarifa').value='Tramo '+rateLabel(r)+' -> '+fmt(r.price)+' por m²';if($('#inPrice').dataset.auto!=='0'){$('#inPrice').value=r.price;$('#inPrice').dataset.auto='1';}}}
+else if(a>0){$('#lblTarifa').value='Fuera de tramos: ingrese precio manual';}
+else{$('#lblTarifa').value='';}
+recalc();}
 $('#inArea').addEventListener('input',onAreaChange);
 $('#inPrice').addEventListener('input',function(){$('#inPrice').dataset.auto='0';recalc();});
 $('#chkIva').addEventListener('change',recalc);
-
 $('#cSeller').value=LS.get('jh_seller','');
 $('#cSeller').addEventListener('input',function(){LS.set('jh_seller',$('#cSeller').value);});
-
-/* --- MODAL --- */
-function mrowHTML(x){
- return '<div class="mrow'+(x.checked?' included':'')+'">'+
- '<label class="chk m-chk"><input type="checkbox" class="m-inc"'+(x.checked?' checked':'')+'></label>'+
- '<input class="m-desc" value="'+esc(x.desc)+'" placeholder="Descripción del trabajo">'+
- '<input class="m-qty" type="number" min="0" value="'+(x.qty||'')+'" placeholder="Cant.">'+
- '<input class="m-unit" value="'+esc(x.unit||'und')+'">'+
- '<input class="m-price" type="number" min="0" value="'+(x.price||'')+'" placeholder="Precio">'+
- '<button class="m-del" title="Quitar">&times;</button></div>';
-}
-function openExtrasModal(){
- ensureDemo();
- $('#extrasModalList').innerHTML=currentExtras.filter(function(x){return !isDemo(x.desc);}).map(mrowHTML).join('');
- modalTotals();
- $('#extrasModal').classList.remove('hidden');
- document.body.style.overflow='hidden';
-}
-function closeExtrasModal(){
- $('#extrasModal').classList.add('hidden');
- document.body.style.overflow='';
-}
-function rowData(r){
- return {desc:r.querySelector('.m-desc').value,qty:num(r.querySelector('.m-qty').value),
-  unit:r.querySelector('.m-unit').value,price:num(r.querySelector('.m-price').value),
-  checked:r.querySelector('.m-inc').checked};
-}
-function modalTotals(){
- var tot=0;
- document.querySelectorAll('#extrasModalList .mrow').forEach(function(r){
-  if(r.querySelector('.m-inc').checked){tot+=num(r.querySelector('.m-qty').value)*num(r.querySelector('.m-price').value);}
- });
- $('#othersTotal').textContent=fmt(tot);
-}
+function mrowHTML(x){return '<div class="mrow'+(x.checked?' included':'')+(hasPrice(x)?' priced':'')+'"><label class="chk m-chk"><input type="checkbox" class="m-inc"'+(x.checked?' checked':'')+'></label><input class="m-desc" value="'+esc(x.desc)+'" placeholder="Descripción del trabajo"><input class="m-qty" type="number" min="0" value="'+(x.qty||'')+'" placeholder="Cant."><input class="m-unit" value="'+esc(x.unit||'und')+'"><input class="m-price" type="number" min="0" value="'+(x.price||'')+'" placeholder="Precio"><button class="m-del" title="Quitar">&times;</button></div>';}
+function openExtrasModal(){ensureDemo();$('#extrasModalList').innerHTML=sortExtras(currentExtras.filter(function(x){return !isDemo(x.desc);})).map(mrowHTML).join('');modalTotals();$('#extrasModal').classList.remove('hidden');document.body.style.overflow='hidden';}
+function closeExtrasModal(){$('#extrasModal').classList.add('hidden');document.body.style.overflow='';}
+function rowData(r){return {desc:r.querySelector('.m-desc').value,qty:num(r.querySelector('.m-qty').value),unit:r.querySelector('.m-unit').value,price:num(r.querySelector('.m-price').value),checked:r.querySelector('.m-inc').checked};}
+function modalTotals(){var tot=0;document.querySelectorAll('#extrasModalList .mrow').forEach(function(r){if(r.querySelector('.m-inc').checked){tot+=num(r.querySelector('.m-qty').value)*num(r.querySelector('.m-price').value);}});$('#othersTotal').textContent=fmt(tot);}
 $('#btnOpenExtras').addEventListener('click',openExtrasModal);
 $('#btnCloseExtras').addEventListener('click',closeExtrasModal);
 $('#btnCancelExtras').addEventListener('click',closeExtrasModal);
 $('#extrasModal').addEventListener('click',function(e){if(e.target===this)closeExtrasModal();});
-$('#extrasModal').addEventListener('change',function(e){
- if(e.target.classList.contains('m-inc')){e.target.closest('.mrow').classList.toggle('included',e.target.checked);}
-});
-$('#extrasModal').addEventListener('input',modalTotals);
-$('#extrasModalList').addEventListener('click',function(e){
- if(e.target.classList.contains('m-del')){e.target.closest('.mrow').remove();modalTotals();}
-});
-$('#btnAddExtraModal').addEventListener('click',function(){
- $('#extrasModalList').insertAdjacentHTML('beforeend',mrowHTML({desc:'',qty:'',unit:'und',price:0,checked:true}));
-});
-$('#btnApplyExtras').addEventListener('click',function(){
- var rows=[];
- document.querySelectorAll('#extrasModalList .mrow').forEach(function(r){rows.push(rowData(r));});
- var d=demoEntry();
- currentExtras=(d?[d]:[]).concat(rows);
- closeExtrasModal();recalc();
- toast('Trabajos extras aplicados');
-});
-
-/* --- LISTA COMPACTA --- */
-function renderExtrasCompact(c){
- var ex=c.extras.filter(function(x){return !isDemo(x.desc);});
- $('#extrasCount').textContent=ex.length+(ex.length===1?' incluido':' incluidos');
- $('#extrasCompactTotal').textContent=fmt(c.totExtras);
- $('#extrasCompact').innerHTML=ex.length?ex.map(function(x){
-   var idx=currentExtras.indexOf(x);
-   return '<div class="xc-item"><span class="xc-name">'+esc(x.desc)+'</span>'+
-   '<span class="xc-calc">'+(num(x.qty)||0)+' '+esc(x.unit||'und')+' × '+fmt(x.price)+'</span>'+
-   '<strong>'+fmt(num(x.qty)*num(x.price))+'</strong>'+
-   '<button class="xc-del" data-idx="'+idx+'" title="Quitar de la cotización">&times;</button></div>';
- }).join(''):'<p class="muted" style="margin:8px 0 0">Sin trabajos extras incluidos. Pulse "TRABAJOS EXTRAS" para agregar.</p>';
-}
-$('#extrasCompact').addEventListener('click',function(e){
- var b=e.target.closest('.xc-del');if(!b)return;
- currentExtras[+b.dataset.idx].checked=false;
- recalc();
-});
-
-function renderItems(checkedSet){
- $('#itemsList').innerHTML=state.catalog.filter(function(c){return c.trim();}).map(function(c){
-  var chk=!checkedSet||checkedSet.indexOf(c)>=0;
-  return '<label class="chk"><input type="checkbox" class="item-chk" value="'+esc(c)+'"'+(chk?' checked':'')+'><span>'+esc(c)+'</span></label>';
- }).join('');
-}
+$('#extrasModal').addEventListener('change',function(e){if(e.target.classList.contains('m-inc')){e.target.closest('.mrow').classList.toggle('included',e.target.checked);}});
+$('#extrasModal').addEventListener('input',function(e){modalTotals();var row=e.target.closest('.mrow');if(row&&e.target.classList.contains('m-price')){row.classList.toggle('priced',num(e.target.value)>0);}});
+$('#extrasModalList').addEventListener('click',function(e){if(e.target.classList.contains('m-del')){e.target.closest('.mrow').remove();modalTotals();}});
+$('#btnAddExtraModal').addEventListener('click',function(){$('#extrasModalList').insertAdjacentHTML('beforeend',mrowHTML({desc:'',qty:'',unit:'und',price:0,checked:true}));});
+$('#btnApplyExtras').addEventListener('click',function(){var rows=[];document.querySelectorAll('#extrasModalList .mrow').forEach(function(r){rows.push(rowData(r));});var d=demoEntry();currentExtras=(d?[d]:[]).concat(rows);closeExtrasModal();recalc();toast('Trabajos extras aplicados');});
+function renderExtrasCompact(c){var ex=sortExtras(c.extras.filter(function(x){return !isDemo(x.desc);}));
+$('#extrasCount').textContent=ex.length+(ex.length===1?' incluido':' incluidos');
+$('#extrasCompactTotal').textContent=fmt(c.totExtras);
+$('#extrasCompact').innerHTML=ex.length?ex.map(function(x){var idx=currentExtras.indexOf(x);
+return '<div class="xc-item"><span class="xc-name">'+esc(x.desc)+'</span><span class="xc-calc">'+(num(x.qty)||0)+' '+esc(x.unit||'und')+' × '+fmt(x.price)+'</span><strong>'+fmt(num(x.qty)*num(x.price))+'</strong><button class="xc-del" data-idx="'+idx+'" title="Quitar de la cotización">&times;</button></div>';}).join(''):'<p class="muted" style="margin:8px 0 0">Sin trabajos extras incluidos. Pulse "TRABAJOS EXTRAS" para agregar.</p>';}
+$('#extrasCompact').addEventListener('click',function(e){var b=e.target.closest('.xc-del');if(!b)return;currentExtras[+b.dataset.idx].checked=false;recalc();});
+function renderItems(checkedSet){$('#itemsList').innerHTML=state.catalog.filter(function(c){return c.trim();}).map(function(c){var chk=!checkedSet||checkedSet.indexOf(c)>=0;return '<label class="chk"><input type="checkbox" class="item-chk" value="'+esc(c)+'"'+(chk?' checked':'')+'><span>'+esc(c)+'</span></label>';}).join('');}
 function checkedItems(){return Array.prototype.map.call(document.querySelectorAll('.item-chk:checked'),function(i){return i.value;});}
-$('#chkAllItems').addEventListener('change',function(){
- document.querySelectorAll('.item-chk').forEach(function(i){i.checked=$('#chkAllItems').checked;});recalc();
-});
+$('#chkAllItems').addEventListener('change',function(){document.querySelectorAll('.item-chk').forEach(function(i){i.checked=$('#chkAllItems').checked;});recalc();});
 $('#itemsList').addEventListener('change',recalc);
-
-function compute(){
- var area=num($('#inArea').value);
- var price=num($('#inPrice').value);
- var r=findRate(area);
- var fixedMode=!!(r&&r.type==='fijo'&&price===0&&area>0);
- var base=area<30?0:(fixedMode?r.price:area*price);
- var extras=currentExtras.filter(function(x){return x.checked&&x.desc.trim();});
- var totExtras=extras.reduce(function(s,x){return s+num(x.qty)*num(x.price);},0);
- var neto=base+totExtras;
- var iva=$('#chkIva').checked?Math.round(neto*0.19):0;
- return {area:area,price:price,rate:r,fixedMode:fixedMode,base:base,extras:extras,totExtras:totExtras,
-  neto:neto,iva:iva,total:neto+iva,items:checkedItems()};
-}
-function recalc(){
- var c=compute();
- paintDemo();
- renderExtrasCompact(c);
- $('#sumClient').textContent=$('#cName').value||'-';
- $('#sumArea').textContent=c.area+' m²';
- $('#sumPrice').textContent=c.fixedMode?'Precio fijo por tramo':(c.price?fmt(c.price)+'/m²':'$0');
- $('#sumSub').textContent=fmt(c.base);
- $('#sumItems').textContent=c.items.length?c.items.join(', '):'Ninguno';
- $('#sumExtras').textContent=c.extras.length?c.extras.map(function(x){return x.desc;}).join(', '):'Ninguno';
- $('#sumTotExtras').textContent=fmt(c.totExtras);
- $('#sumIva').textContent=$('#chkIva').checked?'19% ('+fmt(c.iva)+')':'No incluido';
- $('#sumTotal').textContent=fmt(c.total);
- return c;
-}
+function compute(){var area=num($('#inArea').value);var price=num($('#inPrice').value);var r=findRate(area);
+var fixedMode=!!(r&&r.type==='fijo'&&price===0&&area>0);
+var base=area<30?0:(fixedMode?r.price:area*price);
+var extras=currentExtras.filter(function(x){return x.checked&&x.desc.trim();});
+var totExtras=extras.reduce(function(s,x){return s+num(x.qty)*num(x.price);},0);
+var neto=base+totExtras;var iva=$('#chkIva').checked?Math.round(neto*0.19):0;
+return {area:area,price:price,rate:r,fixedMode:fixedMode,base:base,extras:extras,totExtras:totExtras,neto:neto,iva:iva,total:neto+iva,items:checkedItems()};}
+function recalc(){var c=compute();paintDemo();renderExtrasCompact(c);
+var catTotal=state.catalog.filter(function(x){return x.trim();}).length;
+$('#itemsCount').textContent=c.items.length+' de '+catTotal+' incluidos';
+$('#sumClient').textContent=$('#cName').value||'-';
+$('#sumArea').textContent=c.area+' m²';
+$('#sumPrice').textContent=c.fixedMode?'Precio fijo por tramo':(c.price?fmt(c.price)+'/m²':'$0');
+$('#sumSub').textContent=fmt(c.base);
+$('#sumItems').textContent=c.items.length?c.items.join(', '):'Ninguno';
+$('#sumExtras').textContent=c.extras.length?c.extras.map(function(x){return x.desc;}).join(', '):'Ninguno';
+$('#sumTotExtras').textContent=fmt(c.totExtras);
+$('#sumIva').textContent=$('#chkIva').checked?'19% ('+fmt(c.iva)+')':'No incluido';
+$('#sumTotal').textContent=fmt(c.total);return c;}
 ['cName','cPhone'].forEach(function(id){$('#'+id).addEventListener('input',recalc);});
-
-function collect(){
- var c=recalc();
- return {id:state.editingId||null,num:currentNum,
-  client:{name:$('#cName').value,phone:$('#cPhone').value,email:$('#cEmail').value,addr:$('#cAddr').value,
-   seller:$('#cSeller').value},
-  obs:$('#cObs').value,
-  date:$('#cDate').value||today(),area:c.area,price:c.price,fixedMode:c.fixedMode,iva:$('#chkIva').checked,
-  extras:currentExtras.map(function(x){return {desc:x.desc,qty:x.qty,unit:x.unit,price:x.price,checked:x.checked};}),
-  items:c.items,
-  totals:{base:c.base,extras:c.totExtras,neto:c.neto,iva:c.iva,total:c.total}};
-}
-function saveProject(){
- if(!$('#cName').value.trim()||!$('#cPhone').value.trim()){toast('Nombre y teléfono del cliente son obligatorios');return;}
- if(num($('#inArea').value)<30){toast('Superficie mínima: 30 m²');return;}
- LS.set('jh_seller',$('#cSeller').value);
- var d=collect();
- d.extras.forEach(function(x){if(x.desc.trim()&&x.price>0){
-   var t=state.extrasTpl.filter(function(t){return t.desc===x.desc;})[0];
-   if(t){t.price=x.price;t.unit=x.unit;}else{state.extrasTpl.push({desc:x.desc,unit:x.unit,price:x.price});}
- }});
- if(state.editingId){
-   var p=state.projects.filter(function(p){return p.id===state.editingId;})[0];
-   if(p){d.num=p.num;currentNum=p.num;d.id=p.id;state.projects[state.projects.indexOf(p)]=d;}
-   toast('Proyecto '+d.num+' actualizado correctamente');
- }else{
-   if(!currentNum){currentNum=nextNum();}
-   d.num=currentNum;
-   d.id=Date.now();
-   state.projects.unshift(d);
-   toast('Cotización '+d.num+' guardada exitosamente');
- }
- $('#sumNum').textContent=d.num;
- persist();
- cloudPutProject(d);
- renderProjects();
-}
-function loadProject(p){
- state.editingId=p.id;
- currentNum=p.num;
- $('#editBadge').classList.remove('hidden');
- $('#btnCancel').classList.remove('hidden');
- $('#sumNum').textContent=p.num;
- $('#cName').value=p.client.name||'';$('#cPhone').value=p.client.phone||'';$('#cEmail').value=p.client.email||'';
- $('#cAddr').value=p.client.addr||'';$('#cSeller').value=p.client.seller||'';$('#cDate').value=p.date||today();
- $('#cObs').value=p.obs||'';
- $('#inArea').value=p.area||'';onAreaChange();
- if(p.price>0){$('#inPrice').value=p.price;$('#inPrice').dataset.auto='0';}
- $('#chkIva').checked=!!p.iva;
- currentExtras=(p.extras&&p.extras.length)?p.extras.map(function(x){return {desc:x.desc,qty:x.qty,unit:x.unit,price:x.price,checked:x.checked};}):seedExtras();
- ensureDemo();demoToUI();
- renderItems(p.items);recalc();
- document.querySelector('#sidebar .nav-btn[data-view="cot"]').click();
-}
-function initQuoteView(){
- renderRateHint();$('#cDate').value=today();
- if(!currentExtras.length){resetQuote();}
-}
-function resetQuote(){
- state.editingId=null;
- currentNum=null;
- $('#editBadge').classList.add('hidden');
- $('#btnCancel').classList.add('hidden');
- $('#sumNum').textContent='Se asigna al guardar o generar PDF';
- ['cName','cPhone','cEmail','cAddr','cObs'].forEach(function(id){$('#'+id).value='';});
- $('#cSeller').value=LS.get('jh_seller','');
- $('#cDate').value=today();
- $('#inArea').value='';$('#inPrice').value='';$('#inPrice').dataset.auto='1';$('#lblTarifa').value='';
- $('#chkIva').checked=false;
- currentExtras=seedExtras();
- ensureDemo();demoToUI();
- renderItems(null);recalc();
-}
+function collect(){var c=recalc();
+return {id:state.editingId||null,num:currentNum,client:{name:$('#cName').value,phone:$('#cPhone').value,email:$('#cEmail').value,addr:$('#cAddr').value,seller:$('#cSeller').value},obs:$('#cObs').value,date:$('#cDate').value||today(),area:c.area,price:c.price,fixedMode:c.fixedMode,iva:$('#chkIva').checked,extras:currentExtras.map(function(x){return {desc:x.desc,qty:x.qty,unit:x.unit,price:x.price,checked:x.checked};}),items:c.items,totals:{base:c.base,extras:c.totExtras,neto:c.neto,iva:c.iva,total:c.total}};}
+function saveProject(){if(!$('#cName').value.trim()||!$('#cPhone').value.trim()){toast('Nombre y teléfono del cliente son obligatorios');return;}
+if(num($('#inArea').value)<30){toast('Superficie mínima: 30 m²');return;}
+LS.set('jh_seller',$('#cSeller').value);var d=collect();
+d.extras.forEach(function(x){if(x.desc.trim()&&x.price>0){var t=state.extrasTpl.filter(function(t){return t.desc===x.desc;})[0];if(t){t.price=x.price;t.unit=x.unit;}else{state.extrasTpl.push({desc:x.desc,unit:x.unit,price:x.price});}}});
+if(state.editingId){var p=state.projects.filter(function(p){return p.id===state.editingId;})[0];
+if(p){d.num=p.num;currentNum=p.num;d.id=p.id;state.projects[state.projects.indexOf(p)]=d;}
+toast('Proyecto '+d.num+' actualizado correctamente');}
+else{if(!currentNum){currentNum=nextNum();}d.num=currentNum;d.id=Date.now();state.projects.unshift(d);toast('Cotización '+d.num+' guardada exitosamente');}
+$('#sumNum').textContent=d.num;persist();cloudPutProject(d);renderProjects();}
+function loadProject(p){state.editingId=p.id;currentNum=p.num;
+$('#editBadge').classList.remove('hidden');$('#btnCancel').classList.remove('hidden');$('#sumNum').textContent=p.num;
+$('#cName').value=p.client.name||'';$('#cPhone').value=p.client.phone||'';$('#cEmail').value=p.client.email||'';
+$('#cAddr').value=p.client.addr||'';$('#cSeller').value=p.client.seller||'';$('#cDate').value=p.date||today();
+$('#cObs').value=p.obs||'';$('#inArea').value=p.area||'';onAreaChange();
+if(p.price>0){$('#inPrice').value=p.price;$('#inPrice').dataset.auto='0';}
+$('#chkIva').checked=!!p.iva;
+currentExtras=(p.extras&&p.extras.length)?p.extras.map(function(x){return {desc:x.desc,qty:x.qty,unit:x.unit,price:x.price,checked:x.checked};}):seedExtras();
+ensureDemo();demoToUI();renderItems(p.items);recalc();
+switchView('cot');}
+function initQuoteView(){renderRateHint();$('#cDate').value=today();if(!currentExtras.length){resetQuote();}}
+function resetQuote(){state.editingId=null;currentNum=null;
+$('#editBadge').classList.add('hidden');$('#btnCancel').classList.add('hidden');
+$('#sumNum').textContent='Se asigna al guardar o generar PDF';
+['cName','cPhone','cEmail','cAddr','cObs'].forEach(function(id){$('#'+id).value='';});
+$('#cSeller').value=LS.get('jh_seller','');$('#cDate').value=today();
+$('#inArea').value='';$('#inPrice').value='';$('#inPrice').dataset.auto='1';$('#lblTarifa').value='';$('#chkIva').checked=false;
+currentExtras=seedExtras();ensureDemo();demoToUI();renderItems(null);recalc();}
 $('#btnSave').addEventListener('click',saveProject);
 $('#btnCancel').addEventListener('click',resetQuote);
-
-function quoteSummary(d){
- var ex=(d.extras||[]).filter(function(x){return x.checked&&x.desc.trim();});
- var L=['COTIZACIÓN N° '+(d.num||'S/N')+' - CONSTRUPISOS JH','AVILSAL CONSTRUCCIONES SPA | RUT 78.057.771-1',''];
- L.push('Cliente: '+d.client.name);
- if(d.client.addr)L.push('Dirección: '+d.client.addr);
- L.push('Superficie: '+d.area+' m²');
- L.push('Precio: '+(d.fixedMode?'Precio fijo por tramo':fmt(d.price)+' por m²'));
- if(d.items&&d.items.length)L.push('Incluye: '+d.items.join(', '));
- if(ex.length){
-  L.push('Trabajos extras:');
-  ex.forEach(function(x){L.push('  - '+x.desc+' | '+x.qty+' '+x.unit+' x '+fmt(x.price)+' = '+fmt(x.qty*x.price));});
- }
- L.push('Subtotal pavimento: '+fmt(d.totals.base));
- L.push('Total extras: '+fmt(d.totals.extras));
- if(d.totals.iva)L.push('IVA 19%: '+fmt(d.totals.iva));
- L.push('TOTAL A COBRAR: '+fmt(d.totals.total));
- if(d.obs)L.push('Observaciones: '+d.obs);
- L.push('','--------------------------------------------------','');
- return L.join('\n');
-}
+$('#btnClean').addEventListener('click',function(){askConfirm('¿Desea limpiar el formulario de Nueva Cotización? Se descartarán los datos no guardados y quedará listo para una cotización nueva.',function(){resetQuote();toast('Formulario limpio, listo para una nueva cotización');});});
+function quoteSummary(d){var ex=(d.extras||[]).filter(function(x){return x.checked&&x.desc.trim();});
+var L=['COTIZACIÓN N° '+(d.num||'S/N')+' - CONSTRUPISOS JH','AVILSAL CONSTRUCCIONES SPA | RUT 78.057.771-1',''];
+L.push('Cliente: '+d.client.name);if(d.client.addr)L.push('Dirección: '+d.client.addr);
+L.push('Superficie: '+d.area+' m²');L.push('Precio: '+(d.fixedMode?'Precio fijo por tramo':fmt(d.price)+' por m²'));
+if(d.items&&d.items.length)L.push('Incluye: '+d.items.join(', '));
+if(ex.length){L.push('Trabajos extras:');ex.forEach(function(x){L.push('  - '+x.desc+' | '+x.qty+' '+x.unit+' x '+fmt(x.price)+' = '+fmt(x.qty*x.price));});}
+L.push('Subtotal pavimento: '+fmt(d.totals.base));L.push('Total extras: '+fmt(d.totals.extras));
+if(d.totals.iva)L.push('IVA 19%: '+fmt(d.totals.iva));
+L.push('TOTAL A COBRAR: '+fmt(d.totals.total));if(d.obs)L.push('Observaciones: '+d.obs);
+L.push('','--------------------------------------------------','');return L.join('\n');}
 function fullMessage(d){return quoteSummary(d)+MSG_TEMPLATE;}
 function waPhone(p){var d=String(p).replace(/\D/g,'');if(!d){return '';}if(d.indexOf('56')!==0){d='56'+d;}return d;}
-$('#btnWa').addEventListener('click',function(){
- var d=collect();if(!d.client.phone){toast('Ingrese el teléfono del cliente');return;}
- window.open('https://wa.me/'+waPhone(d.client.phone)+'?text='+encodeURIComponent(fullMessage(d)),'_blank');
-});
-$('#btnMail').addEventListener('click',function(){
- var d=collect();if(!d.client.email){toast('Ingrese el email del cliente');return;}
- window.location.href='mailto:'+d.client.email+'?subject='+encodeURIComponent('Cotización '+(d.num||'')+ ' - Construpisos JH')+'&body='+encodeURIComponent(fullMessage(d));
-});
-
-/* --- PDF: se DESCARGA como archivo .pdf (5 páginas A4 con logo original) --- */
-function pdfCSS(){
- return 'body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#0f172a;font-size:13px;line-height:1.5;background:#fff}'+
- '.page{width:210mm;height:296mm;padding:12mm 12mm 14mm;box-sizing:border-box;page-break-after:always;position:relative;overflow:visible;background:#fff}'+
- '.page:last-child{page-break-after:auto}'+
- '.pagenum{position:absolute;bottom:6mm;right:12mm;font-size:10px;color:#94a3b8}'+
- '.head{background:#0f172a;color:#fff;border-radius:10px;padding:14px 18px;display:flex;gap:16px;align-items:center}'+
- '.head h1{margin:0;font-size:23px;letter-spacing:1px}.head .sm{font-size:12px;color:#94a3b8;margin-top:3px}'+
- '.head .num{margin-left:auto;text-align:right}.head .num span{font-size:11px}.head .num strong{display:block;font-size:23px;color:#0ea5e9;margin-top:3px}'+
- 'h3{color:#1d4ed8;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin:14px 0 6px;border-bottom:2px solid #e2e8f0;padding-bottom:3px}'+
- '.box{border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-top:8px;background:#f8fafc;font-size:13px}'+
- 'table{width:100%;border-collapse:collapse;margin-top:6px}th{background:#f1f5f9;color:#475569;padding:7px 10px;text-align:left;font-size:11px;text-transform:uppercase}'+
- 'td{padding:7px 10px;border-bottom:1px solid #e2e8f0;font-size:12.5px}'+
- '.tot{margin-left:auto;width:300px;margin-top:10px}.tot td{border:none;padding:3px 8px;font-size:13px}.tot .g{font-size:17px;font-weight:700;color:#0f172a}'+
- '.tot .g td{border-top:2px solid #0f172a;color:#0f172a}'+
- 'pre{white-space:pre-wrap;font-family:inherit;font-size:12px;line-height:1.55;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;margin:6px 0}'+
- 'ol.cond{margin:4px 0 0 16px;padding-left:4px}ol.cond li{margin-bottom:7px;text-align:justify;font-size:12.5px}'+
- 'ul.srv{margin:4px 0 0 16px}ul.srv li{margin-bottom:4px;font-size:13px}'+
- '.mkt p{margin:6px 0;text-align:justify;font-size:13px}'+
- '.foot{margin-top:14px;font-size:11px;color:#64748b;text-align:center;border-top:1px solid #e2e8f0;padding-top:8px}';
-}
-function pdfPages(d,logoData){
- var extrasRows=(d.extras||[]).filter(function(x){return x.checked&&x.desc.trim();}).map(function(x){
-  return '<tr><td>'+esc(x.desc)+'</td><td style="text-align:center">'+x.qty+' '+esc(x.unit)+'</td><td style="text-align:right">'+fmt(x.price)+'</td><td style="text-align:right">'+fmt(x.qty*x.price)+'</td></tr>';
- }).join('');
- var itemsUl=(d.items||[]).length?'<ul style="margin:6px 0 0 18px">'+d.items.map(function(i){return '<li style="margin-bottom:4px">'+esc(i)+'</li>';}).join('')+'</ul>':'<p>Sin items seleccionados.</p>';
- var logoTag=logoData
-   ?'<img src="'+logoData+'" style="width:70px;height:70px;object-fit:contain;border-radius:10px;flex-shrink:0">'
-   :logoSVG(58,false);
- var cond1=CONDICIONES.slice(0,9).map(function(c){return '<li>'+c+'</li>';}).join('');
- var cond2=CONDICIONES.slice(9).map(function(c){return '<li>'+c+'</li>';}).join('');
- return '<div class="page">'+
- '<header class="head">'+logoTag+'<div><h1>CONSTRUPISOS JH</h1>'+
- '<div class="sm">AVILSAL CONSTRUCCIONES SPA | RUT 78.057.771-1</div>'+
- '<div class="sm">'+COMPANY.address+' | '+COMPANY.phone+'</div>'+
- '<div class="sm">'+COMPANY.email+' | Instagram: '+COMPANY.ig+'</div></div>'+
- '<div class="num"><span>COTIZACIÓN N°</span><strong>'+(d.num||'S/N')+'</strong><span class="sm">Fecha: '+d.date+'</span></div></header>'+
- '<div class="box"><strong>Cliente:</strong> '+esc(d.client.name)+' &nbsp;|&nbsp; <strong>Teléfono:</strong> '+esc(d.client.phone)+
- (d.client.email?' &nbsp;|&nbsp; <strong>Email:</strong> '+esc(d.client.email):'')+
- (d.client.addr?'<br><strong>Dirección proyecto:</strong> '+esc(d.client.addr):'')+
- '<br><strong>Ejecutivo:</strong> '+esc(d.client.seller||'')+'</div>'+
- '<h3>Detalle del Pavimento</h3><table><tr><th>Superficie</th><th>Tarifa Aplicada</th><th>Precio m²</th><th style="text-align:right">Subtotal</th></tr>'+
- '<tr><td>'+d.area+' m²</td><td>'+(d.fixedMode?'Precio fijo por tramo (30-49 m²)':'Tarifa por m²')+'</td><td>'+(d.fixedMode?'-':fmt(d.price))+'</td><td style="text-align:right">'+fmt(d.totals.base)+'</td></tr></table>'+
- '<h3>Este Presupuesto Incluye</h3>'+itemsUl+
- '<h3>Trabajos Extras</h3>'+(extrasRows?'<table><tr><th>Descripción</th><th style="text-align:center">Cantidad</th><th style="text-align:right">Precio Unit.</th><th style="text-align:right">Total</th></tr>'+extrasRows+'</table>':'<p>No se han agregado trabajos extras.</p>')+
- '<table class="tot"><tr><td>Subtotal pavimento</td><td style="text-align:right">'+fmt(d.totals.base)+'</td></tr>'+
- '<tr><td>Total trabajos extras</td><td style="text-align:right">'+fmt(d.totals.extras)+'</td></tr>'+
- (d.totals.iva?'<tr><td>IVA 19%</td><td style="text-align:right">'+fmt(d.totals.iva)+'</td></tr>':'<tr><td>IVA</td><td style="text-align:right">No incluido</td></tr>')+
- '<tr class="g"><td>TOTAL A COBRAR</td><td style="text-align:right">'+fmt(d.totals.total)+'</td></tr></table>'+
- (d.obs?'<div class="box"><strong>Observaciones:</strong> '+esc(d.obs)+'</div>':'')+
- '<div class="pagenum">Página 1 de 5</div></div>'+
- '<div class="page"><h3>Condiciones y Ofertas del Trabajo</h3><ol class="cond">'+cond1+'</ol>'+
- '<div class="pagenum">Página 2 de 5</div></div>'+
- '<div class="page"><h3>Condiciones y Ofertas del Trabajo (continuación)</h3><ol class="cond" start="10">'+cond2+'</ol>'+
- '<h3>Valores de Otros Servicios Agregados</h3><ul class="srv">'+SERVICIOS_AGREGADOS.map(function(s,i){return '<li>'+(i+1)+'.- '+s+'</li>';}).join('')+'</ul>'+
- '<div class="pagenum">Página 3 de 5</div></div>'+
- '<div class="page"><h3>Mensaje de Envío y Datos de Pago</h3><pre>'+MSG_TEMPLATE+'</pre>'+
- '<div class="pagenum">Página 4 de 5</div></div>'+
- '<div class="page"><h3>¿Qué es el Hormigón Estampado?</h3><div class="mkt">'+MKT_QUE.map(function(p){return '<p>'+p+'</p>';}).join('')+'</div>'+
- '<h3>Ventajas del Hormigón Estampado</h3><ol class="cond">'+MKT_VENTAJAS.map(function(v,i){return '<li><strong>'+(i+1)+'. '+v[0]+':</strong> '+v[1]+'</li>';}).join('')+'</ol>'+
- '<h3>Por Qué Preferir el Hormigón Estampado</h3><div class="mkt">'+MKT_PORQUE.map(function(p){return '<p>'+p+'</p>';}).join('')+'</div>'+
- '<div class="foot">CONSTRUPISOS JH | AVILSAL CONSTRUCCIONES SPA | RUT 78.057.771-1 | '+COMPANY.address+' | '+COMPANY.phone+' | '+COMPANY.email+'</div>'+
- '<div class="pagenum">Página 5 de 5</div></div>';
-}
-function generatePDF(d){
- toast('Generando PDF...');
- ensureLogo().then(function(logoData){
-   var canDownload=(typeof html2canvas!=='undefined')&&(typeof window.jspdf!=='undefined'&&window.jspdf.jsPDF);
-   if(canDownload){buildPDFDownload(d,logoData);}
-   else{buildPDFPrint(d,logoData);}
- });
-}
-function buildPDFDownload(d,logoData){
- var doc='<html><head><meta charset="utf-8"><style>'+pdfCSS()+'</style></head><body>'+pdfPages(d,logoData)+'</body></html>';
- var fr=document.createElement('iframe');
- fr.style.cssText='position:fixed;left:-10000px;top:0;width:820px;height:1200px;border:0;';
- document.body.appendChild(fr);
- fr.srcdoc=doc;
- fr.onload=function(){
-   setTimeout(function(){
-     var pages=fr.contentDocument.querySelectorAll('.page');
-     var pdf=new window.jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
-     var i=0;
-     function next(){
-       if(i>=pages.length){
-         try{document.body.removeChild(fr);}catch(e){}
-         pdf.save((d.num||'COTIZACION')+'-ConstrupisosJH.pdf');
-         toast('PDF descargado');
-         return;
-       }
-       html2canvas(pages[i],{scale:2,backgroundColor:'#ffffff',useCORS:true,logging:false}).then(function(cv){
-         var img=cv.toDataURL('image/png');
-         if(i>0)pdf.addPage();
-         pdf.addImage(img,'PNG',0,0,210,297);
-         i++;next();
-       }).catch(function(){
-         try{document.body.removeChild(fr);}catch(e){}
-         buildPDFPrint(d,logoData);
-       });
-     }
-     next();
-   },350);
- };
-}
-function buildPDFPrint(d,logoData){
- var iconTag=logoData?'<link rel="icon" href="'+logoData+'">':'<link rel="icon" href="logo.png">';
- var html='<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">'+iconTag+
- '<title>Cotización '+(d.num||'')+' - Construpisos JH</title><style>@page{size:A4;margin:0}'+pdfCSS()+
- '</style></head><body>'+pdfPages(d,logoData)+
- '<script>window.onload=function(){setTimeout(function(){window.print()},400)};<\/script></body></html>';
- var w=window.open('','_blank');
- w.document.write(html);
- w.document.close();
- w.focus();
-}
-$('#btnPdf').addEventListener('click',function(){
- var d=collect();if(!d.client.name){toast('Complete al menos el nombre del cliente');return;}
- if(!currentNum){
-   currentNum=nextNum();
-   $('#sumNum').textContent=currentNum;
-   toast('Número de cotización asignado: '+currentNum);
- }
- d.num=currentNum;
- generatePDF(d);
-});
-
-function renderProjects(){
- $('#proyBody').innerHTML=state.projects.map(function(p,i){
-  return '<tr><td>'+(i+1)+'</td><td><span class="pill">'+p.num+'</span></td><td>'+esc(p.client.name)+'</td>'+
-  '<td>'+p.area+' m²</td><td><strong>'+fmt(p.totals.total)+'</strong></td><td>'+p.date+'</td>'+
-  '<td><button class="btn btn-ghost btn-sm" data-act="load" data-id="'+p.id+'">Abrir (Editar)</button> '+
-  '<button class="btn btn-accent btn-sm" data-act="pdf" data-id="'+p.id+'">PDF</button> '+
-  '<button class="btn btn-danger btn-sm" data-act="del" data-id="'+p.id+'">Eliminar</button></td></tr>';
- }).join('')||'<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:24px">No hay proyectos guardados</td></tr>';
-}
-$('#proyBody').addEventListener('click',function(e){
- var b=e.target.closest('button');if(!b)return;
- var p=state.projects.filter(function(x){return x.id==b.dataset.id;})[0];if(!p)return;
- if(b.dataset.act==='load')loadProject(p);
- if(b.dataset.act==='pdf')generatePDF(p);
- if(b.dataset.act==='del'){
-   state.projects=state.projects.filter(function(x){return x.id!==p.id;});
-   p.deletedAt=new Date().toISOString();
-   state.trash.unshift(p);
-   persist();cloudDelProject(p.id);cloudPutTrash(p);renderProjects();toast('Movido a la papelera');
- }
-});
+$('#btnWa').addEventListener('click',function(){var d=collect();if(!d.client.phone){toast('Ingrese el teléfono del cliente');return;}window.open('https://wa.me/'+waPhone(d.client.phone)+'?text='+encodeURIComponent(fullMessage(d)),'_blank');});
+$('#btnMail').addEventListener('click',function(){var d=collect();if(!d.client.email){toast('Ingrese el email del cliente');return;}window.location.href='mailto:'+d.client.email+'?subject='+encodeURIComponent('Cotización '+(d.num||'')+' - Construpisos JH')+'&body='+encodeURIComponent(fullMessage(d));});
+function pdfCSS(){return 'body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#0f172a;font-size:13px;line-height:1.5;background:#fff}'+
+'.page{width:210mm;height:296mm;padding:12mm 12mm 14mm;box-sizing:border-box;page-break-after:always;position:relative;overflow:visible;background:#fff}'+
+'.page:last-child{page-break-after:auto}'+
+'.pagenum{position:absolute;bottom:6mm;right:12mm;font-size:10px;color:#94a3b8}'+
+'.head{background:#0f172a;color:#fff;border-radius:10px;padding:14px 18px;display:flex;gap:16px;align-items:center}'+
+'.head h1{margin:0;font-size:23px;letter-spacing:1px}.head .sm{font-size:12px;color:#94a3b8;margin-top:3px}'+
+'.head .num{margin-left:auto;text-align:right}.head .num span{font-size:11px}.head .num strong{display:block;font-size:23px;color:#0ea5e9;margin-top:3px}'+
+'h3{color:#1d4ed8;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin:14px 0 6px;border-bottom:2px solid #e2e8f0;padding-bottom:3px}'+
+'.box{border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-top:8px;background:#f8fafc;font-size:13px}'+
+'table{width:100%;border-collapse:collapse;margin-top:6px}th{background:#f1f5f9;color:#475569;padding:7px 10px;text-align:left;font-size:11px;text-transform:uppercase}'+
+'td{padding:7px 10px;border-bottom:1px solid #e2e8f0;font-size:12.5px}'+
+'.tot{margin-left:auto;width:300px;margin-top:10px}.tot td{border:none;padding:3px 8px;font-size:13px}.tot .g{font-size:17px;font-weight:700;color:#0f172a}'+
+'.tot .g td{border-top:2px solid #0f172a;color:#0f172a}'+
+'pre{white-space:pre-wrap;font-family:inherit;font-size:12px;line-height:1.55;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;margin:6px 0}'+
+'ol.cond{margin:4px 0 0 16px;padding-left:4px}ol.cond li{margin-bottom:7px;text-align:justify;font-size:12.5px}'+
+'ul.srv{margin:4px 0 0 16px}ul.srv li{margin-bottom:4px;font-size:13px}'+
+'.mkt p{margin:6px 0;text-align:justify;font-size:13px}'+
+'.foot{margin-top:14px;font-size:11px;color:#64748b;text-align:center;border-top:1px solid #e2e8f0;padding-top:8px}';}
+function pdfPages(d,logoData){var extrasRows=(d.extras||[]).filter(function(x){return x.checked&&x.desc.trim();}).map(function(x){return '<tr><td>'+esc(x.desc)+'</td><td style="text-align:center">'+x.qty+' '+esc(x.unit)+'</td><td style="text-align:right">'+fmt(x.price)+'</td><td style="text-align:right">'+fmt(x.qty*x.price)+'</td></tr>';}).join('');
+var itemsUl=(d.items||[]).length?'<ul style="margin:6px 0 0 18px">'+d.items.map(function(i){return '<li style="margin-bottom:4px">'+esc(i)+'</li>';}).join('')+'</ul>':'<p>Sin items seleccionados.</p>';
+var logoTag=logoData?'<img src="'+logoData+'" style="width:70px;height:70px;object-fit:contain;border-radius:10px;flex-shrink:0">':logoSVG(58,false);
+var cond1=CONDICIONES.slice(0,9).map(function(c){return '<li>'+c+'</li>';}).join('');
+var cond2=CONDICIONES.slice(9).map(function(c){return '<li>'+c+'</li>';}).join('');
+return '<div class="page"><header class="head">'+logoTag+'<div><h1>CONSTRUPISOS JH</h1><div class="sm">AVILSAL CONSTRUCCIONES SPA | RUT 78.057.771-1</div><div class="sm">'+COMPANY.address+' | '+COMPANY.phone+'</div><div class="sm">'+COMPANY.email+' | Instagram: '+COMPANY.ig+'</div></div><div class="num"><span>COTIZACIÓN N°</span><strong>'+(d.num||'S/N')+'</strong><span class="sm">Fecha: '+d.date+'</span></div></header>'+
+'<div class="box"><strong>Cliente:</strong> '+esc(d.client.name)+' &nbsp;|&nbsp; <strong>Teléfono:</strong> '+esc(d.client.phone)+(d.client.email?' &nbsp;|&nbsp; <strong>Email:</strong> '+esc(d.client.email):'')+(d.client.addr?'<br><strong>Dirección proyecto:</strong> '+esc(d.client.addr):'')+'<br><strong>Ejecutivo:</strong> '+esc(d.client.seller||'')+'</div>'+
+'<h3>Detalle del Pavimento</h3><table><tr><th>Superficie</th><th>Tarifa Aplicada</th><th>Precio m²</th><th style="text-align:right">Subtotal</th></tr><tr><td>'+d.area+' m²</td><td>'+(d.fixedMode?'Precio fijo por tramo (30-49 m²)':'Tarifa por m²')+'</td><td>'+(d.fixedMode?'-':fmt(d.price))+'</td><td style="text-align:right">'+fmt(d.totals.base)+'</td></tr></table>'+
+'<h3>Este Presupuesto Incluye</h3>'+itemsUl+
+'<h3>Trabajos Extras</h3>'+(extrasRows?'<table><tr><th>Descripción</th><th style="text-align:center">Cantidad</th><th style="text-align:right">Precio Unit.</th><th style="text-align:right">Total</th></tr>'+extrasRows+'</table>':'<p>No se han agregado trabajos extras.</p>')+
+'<table class="tot"><tr><td>Subtotal pavimento</td><td style="text-align:right">'+fmt(d.totals.base)+'</td></tr><tr><td>Total trabajos extras</td><td style="text-align:right">'+fmt(d.totals.extras)+'</td></tr>'+(d.totals.iva?'<tr><td>IVA 19%</td><td style="text-align:right">'+fmt(d.totals.iva)+'</td></tr>':'<tr><td>IVA</td><td style="text-align:right">No incluido</td></tr>')+'<tr class="g"><td>TOTAL A COBRAR</td><td style="text-align:right">'+fmt(d.totals.total)+'</td></tr></table>'+
+(d.obs?'<div class="box"><strong>Observaciones:</strong> '+esc(d.obs)+'</div>':'')+
+'<div class="pagenum">Página 1 de 5</div></div>'+
+'<div class="page"><h3>Condiciones y Ofertas del Trabajo</h3><ol class="cond">'+cond1+'</ol><div class="pagenum">Página 2 de 5</div></div>'+
+'<div class="page"><h3>Condiciones y Ofertas del Trabajo (continuación)</h3><ol class="cond" start="10">'+cond2+'</ol><h3>Valores de Otros Servicios Agregados</h3><ul class="srv">'+SERVICIOS_AGREGADOS.map(function(s,i){return '<li>'+(i+1)+'.- '+s+'</li>';}).join('')+'</ul><div class="pagenum">Página 3 de 5</div></div>'+
+'<div class="page"><h3>Mensaje de Envío y Datos de Pago</h3><pre>'+MSG_TEMPLATE+'</pre><div class="pagenum">Página 4 de 5</div></div>'+
+'<div class="page"><h3>¿Qué es el Hormigón Estampado?</h3><div class="mkt">'+MKT_QUE.map(function(p){return '<p>'+p+'</p>';}).join('')+'</div><h3>Ventajas del Hormigón Estampado</h3><ol class="cond">'+MKT_VENTAJAS.map(function(v,i){return '<li><strong>'+(i+1)+'. '+v[0]+':</strong> '+v[1]+'</li>';}).join('')+'</ol><h3>Por Qué Preferir el Hormigón Estampado</h3><div class="mkt">'+MKT_PORQUE.map(function(p){return '<p>'+p+'</p>';}).join('')+'</div><div class="foot">CONSTRUPISOS JH | AVILSAL CONSTRUCCIONES SPA | RUT 78.057.771-1 | '+COMPANY.address+' | '+COMPANY.phone+' | '+COMPANY.email+'</div><div class="pagenum">Página 5 de 5</div></div>';}
+function safeFile(s){return String(s||'').replace(/[\\/:*?"<>|]+/g,'').replace(/\s+/g,' ').trim();}
+function pdfFileName(d){return safeFile((d.num||'COTIZACION')+' - '+(d.client&&d.client.name?d.client.name:'Cliente'))+'.pdf';}
+function generatePDF(d){toast('Generando PDF...');ensureLogo().then(function(logoData){var ok=(typeof html2canvas!=='undefined')&&(typeof window.jspdf!=='undefined'&&window.jspdf.jsPDF);if(ok){buildPDFDownload(d,logoData);}else{buildPDFPrint(d,logoData);}});}
+function buildPDFDownload(d,logoData){var doc='<html><head><meta charset="utf-8"><style>'+pdfCSS()+'</style></head><body>'+pdfPages(d,logoData)+'</body></html>';
+var fr=document.createElement('iframe');fr.style.cssText='position:fixed;left:-10000px;top:0;width:820px;height:1200px;border:0;';document.body.appendChild(fr);fr.srcdoc=doc;
+fr.onload=function(){setTimeout(function(){var pages=fr.contentDocument.querySelectorAll('.page');
+var pdf=new window.jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});var i=0;
+function next(){if(i>=pages.length){try{document.body.removeChild(fr);}catch(e){}pdf.save(pdfFileName(d));toast('PDF descargado');return;}
+html2canvas(pages[i],{scale:2,backgroundColor:'#ffffff',useCORS:true,logging:false}).then(function(cv){var img=cv.toDataURL('image/png');if(i>0)pdf.addPage();pdf.addImage(img,'PNG',0,0,210,297);i++;next();}).catch(function(){try{document.body.removeChild(fr);}catch(e){}buildPDFPrint(d,logoData);});}
+next();},350);};}
+function buildPDFPrint(d,logoData){var iconTag=logoData?'<link rel="icon" href="'+logoData+'">':'<link rel="icon" href="logo.png">';
+var html='<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">'+iconTag+'<title>'+safeFile((d.num||'')+' '+(d.client&&d.client.name?d.client.name:''))+' - Construpisos JH</title><style>@page{size:A4;margin:0}'+pdfCSS()+'</style></head><body>'+pdfPages(d,logoData)+'<script>window.onload=function(){setTimeout(function(){window.print()},400)};<\/script></body></html>';
+var w=window.open('','_blank');w.document.write(html);w.document.close();w.focus();}
+$('#btnPdf').addEventListener('click',function(){var d=collect();if(!d.client.name){toast('Complete al menos el nombre del cliente');return;}
+if(!currentNum){currentNum=nextNum();$('#sumNum').textContent=currentNum;toast('Número de cotización asignado: '+currentNum);}
+d.num=currentNum;generatePDF(d);});
+function renderProjects(){$('#proyBody').innerHTML=state.projects.map(function(p,i){return '<tr><td>'+(i+1)+'</td><td><span class="pill">'+p.num+'</span></td><td>'+esc(p.client.name)+'</td><td>'+p.area+' m²</td><td><strong>'+fmt(p.totals.total)+'</strong></td><td>'+p.date+'</td><td><button class="btn btn-ghost btn-sm" data-act="load" data-id="'+p.id+'">Abrir (Editar)</button> <button class="btn btn-accent btn-sm" data-act="pdf" data-id="'+p.id+'">PDF</button> <button class="btn btn-danger btn-sm" data-act="del" data-id="'+p.id+'">Eliminar</button></td></tr>';}).join('')||'<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:24px">No hay proyectos guardados</td></tr>';}
+$('#proyBody').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+var p=state.projects.filter(function(x){return x.id==b.dataset.id;})[0];if(!p)return;
+if(b.dataset.act==='load')loadProject(p);
+if(b.dataset.act==='pdf')generatePDF(p);
+if(b.dataset.act==='del'){state.projects=state.projects.filter(function(x){return x.id!==p.id;});p.deletedAt=new Date().toISOString();state.trash.unshift(p);persist();cloudDelProject(p.id);cloudPutTrash(p);renderProjects();toast('Movido a la papelera');}});
 $('#btnRefresh').addEventListener('click',renderProjects);
-
-function renderTrash(){
- $('#papeBody').innerHTML=state.trash.map(function(p,i){
-  return '<tr><td><input type="checkbox" class="t-sel" data-id="'+p.id+'"></td><td>'+(i+1)+'</td><td>'+p.num+'</td><td>'+esc(p.client.name)+'</td>'+
-  '<td>'+p.area+' m²</td><td>'+fmt(p.totals.total)+'</td><td>'+p.date+'</td>'+
-  '<td><button class="btn btn-ghost btn-sm" data-act="res" data-id="'+p.id+'">Restaurar</button> '+
-  '<button class="btn btn-danger btn-sm" data-act="pur" data-id="'+p.id+'">Eliminar</button></td></tr>';
- }).join('')||'<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:24px">La papelera está vacía</td></tr>';
-}
-function selIds(){return Array.prototype.map.call(document.querySelectorAll('.t-sel:checked'),function(c){return c.dataset.id;});}
+function renderTrash(){$('#papeBody').innerHTML=state.trash.map(function(p,i){return '<tr><td><input type="checkbox" class="t-sel" data-id="'+p.id+'"></td><td>'+(i+1)+'</td><td>'+p.num+'</td><td>'+esc(p.client.name)+'</td><td>'+p.area+' m²</td><td>'+fmt(p.totals.total)+'</td><td>'+p.date+'</td><td><button class="btn btn-ghost btn-sm" data-act="res" data-id="'+p.id+'">Restaurar</button> <button class="btn btn-danger btn-sm" data-act="pur" data-id="'+p.id+'">Eliminar</button></td></tr>';}).join('')||'<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:24px">La papelera está vacía</td></tr>';}
+function selIds(){return Array.prototype.map.call(document.querySelectorAll('.t-sel:checked'),function(c){return Number(c.dataset.id);});}
 $('#btnSelAll').addEventListener('click',function(){document.querySelectorAll('.t-sel').forEach(function(c){c.checked=true;});});
-$('#btnRestore').addEventListener('click',function(){
- var ids=selIds();if(!ids.length)return toast('Seleccione al menos un proyecto');
- state.trash.filter(function(p){return ids.indexOf(p.id)>=0;}).forEach(function(p){state.projects.unshift(p);cloudDelTrash(p.id);cloudPutProject(p);});
- state.trash=state.trash.filter(function(p){return ids.indexOf(p.id)<0;});persist();renderTrash();toast('Proyectos restaurados');
-});
-$('#btnPurge').addEventListener('click',function(){
- var ids=selIds();if(!ids.length)return toast('Seleccione al menos un proyecto');
- if(!confirm('¿Está seguro de eliminar estos proyectos definitivamente? Esta acción no se puede deshacer.'))return;
- state.trash.filter(function(p){return ids.indexOf(p.id)>=0;}).forEach(function(p){cloudDelTrash(p.id);});
- state.trash=state.trash.filter(function(p){return ids.indexOf(p.id)<0;});persist();renderTrash();toast('Proyectos eliminados definitivamente');
-});
-$('#papeBody').addEventListener('click',function(e){
- var b=e.target.closest('button');if(!b)return;
- var p=state.trash.filter(function(x){return x.id==b.dataset.id;})[0];if(!p)return;
- if(b.dataset.act==='res'){state.trash=state.trash.filter(function(x){return x.id!==p.id;});state.projects.unshift(p);persist();cloudDelTrash(p.id);cloudPutProject(p);renderTrash();}
- if(b.dataset.act==='pur'){if(confirm('¿Eliminar definitivamente?')){state.trash=state.trash.filter(function(x){return x.id!==p.id;});persist();cloudDelTrash(p.id);renderTrash();}}
-});
-
-function renderRates(){
- $('#tarBody').innerHTML=state.rates.map(function(r,i){
-  return '<tr><td><input type="number" class="r-min" value="'+r.min+'"></td>'+
-  '<td><input type="number" class="r-max" value="'+(r.max>=99999?'':r.max)+'" placeholder="Ilimitado"></td>'+
-  '<td><select class="r-type"><option value="m2"'+(r.type==='m2'?' selected':'')+'>Por m²</option><option value="fijo"'+(r.type==='fijo'?' selected':'')+'>Precio Fijo</option></select></td>'+
-  '<td><input type="number" class="r-price" value="'+r.price+'"></td>'+
-  '<td><button class="btn btn-danger btn-sm" data-del="'+i+'">Eliminar</button></td></tr>';
- }).join('');
-}
-$('#tarBody').addEventListener('click',function(e){
- var b=e.target.closest('button[data-del]');if(!b)return;
- state.rates.splice(+b.dataset.del,1);persist();renderRates();renderRateHint();
-});
+$('#btnRestore').addEventListener('click',function(){var ids=selIds();if(!ids.length)return toast('Seleccione al menos un proyecto');
+state.trash.filter(function(p){return ids.indexOf(p.id)>=0;}).forEach(function(p){state.projects.unshift(p);cloudDelTrash(p.id);cloudPutProject(p);});
+state.trash=state.trash.filter(function(p){return ids.indexOf(p.id)<0;});persist();renderTrash();toast('Proyectos restaurados');});
+$('#btnPurge').addEventListener('click',function(){var ids=selIds();if(!ids.length)return toast('Seleccione al menos un proyecto');
+askConfirm('¿Está seguro de eliminar estos proyectos definitivamente? Esta acción no se puede deshacer.',function(){
+state.trash.filter(function(p){return ids.indexOf(p.id)>=0;}).forEach(function(p){cloudDelTrash(p.id);});
+state.trash=state.trash.filter(function(p){return ids.indexOf(p.id)<0;});persist();renderTrash();toast('Proyectos eliminados definitivamente');});});
+$('#papeBody').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+var p=state.trash.filter(function(x){return x.id==b.dataset.id;})[0];if(!p)return;
+if(b.dataset.act==='res'){state.trash=state.trash.filter(function(x){return x.id!==p.id;});state.projects.unshift(p);persist();cloudDelTrash(p.id);cloudPutProject(p);renderTrash();}
+if(b.dataset.act==='pur'){askConfirm('¿Está seguro que desea eliminar "'+p.num+'" definitivamente?',function(){state.trash=state.trash.filter(function(x){return x.id!==p.id;});persist();cloudDelTrash(p.id);renderTrash();toast('Proyecto eliminado definitivamente');});}});
+function renderRates(){$('#tarBody').innerHTML=state.rates.map(function(r,i){return '<tr><td><input type="number" class="r-min" value="'+r.min+'"></td><td><input type="number" class="r-max" value="'+(r.max>=99999?'':r.max)+'" placeholder="Ilimitado"></td><td><select class="r-type"><option value="m2"'+(r.type==='m2'?' selected':'')+'>Por m²</option><option value="fijo"'+(r.type==='fijo'?' selected':'')+'>Precio Fijo</option></select></td><td><input type="number" class="r-price" value="'+r.price+'"></td><td><button class="btn btn-danger btn-sm" data-del="'+i+'">Eliminar</button></td></tr>';}).join('');}
+$('#tarBody').addEventListener('click',function(e){var b=e.target.closest('button[data-del]');if(!b)return;state.rates.splice(+b.dataset.del,1);persist();renderRates();renderRateHint();});
 $('#btnAddRate').addEventListener('click',function(){state.rates.push({min:100,max:'',type:'m2',price:0});renderRates();});
-$('#btnSaveRates').addEventListener('click',function(){
- state.rates=Array.prototype.map.call(document.querySelectorAll('#tarBody tr'),function(tr){
-  return {min:num(tr.querySelector('.r-min').value),
-   max:tr.querySelector('.r-max').value===''?99999:num(tr.querySelector('.r-max').value),
-   type:tr.querySelector('.r-type').value,price:num(tr.querySelector('.r-price').value)};
- });
- persist();renderRateHint();onAreaChange();toast('Tarifas actualizadas y sincronizadas');
-});
-
-function renderExtrasCat(){
- $('#extrasCatBody').innerHTML=state.extrasTpl.map(function(x,i){
-  return '<tr><td><input class="xc-desc" data-i="'+i+'" value="'+esc(x.desc)+'"></td>'+
-  '<td><input class="xc-unit" data-i="'+i+'" value="'+esc(x.unit||'und')+'"></td>'+
-  '<td><input type="number" class="xc-price" data-i="'+i+'" value="'+(x.price||'')+'" placeholder="0"></td>'+
-  '<td><button class="btn btn-danger btn-sm" data-xcdel="'+i+'">Eliminar</button></td></tr>';
- }).join('');
-}
-$('#extrasCatBody').addEventListener('input',function(e){
- var i=e.target.dataset.i;if(i===undefined)return;var x=state.extrasTpl[+i];
- if(e.target.classList.contains('xc-desc'))x.desc=e.target.value;
- if(e.target.classList.contains('xc-unit'))x.unit=e.target.value;
- if(e.target.classList.contains('xc-price'))x.price=num(e.target.value);
- persist();
-});
-$('#extrasCatBody').addEventListener('click',function(e){
- var b=e.target.closest('button[data-xcdel]');if(!b)return;
- state.extrasTpl.splice(+b.dataset.xcdel,1);persist();renderExtrasCat();toast('Trabajo extra eliminado del catálogo');
-});
-$('#btnAddExtraCat').addEventListener('click',function(){
- state.extrasTpl.push({desc:'Nuevo trabajo extra',unit:'und',price:0});persist();renderExtrasCat();
-});
-
-function renderInventory(){
- renderExtrasCat();
- $('#catList').innerHTML=state.catalog.map(function(c,i){
-  return '<div style="display:flex;gap:8px;margin-bottom:8px;max-width:600px"><input class="cat-in" data-i="'+i+'" value="'+esc(c)+'">'+
-  '<button class="btn btn-danger btn-sm" data-catdel="'+i+'" style="flex-shrink:0">Eliminar</button></div>';
- }).join('');
- $('#invBody').innerHTML=state.inv.map(function(it,i){
-  return '<tr><td><input class="i-name" data-i="'+i+'" value="'+esc(it.name)+'"></td>'+
-  '<td><input type="number" class="i-qty" data-i="'+i+'" value="'+(it.qty||'')+'"></td>'+
-  '<td><input class="i-unit" data-i="'+i+'" value="'+esc(it.unit||'')+'"></td>'+
-  '<td><input type="number" class="i-price" data-i="'+i+'" value="'+(it.price||'')+'"></td>'+
-  '<td><strong>'+fmt((it.qty||0)*(it.price||0))+'</strong></td>'+
-  '<td><button class="btn btn-danger btn-sm" data-invdell="'+i+'">Eliminar</button></td></tr>';
- }).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px">Inventario vacío</td></tr>';
-}
+$('#btnSaveRates').addEventListener('click',function(){state.rates=Array.prototype.map.call(document.querySelectorAll('#tarBody tr'),function(tr){return {min:num(tr.querySelector('.r-min').value),max:tr.querySelector('.r-max').value===''?99999:num(tr.querySelector('.r-max').value),type:tr.querySelector('.r-type').value,price:num(tr.querySelector('.r-price').value)};});persist();renderRateHint();onAreaChange();toast('Tarifas actualizadas y sincronizadas');});
+function renderExtrasCat(){var list=sortExtras(state.extrasTpl);
+$('#extrasCatBody').innerHTML=list.map(function(x){var i=state.extrasTpl.indexOf(x);var pr=hasPrice(x);
+return '<tr class="'+(pr?'row-priced':'')+'"><td><input class="xc-desc" data-i="'+i+'" value="'+esc(x.desc)+'">'+(pr?'<span class="pill pill-ok">Precio establecido</span>':'')+'</td><td><input class="xc-unit" data-i="'+i+'" value="'+esc(x.unit||'und')+'"></td><td><input type="number" class="xc-price" data-i="'+i+'" value="'+(x.price||'')+'" placeholder="0"></td><td><button class="btn btn-danger btn-sm" data-xcdel="'+i+'">Eliminar</button></td></tr>';}).join('');}
+$('#extrasCatBody').addEventListener('input',function(e){var i=e.target.dataset.i;if(i===undefined)return;var x=state.extrasTpl[+i];
+if(e.target.classList.contains('xc-desc'))x.desc=e.target.value;
+if(e.target.classList.contains('xc-unit'))x.unit=e.target.value;
+if(e.target.classList.contains('xc-price'))x.price=num(e.target.value);persist();renderExtrasCat();});
+$('#extrasCatBody').addEventListener('click',function(e){var b=e.target.closest('button[data-xcdel]');if(!b)return;var i=+b.dataset.xcdel;var nm=state.extrasTpl[i]?state.extrasTpl[i].desc:'este trabajo extra';
+askConfirm('¿Está seguro que desea eliminar "'+nm+'" del catálogo de trabajos extras?',function(){state.extrasTpl.splice(i,1);persist();renderExtrasCat();toast('Trabajo extra eliminado del catálogo');});});
+$('#btnAddExtraCat').addEventListener('click',function(){state.extrasTpl.push({desc:'Nuevo trabajo extra',unit:'und',price:0});persist();renderExtrasCat();});
+function renderInventory(){renderExtrasCat();
+$('#catList').innerHTML=state.catalog.map(function(c,i){return '<div style="display:flex;gap:8px;margin-bottom:8px;max-width:600px"><input class="cat-in" data-i="'+i+'" value="'+esc(c)+'"><button class="btn btn-danger btn-sm" data-catdel="'+i+'" style="flex-shrink:0">Eliminar</button></div>';}).join('');
+$('#invBody').innerHTML=state.inv.map(function(it,i){return '<tr><td><input class="i-name" data-i="'+i+'" value="'+esc(it.name)+'"></td><td><input type="number" class="i-qty" data-i="'+i+'" value="'+(it.qty||'')+'"></td><td><input class="i-unit" data-i="'+i+'" value="'+esc(it.unit||'')+'"></td><td><input type="number" class="i-price" data-i="'+i+'" value="'+(it.price||'')+'"></td><td><strong>'+fmt((it.qty||0)*(it.price||0))+'</strong></td><td><button class="btn btn-danger btn-sm" data-invdell="'+i+'">Eliminar</button></td></tr>';}).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px">Inventario vacío</td></tr>';}
 $('#catList').addEventListener('input',function(e){if(e.target.classList.contains('cat-in')){state.catalog[+e.target.dataset.i]=e.target.value;persist();}});
-$('#catList').addEventListener('click',function(e){var b=e.target.closest('button[data-catdel]');if(!b)return;state.catalog.splice(+b.dataset.catdel,1);persist();renderInventory();renderItems(null);});
+$('#catList').addEventListener('click',function(e){var b=e.target.closest('button[data-catdel]');if(!b)return;var i=+b.dataset.catdel;var nm=state.catalog[i]||'este item';
+askConfirm('¿Está seguro que desea eliminar "'+nm+'" del catálogo de items incluidos?',function(){state.catalog.splice(i,1);persist();renderInventory();renderItems(null);toast('Item eliminado del catálogo');});});
 $('#btnAddCat').addEventListener('click',function(){state.catalog.push('Nuevo item');persist();renderInventory();});
-$('#invBody').addEventListener('input',function(e){
- var i=e.target.dataset.i;if(i===undefined)return;var it=state.inv[+i];
- if(e.target.classList.contains('i-name'))it.name=e.target.value;
- if(e.target.classList.contains('i-qty'))it.qty=num(e.target.value);
- if(e.target.classList.contains('i-unit'))it.unit=e.target.value;
- if(e.target.classList.contains('i-price'))it.price=num(e.target.value);
- persist();renderInventory();
-});
-$('#invBody').addEventListener('click',function(e){var b=e.target.closest('button[data-invdell]');if(!b)return;state.inv.splice(+b.dataset.invdell,1);persist();renderInventory();});
+$('#invBody').addEventListener('input',function(e){var i=e.target.dataset.i;if(i===undefined)return;var it=state.inv[+i];
+if(e.target.classList.contains('i-name'))it.name=e.target.value;
+if(e.target.classList.contains('i-qty'))it.qty=num(e.target.value);
+if(e.target.classList.contains('i-unit'))it.unit=e.target.value;
+if(e.target.classList.contains('i-price'))it.price=num(e.target.value);persist();renderInventory();});
+$('#invBody').addEventListener('click',function(e){var b=e.target.closest('button[data-invdell]');if(!b)return;var i=+b.dataset.invdell;var nm=state.inv[i]?state.inv[i].name:'este item';
+askConfirm('¿Está seguro que desea eliminar "'+nm+'" del inventario?',function(){state.inv.splice(i,1);persist();renderInventory();toast('Item eliminado del inventario');});});
 $('#btnAddInv').addEventListener('click',function(){state.inv.push({name:'Nuevo item',qty:1,unit:'und',price:0});persist();renderInventory();});
-
 renderRateHint();
 initAuth();
 })();
