@@ -99,7 +99,11 @@ body {
   font-size: 16px; transition: border-color 0.2s; background: var(--input-bg); color: var(--text-main);
 }
 .login-card input:focus { outline: none; border-color: var(--primary-500); box-shadow: 0 0 0 3px var(--accent-light); }
-.login-hint { font-size: 12px; color: var(--text-muted); margin-top: 16px; }
+.login-hint {
+  font-size: 12.5px; color: var(--hint-text); margin-top: 16px;
+  background: var(--accent-light); border: 1px dashed var(--accent);
+  border-radius: 8px; padding: 10px 12px; line-height: 1.6;
+}
 
 /* --- TOPBAR --- */
 .topbar {
@@ -421,7 +425,7 @@ footer a:hover { text-decoration: underline; }
       <input id="loginPass" type="password" placeholder="Contraseña" required autocomplete="current-password">
       <button class="btn btn-primary" style="width:100%" type="submit">Iniciar Sesión</button>
     </form>
-    <div class="login-hint" id="loginHint">Credenciales de acceso: admin / admin</div>
+    <div class="login-hint" id="loginHint"></div>
   </div>
 </div>
 
@@ -686,7 +690,7 @@ footer a:hover { text-decoration: underline; }
 
 <div id="toast"></div>
 
-<!-- SDK de Firebase (configuración real del proyecto ContrupisosJH ya enlazada) -->
+<!-- SDK de Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -704,6 +708,20 @@ var esc=function(s){return String(s||'').replace(/"/g,'&quot;').replace(/</g,'&l
 var today=function(){return new Date().toISOString().slice(0,10);};
 var isDemo=function(d){return /demolici/i.test(d||'');};
 
+/* =====================================================================
+   CREDENCIALES LOCALES DEL PANEL
+   ===================================================================== */
+var LOCAL_USER='admin';
+var LOCAL_PASS='admin123';
+
+/* =====================================================================
+   MENCIÓN DE CREDENCIALES EN EL LOGIN:
+   Se muestra hasta esta fecha y luego se borra automáticamente.
+   Calculado: mañana (24/10/2026) + 7 días = 31/10/2026.
+   Para cambiar el plazo, edite solo esta línea.
+   ===================================================================== */
+var CRED_HINT_UNTIL=new Date('2026-10-31T23:59:59');
+
 var memStore={};
 var LS={
   get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return memStore[k]!==undefined?memStore[k]:d;}},
@@ -712,7 +730,7 @@ var LS={
 function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2600);}
 
 /* =====================================================================
-   CONFIGURACIÓN DE FIREBASE DEL PROYECTO ContrupisosJH (YA ENLAZADA)
+   CONFIGURACIÓN DE FIREBASE DEL PROYECTO ContrupisosJH
    ===================================================================== */
 var FIREBASE_CONFIG = {
   apiKey: "AIzaSyCBBvUHVWJMO4-3XqdR7k9FAu67fcDE6SE",
@@ -811,7 +829,7 @@ var MKT_QUE=[
 var MKT_VENTAJAS=[
 ['MÚLTIPLES DISEÑOS','Las posibilidades de aplicar patrones geométricos en un piso estampado, texturas y colores en las terminaciones son casi infinitas, permitiendo formas y patrones personalizados con diseños únicos e irrepetibles.'],
 ['RÁPIDA EJECUCIÓN','La elaboración es más rápida y fácil que el adoquinado tradicional, cerámicas u otros pavimentos de menos resistencia, lo que mejora los tiempos de elaboración del proyecto.'],
-['EVITA EL CRECIMIMIENTO DE MALEZA','La resistencia, peso y durabilidad del hormigón estampado lo hacen el complemento ideal de espacios verdes y estéticos, evitando la maleza que crece en las juntas de otros pavimentos.'],
+['EVITA EL CRECIMIENTO DE MALEZA','La resistencia, peso y durabilidad del hormigón estampado lo hacen el complemento ideal de espacios verdes y estéticos, evitando la maleza que crece en las juntas de otros pavimentos.'],
 ['POCO MANTENIMIENTO','Es un material que no necesita cuidados especiales y su larga vida útil lo convierte en una apuesta segura; su desgaste tarda décadas, siendo la obra un proyecto eficiente y próspero.'],
 ['ALTA RESISTENCIA Y DURABILIDAD','Su gran resistencia frente a las condiciones climáticas y golpes lo hace ideal, focalizando el daño en un solo punto y limitando deterioros en comparación con adoquines, baldosas o cerámicas.']
 ];
@@ -1016,36 +1034,51 @@ function ensureLogo(){
 }
 
 function showApp(){$('#loginScreen').classList.add('hidden');$('#app').classList.remove('hidden');initQuoteView();}
-function showLogin(){$('#app').classList.add('hidden');$('#loginScreen').classList.remove('hidden');}
+function showLogin(){$('#app').classList.add('hidden');$('#loginScreen').classList.remove('hidden');refreshLoginHint();}
 
-if(fb.enabled){
-  $('#loginUser').placeholder='Correo del panel';
-  $('#loginPass').placeholder='Contraseña del panel';
-  $('#loginHint').textContent='Use el correo y contraseña creados en Firebase Authentication.';
-}else{
-  $('#loginHint').textContent='Credenciales de acceso: admin / admin (modo local)';
+/* --- MENCIÓN DE CREDENCIALES CON VENCIMIENTO --- */
+function refreshLoginHint(){
+  var el=$('#loginHint');
+  if(Date.now()<=CRED_HINT_UNTIL.getTime()){
+    el.classList.remove('hidden');
+    el.innerHTML='Acceso al panel:<br>Usuario: <b>'+LOCAL_USER+'</b> &nbsp;·&nbsp; Clave: <b>'+LOCAL_PASS+'</b>'+
+      (fb.enabled?'<br><span style="font-size:11px">Para sincronizar entre dispositivos también puede entrar con el correo del panel.</span>':'');
+  }else{
+    el.classList.add('hidden');
+    el.innerHTML='';
+  }
 }
+refreshLoginHint();
+
+/* --- LOGIN: admin/admin123 siempre; correo del panel para sincronizar --- */
 $('#loginForm').addEventListener('submit',function(e){
  e.preventDefault();
  var u=$('#loginUser').value.trim(),p=$('#loginPass').value;
+ if(u===LOCAL_USER&&p===LOCAL_PASS){
+   LS.set('jh_session','1');
+   showApp();
+   toast(fb.enabled&&!fb.user?'Sesión iniciada en modo local':('Sesión iniciada correctamente'));
+   return;
+ }
  if(fb.enabled){
-   if(!u||!p){toast('Ingrese correo y contraseña');return;}
+   if(u.indexOf('@')===-1){toast('Credenciales incorrectas');return;}
    toast('Verificando acceso...');
    fb.auth.signInWithEmailAndPassword(u,p).catch(function(){toast('Credenciales incorrectas o sin conexión');});
  }else{
-   if(u==='admin'&&p==='admin'){LS.set('jh_session','1');showApp();toast('Sesión iniciada (modo local)');}
-   else{toast('Credenciales incorrectas');}
+   toast('Credenciales incorrectas');
  }
 });
 $('#btnSalir').addEventListener('click',function(){
-  if(fb.enabled){fb.auth.signOut();}
-  else{LS.set('jh_session','0');showLogin();}
+  LS.set('jh_session','0');
+  if(fb.enabled&&fb.user){fb.auth.signOut();}
+  else{showLogin();}
 });
 function initAuth(){
   if(fb.enabled){
     fb.auth.onAuthStateChanged(function(u){
       fb.user=u;
-      if(u){startSync();showApp();}
+      if(u){LS.set('jh_session','0');startSync();showApp();}
+      else if(LS.get('jh_session','0')==='1'){showApp();}
       else{showLogin();}
     });
   }else{
@@ -1324,8 +1357,7 @@ $('#btnMail').addEventListener('click',function(){
 });
 
 /* =====================================================================
-   PDF: se DESCARGA como archivo .pdf (5 páginas A4 con logo original).
-   Si las librerías no cargan, usa impresión como respaldo.
+   PDF: se DESCARGA como archivo .pdf (5 páginas A4 con logo original)
    ===================================================================== */
 function pdfCSS(){
  return 'body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#0f172a;font-size:13px;line-height:1.5;background:#fff}'+
@@ -1386,7 +1418,7 @@ function pdfPages(d,logoData){
  '<div class="pagenum">Página 4 de 5</div></div>'+
  '<div class="page"><h3>¿Qué es el Hormigón Estampado?</h3><div class="mkt">'+MKT_QUE.map(function(p){return '<p>'+p+'</p>';}).join('')+'</div>'+
  '<h3>Ventajas del Hormigón Estampado</h3><ol class="cond">'+MKT_VENTAJAS.map(function(v,i){return '<li><strong>'+(i+1)+'. '+v[0]+':</strong> '+v[1]+'</li>';}).join('')+'</ol>'+
- '<h3>Por Qué Preferir el Hormigón Estampado</h3><div class="mkt">'+MKT_PORQUE.map(function(p){return '<p>'+p+'</p>;';}).join('')+'</div>'+
+ '<h3>Por Qué Preferir el Hormigón Estampado</h3><div class="mkt">'+MKT_PORQUE.map(function(p){return '<p>'+p+'</p>';}).join('')+'</div>'+
  '<div class="foot">CONSTRUPISOS JH | AVILSAL CONSTRUCCIONES SPA | RUT 78.057.771-1 | '+COMPANY.address+' | '+COMPANY.phone+' | '+COMPANY.email+'</div>'+
  '<div class="pagenum">Página 5 de 5</div></div>';
 }
