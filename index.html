@@ -261,7 +261,7 @@ main{padding:12px}
 </div>
 <label class="chk" style="margin-top:16px"><input type="checkbox" id="chkIva"> <span>Aplicar IVA 19% al total final</span></label>
 <h3>Trabajos Extras</h3>
-<p class="muted">Presione el botón para abrir la ventana de trabajos extras. Los trabajos con precio establecido aparecen primero y destacados en verde. La demolición se configura en su propia tarjeta.</p>
+<p class="muted">Presione el botón para abrir la ventana de trabajos extras. Los trabajos con precio establecido aparecen primero y destacados en verde. La demolición y el borde de cenefa se configuran en sus propias tarjetas.</p>
 <div class="extras-bar">
 <button class="btn btn-extras" id="btnOpenExtras">TRABAJOS EXTRAS</button>
 <span class="pill" id="extrasCount">0 incluidos</span>
@@ -274,6 +274,15 @@ main{padding:12px}
 <div><label class="f">m² a demoler</label><input id="demoQty" type="number" min="0" placeholder="0"></div>
 <div><label class="f">Precio por m² ($)</label><input id="demoPrice" type="number" min="0" placeholder="5000"></div>
 <div class="demo-unit">Unidad: m²</div>
+</div>
+<div class="hint-sm">Se configura directamente en el formulario, fuera de la ventana de trabajos extras. Si está marcada, se suma al total.</div>
+</div>
+<div class="demo-card" id="cenCard">
+<div class="demo-head"><label class="chk"><input type="checkbox" id="cenChk"> <span>Borde de cenefa</span></label><strong id="cenTotalInline">$0</strong></div>
+<div class="demo-row">
+<div><label class="f">Metros lineales</label><input id="cenQty" type="number" min="0" placeholder="0"></div>
+<div><label class="f">Precio por metro lineal ($)</label><input id="cenPrice" type="number" min="0" placeholder="8000"></div>
+<div class="demo-unit">Unidad: m lineal</div>
 </div>
 <div class="hint-sm">Se configura directamente en el formulario, fuera de la ventana de trabajos extras. Si está marcada, se suma al total.</div>
 </div>
@@ -369,7 +378,7 @@ main{padding:12px}
 <div id="extrasModal" class="modal-overlay hidden">
 <div class="modal" role="dialog" aria-modal="true" aria-label="Trabajos Extras">
 <div class="modal-head"><h2>Trabajos Extras</h2><button class="modal-close" id="btnCloseExtras" aria-label="Cerrar">&times;</button></div>
-<p class="modal-sub">Los trabajos con precio establecido aparecen primero y destacados en verde. Marque los que desea incluir y ajuste cantidad y precio.</p>
+<p class="modal-sub">Los trabajos con precio establecido aparecen primero y destacados en verde. La demolición y el borde de cenefa se configuran directamente en el formulario.</p>
 <div class="modal-body">
 <div class="msec">
 <div class="msec-head"><span>Trabajos Extras</span><strong id="othersTotal">$0</strong></div>
@@ -406,7 +415,7 @@ var fmt=function(n){return '$'+Math.round(n||0).toLocaleString('es-CL');};
 var num=function(v){var n=parseFloat(String(v).replace(/[^\d.-]/g,''));return isNaN(n)?0:n;};
 var esc=function(s){return String(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;');};
 var today=function(){return new Date().toISOString().slice(0,10);};
-var isDemo=function(d){return /demolici/i.test(d||'');};
+var isFixed=function(d){return /demolici|cenefa/i.test(d||'');};
 var LOCAL_USER='admin';
 var LOCAL_PASS='admin123';
 var CRED_HINT_UNTIL=new Date('2026-10-31T23:59:59');
@@ -426,23 +435,24 @@ function setConnStatus(on){var b=$('#statusBadge');b.className='status-badge '+(
 var COMPANY={brand:'CONSTRUPISOS JH',legal:'AVILSAL CONSTRUCCIONES SPA',rut:'78.057.771-1',email:'Construpisosjh@gmail.com',phone:'+56984748293',wa:'56984748293',ig:'@Construpisosjh',address:'Av. Nueva Providencia 1881, oficina 230'};
 var MSG_TEMPLATE='Buenas noches, junto con saludarle. Le adjunto la cotización para el proyecto: Hormigón estampado.\n\nReserva de fecha: Para la reserva de fechas; deberá abonar $100.000 y enviar el comprobante a este correo, el dinero quedará abonado como parte de pago y se le descontará del valor total.\n\nTambién contamos con la instalación de pasto natural, valor por m2 sería de $13.500, incluye instalación, emparejamiento de terreno, materiales para la instalación y pasto natural.\n\nPasto sintético valor por m2: $17.990, incluye pasto sintético premium 40mm, instalación y todos los materiales para su instalación.\n\nNOTA: Todos nuestros proyectos son ejecutados por jefes de obra altamente capacitados en el tema de la elaboración de pavimentos, ellos estarán en todo momento supervisando cada paso en la ejecución del proyecto y respondiendo todas las consultas o dudas que tenga el cliente respecto a la elaboración de su pavimento en hormigón estampado.\n\nMuchas gracias por preferirnos.\n\nAtte.: Luisana Herrera\n\nDatos a transferir:\nAVILSAL CONSTRUCCIONES SPA\n78.057.771-1\nBanco de Chile\nCuenta Corriente\n00-821-07131-09\nConstrupisosjh@gmail.com\n\nConstrupisos JH\nRUT: 78.057.771-1\nDirección: Av. Nueva Providencia 1881, oficina 230\nTeléfono: +56984748293';
 var CONDICIONES=['Respecto a los pagos: Los pagos serán 90% al segundo día de trabajo (día del hormigón y estampado del pavimento) y el otro 10% al finalizar el proyecto. Se considera cada ítem del presupuesto para lograr la mayor efectividad a la hora de la ejecución de la obra; de no cancelar el pago del 90% al segundo día de trabajo, la empresa estará en todo su derecho de detener el proyecto. Para la habilitación de pagos en transferencia de altos montos, se le recomienda al cliente transferir el primer día de trabajo $1.000 pesos chilenos (este quedará abonado como pago) y así en 24 horas estará habilitada la cuenta para transferir montos mayores permitidos por los bancos. Se aceptan pagos con efectivo, transferencia, tarjeta de débito y tarjeta de crédito (una sola cuota).','Respecto a la Duración: La duración aproximada del proyecto será de 3 a 5 días hábiles, dependiendo de la complejidad del terreno.','Nota Precio: Los precios corresponden a obra vendida, es decir, todo incluido; nos encargamos de gestionar todas las compras de materiales e insumos, traslados, fletes, retiro de escombros y todo lo necesario para cumplir con lo especificado en este presupuesto. De no requerir factura se respetará el valor neto.','Nota Sanitaria: Tomaremos todas las precauciones sanitarias pertinentes, manteniendo el menor contacto con el interior de la vivienda y cumpliendo siempre el protocolo sanitario.','Nota de Trabajo: La empresa no se hace responsable por tuberías, pisos, electricidad, cables, muros y estructuras que no se le hayan notificado o estén en mal estado en el sitio de la obra, al no presentar planos y detalles de la estructura actual ya existente.','Una vez concluidos los trabajos: CONSTRUPISOSESTAMPADOSJH retirará todo tipo de desechos producto del trabajo realizado, así como también maquinarias, equipos, herramientas y elementos de seguridad; quedando entendido que de ninguna manera se realizarán daños al medio ambiente.','CONSTRUPISOSESTAMPADOSJH se compromete a mantener constante comunicación y propiciar un trato armónico con el cliente, de tal manera que ambos se beneficien del producto.','Diseño y color del estampado: Esta cotización contempla elección del molde, color base, color del desmoldante, tipo de pavimento y color a potestad del cliente. Algunos moldes suelen marcar menos por temas de diseños y formas realizadas por las fábricas; esto no afectará lo estético, ya que los diseños están creados para exponer una estética de texturas variadas y así su pavimento se vea creativamente natural.','Sello acrílico: Queda de parte de CONSTRUPISOSESTAMPADOSJH el día en que efectuará el lavado del piso y el día de su vitrificación. El sello acrílico es un protector que impermeabiliza el pavimento estampado; la durabilidad del brillo es visible hasta que el concreto absorba completamente el sello y cumpla su función.','CONSTRUPISOSESTAMPADOSJH se compromete a que, una vez terminados los trabajos, no existirán desniveles que provoquen aposamientos de agua, excepto los que por la naturaleza del trabajo se produzcan debido a las formas hechas por los moldes.','Si la cotización contempla focos LED: CONSTRUPISOSESTAMPADOSJH contempla la recepción de los trabajos al enchufe más próximo a los mismos, siendo responsabilidad del cliente cualquier otro tipo de interruptor; es responsabilidad de CONSTRUPISOSESTAMPADOSJH demostrar el perfecto funcionamiento de estos. Los focos serán embutidos en tubería PVC sellados con silicona, dejando en la parte inferior un subdrenaje.','Cuidado del pavimento estampado: El cliente debe regar el piso con abundante agua durante 28 días continuos desde el siguiente día de hacer el radier, exceptuando un día antes del vitrificado, de tal manera que el secado interior no se produzca de forma brusca y se puedan presentar fisuras refractarias. Se recomienda mantención para evitar daños por movimientos sísmicos y otros factores ambientales.','Debido a la naturaleza del trabajo: Los clientes en su mayoría son particulares; queda de parte del cliente cancelar sólo el monto neto por no requerir factura.','Grietas superficiales: El radier, por temas de temperatura en épocas de verano y movimientos sísmicos, puede sufrir exposición superficial de grietas; estas, por ser poco profundas, no afectan la resistencia ni durabilidad del radier.','Garantía: CONSTRUPISOSESTAMPADOSJH se compromete a dar garantía a todo pavimento realizado por nuestra empresa, siempre que el motivo sea una fisura profunda que dañe la calidad o resistencia del mismo y pueda ocasionar daños colaterales al cliente. La garantía tendrá validez si las fisuras profundas son ocasionadas de manera natural (no por sismos, objetos de gran peso o daños ocasionados por trabajos externos de terceros). La empresa asignará una fecha de reparación en acuerdo con el cliente.','De concretar parcial o totalmente la cotización: El cliente acepta las condiciones informadas en esta cotización.','Cotización: Este presupuesto es válido por 10 días hábiles; después de transcurridos los 10 días hábiles para confirmar fecha de inicio del proyecto, la cotización estará sujeta a cambios por costos del hormigón de planta y otros materiales que varían con el transcurrir de los días.'];
-var SERVICIOS_AGREGADOS=['Valor de focos LED para pisos: $30.000 c/u.','Demolición: $5.000 por m² (sujeta a cambios por dificultad del pavimento a demoler).','Cenefa por metro lineal: precio varía según la cantidad de metros lineales.','Tapa de cámara: $80.000 c/u.','Figuras de diseño: $80.000 c/u.','Trabajos de gasfitería: valor acordado en terreno previa evaluación.'];
+var SERVICIOS_AGREGADOS=['Valor de focos LED para pisos: $30.000 c/u.','Demolición: $5.000 por m² (sujeta a cambios por dificultad del pavimento a demoler).','Borde de cenefa: $8.000 por metro lineal.','Tapa de cámara: $80.000 c/u.','Figuras de diseño: $80.000 c/u.','Trabajos de gasfitería: valor acordado en terreno previa evaluación.'];
 var MKT_QUE=['El pavimento de hormigón estampado es una técnica decorativa que permite aplicar texturas, relieves, estampados y formas. De este modo, sus aplicaciones favorecen la resistencia y la creación de diseños atractivos.','El cemento, siendo uno de los principales componentes del hormigón, permite desarrollar la capacidad de adherirse a otros materiales. Así, su sencilla aplicación lo convierte en el material perfecto para crear proyectos en jardines, pisos, terrazas, garajes y más.','Dentro del gran abanico de posibilidades constructivas que hay en la actualidad, entra en juego el hormigón y sus diferentes aplicaciones. Entre ellas destaca el pavimento de hormigón estampado, un material resistente, versátil y estéticamente superior.'];
 var MKT_VENTAJAS=[['MÚLTIPLES DISEÑOS','Las posibilidades de aplicar patrones geométricos en un piso estampado, texturas y colores en las terminaciones son casi infinitas, permitiendo formas y patrones personalizados con diseños únicos e irrepetibles.'],['RÁPIDA EJECUCIÓN','La elaboración es más rápida y fácil que el adoquinado tradicional, cerámicas u otros pavimentos de menos resistencia, lo que mejora los tiempos de elaboración del proyecto.'],['EVITA EL CRECIMIENTO DE MALEZA','La resistencia, peso y durabilidad del hormigón estampado lo hacen el complemento ideal de espacios verdes y estéticos, evitando la maleza que crece en las juntas de otros pavimentos.'],['POCO MANTENIMIENTO','Es un material que no necesita cuidados especiales y su larga vida útil lo convierte en una apuesta segura; su desgaste tarda décadas, siendo la obra un proyecto eficiente y próspero.'],['ALTA RESISTENCIA Y DURABILIDAD','Su gran resistencia frente a las condiciones climáticas y golpes lo hace ideal, focalizando el daño en un solo punto y limitando deterioros en comparación con adoquines, baldosas o cerámicas.']];
 var MKT_PORQUE=['Es evidente que la gama de materiales en el sector de la construcción es enorme. No obstante, este tipo de hormigón es toda una oportunidad económica: su bajo costo hace su instalación más accesible, siendo una opción idónea frente a otros materiales.','La posibilidad de personalizar los patrones y figuras en el hormigón hace que cada diseño sea único, creando espacios duraderos, resistentes y con un alto valor arquitectónico.','Se trata de un material muy apreciado que destaca la belleza natural del lugar en el que se utiliza, dando un aspecto rústico pero sin restricciones de color, con gran ventaja sobre el clásico pavimento de baldosas o adoquines tradicionales.','En conclusión, el pavimento de hormigón estampado es robusto, permite renovar su aspecto cuando se desee con la aplicación del sello acrílico sobre la superficie, es de rápida elaboración y económicamente más accesible que otros trabajos de pavimentación. No dude en contactar a CONSTRUPISOSESTAMPADOSJH: somos expertos en este y otros materiales.'];
 var DEFAULT_RATES=[{min:80,max:99999,type:'m2',price:28500},{min:50,max:79,type:'m2',price:29500},{min:30,max:49,type:'fijo',price:1550000}];
-var DEFAULT_EXTRAS=[{desc:'Demolición de pavimento existente',unit:'m²',price:5000},{desc:'Focos LED',unit:'und',price:30000},{desc:'Tapa de cámara',unit:'und',price:80000},{desc:'Figuras de diseño',unit:'und',price:80000},{desc:'Solerilla',unit:'m lineal',price:0},{desc:'Tuberías de desagüe',unit:'m lineal',price:0},{desc:'Bordes de cenefa',unit:'m lineal',price:0},{desc:'Trabajos de gasfitería',unit:'und',price:0}];
-var PRICE_FIX={'Demolición de pavimento existente':5000,'Focos LED':30000,'Tapa de cámara':80000,'Figuras de diseño':80000};
+var DEFAULT_EXTRAS=[{desc:'Demolición de pavimento existente',unit:'m²',price:5000},{desc:'Borde de cenefa',unit:'m lineal',price:8000},{desc:'Focos LED',unit:'und',price:30000},{desc:'Tapa de cámara',unit:'und',price:80000},{desc:'Figuras de diseño',unit:'und',price:80000},{desc:'Solerilla',unit:'m lineal',price:0},{desc:'Tuberías de desagüe',unit:'m lineal',price:0},{desc:'Trabajos de gasfitería',unit:'und',price:0}];
+var PRICE_FIX={'Demolición de pavimento existente':5000,'Borde de cenefa':8000,'Focos LED':30000,'Tapa de cámara':80000,'Figuras de diseño':80000};
 var DEFAULT_CATALOG=['Hormigón H25 (espesor 10 cm)','Malla de acero Acma C92','Endurecedor de color (stamp color)','Desmoldante en polvo','Sello protector','Capa de ripio o estabilizado','Cortes de dilatación y juntas de expansión','Mano de obra especializada','Supervisión permanente de jefe de obra'];
 var state={editingId:null,rates:LS.get('jh_rates',DEFAULT_RATES),catalog:LS.get('jh_catalog',DEFAULT_CATALOG),extrasTpl:LS.get('jh_extras',DEFAULT_EXTRAS),projects:LS.get('jh_projects',[]),trash:LS.get('jh_trash',[]),inv:LS.get('jh_inv',[]),seq:LS.get('jh_seq',1)};
 DEFAULT_EXTRAS.forEach(function(d){var ex=state.extrasTpl.some(function(t){return t.desc===d.desc;});if(!ex){state.extrasTpl.push({desc:d.desc,unit:d.unit,price:d.price});}});
 function applyPriceFix(){var ch=false;state.extrasTpl.forEach(function(t){if(PRICE_FIX.hasOwnProperty(t.desc)&&t.price!==PRICE_FIX[t.desc]){t.price=PRICE_FIX[t.desc];ch=true;}});return ch;}
-(function(){var ch=false,i;for(i=0;i<state.catalog.length;i++){if(/sellador brillante/i.test(state.catalog[i])){state.catalog[i]='Sello protector';ch=true;}}
+(function(){var ch=false,i;
+state.extrasTpl.forEach(function(t){if(t.desc==='Bordes de cenefa'){t.desc='Borde de cenefa';t.unit='m lineal';ch=true;}});
+for(i=0;i<state.catalog.length;i++){if(/sellador brillante/i.test(state.catalog[i])){state.catalog[i]='Sello protector';ch=true;}}
 var hs=state.catalog.some(function(c){return c==='Sello protector';});if(!hs){state.catalog.push('Sello protector');ch=true;}
 var hr=state.catalog.some(function(c){return /ripio|estabilizado/i.test(c);});if(!hr){var ix=state.catalog.indexOf('Sello protector');state.catalog.splice(ix+1,0,'Capa de ripio o estabilizado');ch=true;}
-if(ch){LS.set('jh_catalog',state.catalog);}
 if(applyPriceFix()){ch=true;}
-if(ch){LS.set('jh_extras',state.extrasTpl);}})();
+if(ch){LS.set('jh_catalog',state.catalog);LS.set('jh_extras',state.extrasTpl);}})();
 function hasPrice(x){return num(x.price)>0;}
 function sortExtras(list){return list.slice().sort(function(a,b){return (hasPrice(b)?1:0)-(hasPrice(a)?1:0);});}
 function persist(){LS.set('jh_rates',state.rates);LS.set('jh_catalog',state.catalog);LS.set('jh_extras',state.extrasTpl);LS.set('jh_projects',state.projects);LS.set('jh_trash',state.trash);LS.set('jh_inv',state.inv);LS.set('jh_seq',state.seq);cloudPutConfig();}
@@ -474,15 +484,20 @@ else if(!migC){migC=true;LS.set('jh_migrated_config','1');cloudPutConfig();}},fu
 var currentExtras=[];var currentNum=null;
 function seedExtras(){return state.extrasTpl.map(function(x){return {desc:x.desc,unit:x.unit,price:x.price,qty:'',checked:false};});}
 function nextNum(){var n='COT-'+String(state.seq).padStart(4,'0');state.seq++;persist();return n;}
-function demoEntry(){for(var i=0;i<currentExtras.length;i++){if(isDemo(currentExtras[i].desc))return currentExtras[i];}return null;}
-function ensureDemo(){if(demoEntry())return;var t=null;for(var j=0;j<state.extrasTpl.length;j++){if(isDemo(state.extrasTpl[j].desc)){t=state.extrasTpl[j];break;}}
-currentExtras.unshift(t?{desc:t.desc,unit:t.unit,price:t.price,qty:'',checked:false}:{desc:'Demolición de pavimento existente',unit:'m²',price:5000,qty:'',checked:false});}
-function demoToUI(){var d=demoEntry();if(!d)return;$('#demoChk').checked=!!d.checked;$('#demoQty').value=d.qty||'';$('#demoPrice').value=d.price||'';paintDemo();}
-function uiToDemo(){var d=demoEntry();if(!d)return;d.checked=$('#demoChk').checked;d.qty=num($('#demoQty').value);d.unit='m²';d.price=num($('#demoPrice').value);paintDemo();}
-function paintDemo(){var d=demoEntry();if(!d)return;$('#demoTotalInline').textContent=fmt(num(d.qty)*num(d.price));$('#demoCard').classList.toggle('on',!!d.checked);}
-$('#demoChk').addEventListener('change',function(){uiToDemo();recalc();});
-$('#demoQty').addEventListener('input',function(){uiToDemo();recalc();});
-$('#demoPrice').addEventListener('input',function(){uiToDemo();recalc();});
+var FIXED_DEFS=[{match:/demolici/i,desc:'Demolición de pavimento existente',unit:'m²',price:5000},{match:/cenefa/i,desc:'Borde de cenefa',unit:'m lineal',price:8000}];
+var CARD_UI=[{match:/demolici/i,unit:'m²',chk:'#demoChk',qty:'#demoQty',price:'#demoPrice',tot:'#demoTotalInline',card:'#demoCard'},{match:/cenefa/i,unit:'m lineal',chk:'#cenChk',qty:'#cenQty',price:'#cenPrice',tot:'#cenTotalInline',card:'#cenCard'}];
+function fixedEntry(re){for(var i=0;i<currentExtras.length;i++){if(re.test(currentExtras[i].desc))return currentExtras[i];}return null;}
+function ensureAllFixed(){for(var i=FIXED_DEFS.length-1;i>=0;i--){var f=FIXED_DEFS[i];if(fixedEntry(f.match))continue;var t=null;for(var j=0;j<state.extrasTpl.length;j++){if(f.match.test(state.extrasTpl[j].desc)){t=state.extrasTpl[j];break;}}currentExtras.unshift(t?{desc:t.desc,unit:t.unit,price:t.price,qty:'',checked:false}:{desc:f.desc,unit:f.unit,price:f.price,qty:'',checked:false});}}
+function paintCard(u){var d=fixedEntry(u.match);if(!d)return;$(u.tot).textContent=fmt(num(d.qty)*num(d.price));$(u.card).classList.toggle('on',!!d.checked);}
+function cardToUI(u){var d=fixedEntry(u.match);if(!d)return;$(u.chk).checked=!!d.checked;$(u.qty).value=d.qty||'';$(u.price).value=d.price||'';paintCard(u);}
+function uiToCard(u){var d=fixedEntry(u.match);if(!d)return;d.checked=$(u.chk).checked;d.qty=num($(u.qty).value);d.unit=u.unit;d.price=num($(u.price).value);paintCard(u);}
+function paintCards(){CARD_UI.forEach(paintCard);}
+function cardsToUI(){CARD_UI.forEach(cardToUI);}
+CARD_UI.forEach(function(u){
+$(u.chk).addEventListener('change',function(){uiToCard(u);recalc();});
+$(u.qty).addEventListener('input',function(){uiToCard(u);recalc();});
+$(u.price).addEventListener('input',function(){uiToCard(u);recalc();});
+});
 var logoSeq=0;
 function logoSVG(w,withText){var id='jhG'+(logoSeq++);var h=withText?w*1.42:w;var vb=withText?'0 0 120 170':'0 0 120 112';
 var txt=withText?'<text x="60" y="152" text-anchor="middle" font-family="Arial, sans-serif" font-size="46" font-weight="900" fill="none" stroke="#ffffff" stroke-width="3">JH</text>':'';
@@ -547,7 +562,7 @@ $('#chkIva').addEventListener('change',recalc);
 $('#cSeller').value=LS.get('jh_seller','');
 $('#cSeller').addEventListener('input',function(){LS.set('jh_seller',$('#cSeller').value);});
 function mrowHTML(x){return '<div class="mrow'+(x.checked?' included':'')+(hasPrice(x)?' priced':'')+'"><label class="chk m-chk"><input type="checkbox" class="m-inc"'+(x.checked?' checked':'')+'></label><input class="m-desc" value="'+esc(x.desc)+'" placeholder="Descripción del trabajo"><input class="m-qty" type="number" min="0" value="'+(x.qty||'')+'" placeholder="Cant."><input class="m-unit" value="'+esc(x.unit||'und')+'"><input class="m-price" type="number" min="0" value="'+(x.price||'')+'" placeholder="Precio"><button class="m-del" title="Quitar">&times;</button></div>';}
-function openExtrasModal(){ensureDemo();$('#extrasModalList').innerHTML=sortExtras(currentExtras.filter(function(x){return !isDemo(x.desc);})).map(mrowHTML).join('');modalTotals();$('#extrasModal').classList.remove('hidden');document.body.style.overflow='hidden';}
+function openExtrasModal(){ensureAllFixed();$('#extrasModalList').innerHTML=sortExtras(currentExtras.filter(function(x){return !isFixed(x.desc);})).map(mrowHTML).join('');modalTotals();$('#extrasModal').classList.remove('hidden');document.body.style.overflow='hidden';}
 function closeExtrasModal(){$('#extrasModal').classList.add('hidden');document.body.style.overflow='';}
 function rowData(r){return {desc:r.querySelector('.m-desc').value,qty:num(r.querySelector('.m-qty').value),unit:r.querySelector('.m-unit').value,price:num(r.querySelector('.m-price').value),checked:r.querySelector('.m-inc').checked};}
 function modalTotals(){var tot=0;document.querySelectorAll('#extrasModalList .mrow').forEach(function(r){if(r.querySelector('.m-inc').checked){tot+=num(r.querySelector('.m-qty').value)*num(r.querySelector('.m-price').value);}});$('#othersTotal').textContent=fmt(tot);}
@@ -559,8 +574,10 @@ $('#extrasModal').addEventListener('change',function(e){if(e.target.classList.co
 $('#extrasModal').addEventListener('input',function(e){modalTotals();var row=e.target.closest('.mrow');if(row&&e.target.classList.contains('m-price')){row.classList.toggle('priced',num(e.target.value)>0);}});
 $('#extrasModalList').addEventListener('click',function(e){if(e.target.classList.contains('m-del')){e.target.closest('.mrow').remove();modalTotals();}});
 $('#btnAddExtraModal').addEventListener('click',function(){$('#extrasModalList').insertAdjacentHTML('beforeend',mrowHTML({desc:'',qty:'',unit:'und',price:0,checked:true}));});
-$('#btnApplyExtras').addEventListener('click',function(){var rows=[];document.querySelectorAll('#extrasModalList .mrow').forEach(function(r){rows.push(rowData(r));});var d=demoEntry();currentExtras=(d?[d]:[]).concat(rows);closeExtrasModal();recalc();toast('Trabajos extras aplicados');});
-function renderExtrasCompact(c){var ex=sortExtras(c.extras.filter(function(x){return !isDemo(x.desc);}));
+$('#btnApplyExtras').addEventListener('click',function(){var rows=[];document.querySelectorAll('#extrasModalList .mrow').forEach(function(r){rows.push(rowData(r));});
+var fixed=currentExtras.filter(function(x){return isFixed(x.desc);});
+currentExtras=fixed.concat(rows);closeExtrasModal();recalc();toast('Trabajos extras aplicados');});
+function renderExtrasCompact(c){var ex=sortExtras(c.extras.filter(function(x){return !isFixed(x.desc);}));
 $('#extrasCount').textContent=ex.length+(ex.length===1?' incluido':' incluidos');
 $('#extrasCompactTotal').textContent=fmt(c.totExtras);
 $('#extrasCompact').innerHTML=ex.length?ex.map(function(x){var idx=currentExtras.indexOf(x);
@@ -577,7 +594,7 @@ var extras=currentExtras.filter(function(x){return x.checked&&x.desc.trim();});
 var totExtras=extras.reduce(function(s,x){return s+num(x.qty)*num(x.price);},0);
 var neto=base+totExtras;var iva=$('#chkIva').checked?Math.round(neto*0.19):0;
 return {area:area,price:price,rate:r,fixedMode:fixedMode,base:base,extras:extras,totExtras:totExtras,neto:neto,iva:iva,total:neto+iva,items:checkedItems()};}
-function recalc(){var c=compute();paintDemo();renderExtrasCompact(c);
+function recalc(){var c=compute();paintCards();renderExtrasCompact(c);
 var catTotal=state.catalog.filter(function(x){return x.trim();}).length;
 $('#itemsCount').textContent=c.items.length+' de '+catTotal+' incluidos';
 $('#sumClient').textContent=$('#cName').value||'-';
@@ -609,7 +626,7 @@ $('#cObs').value=p.obs||'';$('#inArea').value=p.area||'';onAreaChange();
 if(p.price>0){$('#inPrice').value=p.price;$('#inPrice').dataset.auto='0';}
 $('#chkIva').checked=!!p.iva;
 currentExtras=(p.extras&&p.extras.length)?p.extras.map(function(x){return {desc:x.desc,qty:x.qty,unit:x.unit,price:x.price,checked:x.checked};}):seedExtras();
-ensureDemo();demoToUI();renderItems(p.items);recalc();
+ensureAllFixed();cardsToUI();renderItems(p.items);recalc();
 switchView('cot');}
 function initQuoteView(){renderRateHint();$('#cDate').value=today();if(!currentExtras.length){resetQuote();}}
 function resetQuote(){state.editingId=null;currentNum=null;
@@ -618,7 +635,7 @@ $('#sumNum').textContent='Se asigna al guardar o generar PDF';
 ['cName','cPhone','cEmail','cAddr','cObs'].forEach(function(id){$('#'+id).value='';});
 $('#cSeller').value=LS.get('jh_seller','');$('#cDate').value=today();
 $('#inArea').value='';$('#inPrice').value='';$('#inPrice').dataset.auto='1';$('#lblTarifa').value='';$('#chkIva').checked=false;
-currentExtras=seedExtras();ensureDemo();demoToUI();renderItems(null);recalc();}
+currentExtras=seedExtras();ensureAllFixed();cardsToUI();renderItems(null);recalc();}
 $('#btnSave').addEventListener('click',saveProject);
 $('#btnCancel').addEventListener('click',resetQuote);
 $('#btnClean').addEventListener('click',function(){askConfirm('¿Desea limpiar el formulario de Nueva Cotización? Se descartarán los datos no guardados y quedará listo para una cotización nueva.',function(){resetQuote();toast('Formulario limpio, listo para una nueva cotización');});});
