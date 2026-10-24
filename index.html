@@ -686,10 +686,13 @@ footer a:hover { text-decoration: underline; }
 
 <div id="toast"></div>
 
-<!-- SDK de Firebase (solo se usa si pega su configuración más abajo) -->
+<!-- SDK de Firebase (configuración real del proyecto ContrupisosJH ya enlazada) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<!-- Librerías para descargar el PDF directamente -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
 (function(){
@@ -709,16 +712,15 @@ var LS={
 function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2600);}
 
 /* =====================================================================
-   PEGUE AQUÍ SU CONFIGURACIÓN DE FIREBASE
-   Mientras diga PEGUE_AQUI, el sistema funciona en modo local.
+   CONFIGURACIÓN DE FIREBASE DEL PROYECTO ContrupisosJH (YA ENLAZADA)
    ===================================================================== */
 var FIREBASE_CONFIG = {
-  apiKey: "PEGUE_AQUI_su_apiKey",
-  authDomain: "PEGUE_AQUI_su_proyecto.firebaseapp.com",
-  projectId: "PEGUE_AQUI_su_projectId",
-  storageBucket: "PEGUE_AQUI_su_proyecto.appspot.com",
-  messagingSenderId: "PEGUE_AQUI_su_messagingSenderId",
-  appId: "PEGUE_AQUI_su_appId"
+  apiKey: "AIzaSyCBBvUHVWJMO4-3XqdR7k9FAu67fcDE6SE",
+  authDomain: "contrupisosjh.firebaseapp.com",
+  projectId: "contrupisosjh",
+  storageBucket: "contrupisosjh.firebasestorage.app",
+  messagingSenderId: "694991039551",
+  appId: "1:694991039551:web:f3fe9982df38fff8fe19c8a"
 };
 var FIREBASE_ENABLED = !!FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey.indexOf('PEGUE_AQUI')===-1;
 var fb={enabled:false,db:null,auth:null,user:null,synced:false};
@@ -809,7 +811,7 @@ var MKT_QUE=[
 var MKT_VENTAJAS=[
 ['MÚLTIPLES DISEÑOS','Las posibilidades de aplicar patrones geométricos en un piso estampado, texturas y colores en las terminaciones son casi infinitas, permitiendo formas y patrones personalizados con diseños únicos e irrepetibles.'],
 ['RÁPIDA EJECUCIÓN','La elaboración es más rápida y fácil que el adoquinado tradicional, cerámicas u otros pavimentos de menos resistencia, lo que mejora los tiempos de elaboración del proyecto.'],
-['EVITA EL CRECIMIENTO DE MALEZA','La resistencia, peso y durabilidad del hormigón estampado lo hacen el complemento ideal de espacios verdes y estéticos, evitando la maleza que crece en las juntas de otros pavimentos.'],
+['EVITA EL CRECIMIMIENTO DE MALEZA','La resistencia, peso y durabilidad del hormigón estampado lo hacen el complemento ideal de espacios verdes y estéticos, evitando la maleza que crece en las juntas de otros pavimentos.'],
 ['POCO MANTENIMIENTO','Es un material que no necesita cuidados especiales y su larga vida útil lo convierte en una apuesta segura; su desgaste tarda décadas, siendo la obra un proyecto eficiente y próspero.'],
 ['ALTA RESISTENCIA Y DURABILIDAD','Su gran resistencia frente a las condiciones climáticas y golpes lo hace ideal, focalizando el daño en un solo punto y limitando deterioros en comparación con adoquines, baldosas o cerámicas.']
 ];
@@ -970,7 +972,7 @@ $('#demoChk').addEventListener('change',function(){uiToDemo();recalc();});
 $('#demoQty').addEventListener('input',function(){uiToDemo();recalc();});
 $('#demoPrice').addEventListener('input',function(){uiToDemo();recalc();});
 
-/* --- LOGO REAL (imagen con respaldo SVG y versión embebida para PDF) --- */
+/* --- LOGO REAL --- */
 var logoSeq=0;
 function logoSVG(w,withText){
  var id='jhG'+(logoSeq++);
@@ -1322,32 +1324,15 @@ $('#btnMail').addEventListener('click',function(){
 });
 
 /* =====================================================================
-   PDF: páginas A4 exactas, sin encabezado/pie del navegador
-   (por eso desaparece "about:blank" de todas las hojas),
-   con el logo original embebido tal cual.
+   PDF: se DESCARGA como archivo .pdf (5 páginas A4 con logo original).
+   Si las librerías no cargan, usa impresión como respaldo.
    ===================================================================== */
-function generatePDF(d){
- ensureLogo().then(function(logoData){ buildPDF(d,logoData); });
-}
-function buildPDF(d,logoData){
- var extrasRows=(d.extras||[]).filter(function(x){return x.checked&&x.desc.trim();}).map(function(x){
-  return '<tr><td>'+esc(x.desc)+'</td><td style="text-align:center">'+x.qty+' '+esc(x.unit)+'</td><td style="text-align:right">'+fmt(x.price)+'</td><td style="text-align:right">'+fmt(x.qty*x.price)+'</td></tr>';
- }).join('');
- var itemsUl=(d.items||[]).length?'<ul style="margin:6px 0 0 18px">'+d.items.map(function(i){return '<li style="margin-bottom:4px">'+esc(i)+'</li>';}).join('')+'</ul>':'<p>Sin items seleccionados.</p>';
- var logoTag=logoData
-   ?'<img src="'+logoData+'" style="width:70px;height:70px;object-fit:contain;border-radius:10px;flex-shrink:0">'
-   :logoSVG(58,false);
- var iconTag=logoData?'<link rel="icon" href="'+logoData+'">':'<link rel="icon" href="logo.png">';
- var cond1=CONDICIONES.slice(0,9).map(function(c){return '<li>'+c+'</li>';}).join('');
- var cond2=CONDICIONES.slice(9).map(function(c){return '<li>'+c+'</li>';}).join('');
- var html='<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">'+iconTag+
- '<title>Cotización '+(d.num||'')+' - Construpisos JH</title><style>'+
- '@page{size:A4;margin:0}'+
- 'body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#0f172a;font-size:13px;line-height:1.5}'+
- '.page{width:210mm;height:296mm;padding:12mm 12mm 14mm;box-sizing:border-box;page-break-after:always;position:relative;overflow:visible}'+
+function pdfCSS(){
+ return 'body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#0f172a;font-size:13px;line-height:1.5;background:#fff}'+
+ '.page{width:210mm;height:296mm;padding:12mm 12mm 14mm;box-sizing:border-box;page-break-after:always;position:relative;overflow:visible;background:#fff}'+
  '.page:last-child{page-break-after:auto}'+
  '.pagenum{position:absolute;bottom:6mm;right:12mm;font-size:10px;color:#94a3b8}'+
- '.head{background:#0f172a;color:#fff;border-radius:10px;padding:14px 18px;display:flex;gap:16px;align-items:center;-webkit-print-color-adjust:exact;print-color-adjust:exact}'+
+ '.head{background:#0f172a;color:#fff;border-radius:10px;padding:14px 18px;display:flex;gap:16px;align-items:center}'+
  '.head h1{margin:0;font-size:23px;letter-spacing:1px}.head .sm{font-size:12px;color:#94a3b8;margin-top:3px}'+
  '.head .num{margin-left:auto;text-align:right}.head .num span{font-size:11px}.head .num strong{display:block;font-size:23px;color:#0ea5e9;margin-top:3px}'+
  'h3{color:#1d4ed8;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin:14px 0 6px;border-bottom:2px solid #e2e8f0;padding-bottom:3px}'+
@@ -1360,11 +1345,19 @@ function buildPDF(d,logoData){
  'ol.cond{margin:4px 0 0 16px;padding-left:4px}ol.cond li{margin-bottom:7px;text-align:justify;font-size:12.5px}'+
  'ul.srv{margin:4px 0 0 16px}ul.srv li{margin-bottom:4px;font-size:13px}'+
  '.mkt p{margin:6px 0;text-align:justify;font-size:13px}'+
- '.foot{margin-top:14px;font-size:11px;color:#64748b;text-align:center;border-top:1px solid #e2e8f0;padding-top:8px}'+
- '</style></head><body>'+
-
- /* ---- PÁGINA 1 ---- */
- '<div class="page">'+
+ '.foot{margin-top:14px;font-size:11px;color:#64748b;text-align:center;border-top:1px solid #e2e8f0;padding-top:8px}';
+}
+function pdfPages(d,logoData){
+ var extrasRows=(d.extras||[]).filter(function(x){return x.checked&&x.desc.trim();}).map(function(x){
+  return '<tr><td>'+esc(x.desc)+'</td><td style="text-align:center">'+x.qty+' '+esc(x.unit)+'</td><td style="text-align:right">'+fmt(x.price)+'</td><td style="text-align:right">'+fmt(x.qty*x.price)+'</td></tr>';
+ }).join('');
+ var itemsUl=(d.items||[]).length?'<ul style="margin:6px 0 0 18px">'+d.items.map(function(i){return '<li style="margin-bottom:4px">'+esc(i)+'</li>';}).join('')+'</ul>':'<p>Sin items seleccionados.</p>';
+ var logoTag=logoData
+   ?'<img src="'+logoData+'" style="width:70px;height:70px;object-fit:contain;border-radius:10px;flex-shrink:0">'
+   :logoSVG(58,false);
+ var cond1=CONDICIONES.slice(0,9).map(function(c){return '<li>'+c+'</li>';}).join('');
+ var cond2=CONDICIONES.slice(9).map(function(c){return '<li>'+c+'</li>';}).join('');
+ return '<div class="page">'+
  '<header class="head">'+logoTag+'<div><h1>CONSTRUPISOS JH</h1>'+
  '<div class="sm">AVILSAL CONSTRUCCIONES SPA | RUT 78.057.771-1</div>'+
  '<div class="sm">'+COMPANY.address+' | '+COMPANY.phone+'</div>'+
@@ -1383,43 +1376,70 @@ function buildPDF(d,logoData){
  (d.totals.iva?'<tr><td>IVA 19%</td><td style="text-align:right">'+fmt(d.totals.iva)+'</td></tr>':'<tr><td>IVA</td><td style="text-align:right">No incluido</td></tr>')+
  '<tr class="g"><td>TOTAL A COBRAR</td><td style="text-align:right">'+fmt(d.totals.total)+'</td></tr></table>'+
  (d.obs?'<div class="box"><strong>Observaciones:</strong> '+esc(d.obs)+'</div>':'')+
- '<div class="pagenum">Página 1 de 5</div>'+
- '</div>'+
-
- /* ---- PÁGINA 2 ---- */
- '<div class="page">'+
- '<h3>Condiciones y Ofertas del Trabajo</h3><ol class="cond">'+cond1+'</ol>'+
- '<div class="pagenum">Página 2 de 5</div>'+
- '</div>'+
-
- /* ---- PÁGINA 3 ---- */
- '<div class="page">'+
- '<h3>Condiciones y Ofertas del Trabajo (continuación)</h3><ol class="cond" start="10">'+cond2+'</ol>'+
+ '<div class="pagenum">Página 1 de 5</div></div>'+
+ '<div class="page"><h3>Condiciones y Ofertas del Trabajo</h3><ol class="cond">'+cond1+'</ol>'+
+ '<div class="pagenum">Página 2 de 5</div></div>'+
+ '<div class="page"><h3>Condiciones y Ofertas del Trabajo (continuación)</h3><ol class="cond" start="10">'+cond2+'</ol>'+
  '<h3>Valores de Otros Servicios Agregados</h3><ul class="srv">'+SERVICIOS_AGREGADOS.map(function(s,i){return '<li>'+(i+1)+'.- '+s+'</li>';}).join('')+'</ul>'+
- '<div class="pagenum">Página 3 de 5</div>'+
- '</div>'+
-
- /* ---- PÁGINA 4 ---- */
- '<div class="page">'+
- '<h3>Mensaje de Envío y Datos de Pago</h3><pre>'+MSG_TEMPLATE+'</pre>'+
- '<div class="pagenum">Página 4 de 5</div>'+
- '</div>'+
-
- /* ---- PÁGINA 5 ---- */
- '<div class="page">'+
- '<h3>¿Qué es el Hormigón Estampado?</h3><div class="mkt">'+MKT_QUE.map(function(p){return '<p>'+p+'</p>';}).join('')+'</div>'+
+ '<div class="pagenum">Página 3 de 5</div></div>'+
+ '<div class="page"><h3>Mensaje de Envío y Datos de Pago</h3><pre>'+MSG_TEMPLATE+'</pre>'+
+ '<div class="pagenum">Página 4 de 5</div></div>'+
+ '<div class="page"><h3>¿Qué es el Hormigón Estampado?</h3><div class="mkt">'+MKT_QUE.map(function(p){return '<p>'+p+'</p>';}).join('')+'</div>'+
  '<h3>Ventajas del Hormigón Estampado</h3><ol class="cond">'+MKT_VENTAJAS.map(function(v,i){return '<li><strong>'+(i+1)+'. '+v[0]+':</strong> '+v[1]+'</li>';}).join('')+'</ol>'+
- '<h3>Por Qué Preferir el Hormigón Estampado</h3><div class="mkt">'+MKT_PORQUE.map(function(p){return '<p>'+p+'</p>';}).join('')+'</div>'+
+ '<h3>Por Qué Preferir el Hormigón Estampado</h3><div class="mkt">'+MKT_PORQUE.map(function(p){return '<p>'+p+'</p>;';}).join('')+'</div>'+
  '<div class="foot">CONSTRUPISOS JH | AVILSAL CONSTRUCCIONES SPA | RUT 78.057.771-1 | '+COMPANY.address+' | '+COMPANY.phone+' | '+COMPANY.email+'</div>'+
- '<div class="pagenum">Página 5 de 5</div>'+
- '</div>'+
-
- '</body></html>';
+ '<div class="pagenum">Página 5 de 5</div></div>';
+}
+function generatePDF(d){
+ toast('Generando PDF...');
+ ensureLogo().then(function(logoData){
+   var canDownload=(typeof html2canvas!=='undefined')&&(typeof window.jspdf!=='undefined'&&window.jspdf.jsPDF);
+   if(canDownload){buildPDFDownload(d,logoData);}
+   else{buildPDFPrint(d,logoData);}
+ });
+}
+function buildPDFDownload(d,logoData){
+ var doc='<html><head><meta charset="utf-8"><style>'+pdfCSS()+'</style></head><body>'+pdfPages(d,logoData)+'</body></html>';
+ var fr=document.createElement('iframe');
+ fr.style.cssText='position:fixed;left:-10000px;top:0;width:820px;height:1200px;border:0;';
+ document.body.appendChild(fr);
+ fr.srcdoc=doc;
+ fr.onload=function(){
+   setTimeout(function(){
+     var pages=fr.contentDocument.querySelectorAll('.page');
+     var pdf=new window.jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
+     var i=0;
+     function next(){
+       if(i>=pages.length){
+         try{document.body.removeChild(fr);}catch(e){}
+         pdf.save((d.num||'COTIZACION')+'-ConstrupisosJH.pdf');
+         toast('PDF descargado');
+         return;
+       }
+       html2canvas(pages[i],{scale:2,backgroundColor:'#ffffff',useCORS:true,logging:false}).then(function(cv){
+         var img=cv.toDataURL('image/png');
+         if(i>0)pdf.addPage();
+         pdf.addImage(img,'PNG',0,0,210,297);
+         i++;next();
+       }).catch(function(){
+         try{document.body.removeChild(fr);}catch(e){}
+         buildPDFPrint(d,logoData);
+       });
+     }
+     next();
+   },350);
+ };
+}
+function buildPDFPrint(d,logoData){
+ var iconTag=logoData?'<link rel="icon" href="'+logoData+'">':'<link rel="icon" href="logo.png">';
+ var html='<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">'+iconTag+
+ '<title>Cotización '+(d.num||'')+' - Construpisos JH</title><style>@page{size:A4;margin:0}'+pdfCSS()+
+ '</style></head><body>'+pdfPages(d,logoData)+
+ '<script>window.onload=function(){setTimeout(function(){window.print()},400)};<\/script></body></html>';
  var w=window.open('','_blank');
  w.document.write(html);
  w.document.close();
  w.focus();
- setTimeout(function(){try{w.print();}catch(e){}},450);
 }
 $('#btnPdf').addEventListener('click',function(){
  var d=collect();if(!d.client.name){toast('Complete al menos el nombre del cliente');return;}
@@ -1436,7 +1456,7 @@ function renderProjects(){
  $('#proyBody').innerHTML=state.projects.map(function(p,i){
   return '<tr><td>'+(i+1)+'</td><td><span class="pill">'+p.num+'</span></td><td>'+esc(p.client.name)+'</td>'+
   '<td>'+p.area+' m²</td><td><strong>'+fmt(p.totals.total)+'</strong></td><td>'+p.date+'</td>'+
-  '<td><button class="btn btn-ghost btn-sm" data-act="load" data-id="'+p.id+'">Cargar</button> '+
+  '<td><button class="btn btn-ghost btn-sm" data-act="load" data-id="'+p.id+'">Abrir (Editar)</button> '+
   '<button class="btn btn-accent btn-sm" data-act="pdf" data-id="'+p.id+'">PDF</button> '+
   '<button class="btn btn-danger btn-sm" data-act="del" data-id="'+p.id+'">Eliminar</button></td></tr>';
  }).join('')||'<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:24px">No hay proyectos guardados</td></tr>';
