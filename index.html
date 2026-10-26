@@ -144,7 +144,12 @@ tr.row-priced td{background:rgba(5,150,105,.06)}
 .m-chk{grid-area:chk}.m-desc{grid-area:desc}.m-qty{grid-area:qty}.m-unit{grid-area:unit}.m-price{grid-area:price}
 .m-del{grid-area:del;background:none;border:none;color:var(--text-muted);font-size:18px;cursor:pointer;line-height:1}
 .m-del:hover{color:var(--danger)}
-@media (max-width:640px){.mrow{grid-template-areas:"chk desc del" "qty unit price";grid-template-columns:32px 1fr 32px}}
+@media (max-width:640px){
+.mrow{grid-template-columns:1fr 1fr 1fr;grid-template-areas:"chk chk del" "desc desc desc" "qty unit price";gap:8px;padding:12px}
+.m-chk::after{content:'Incluir';font-size:12px;font-weight:600;color:var(--text-muted)}
+.m-del{justify-self:end}
+.mrow input{min-height:42px;font-size:14px}
+}
 .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;font-size:13px;min-width:600px}
 th{background:var(--bg);color:var(--text-muted);padding:10px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border);white-space:nowrap}
