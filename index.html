@@ -139,16 +139,26 @@ tr.row-priced td{background:rgba(5,150,105,.06)}
 .msec{margin-bottom:12px}
 .msec-head{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--heading-accent);border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:10px}
 .msec-head strong{font-size:13px}
-.mrow{display:grid;gap:10px;align-items:center;grid-template-areas:"chk desc qty unit price del";grid-template-columns:32px 1.6fr 90px 92px 116px 32px;padding:10px;border:1px solid var(--border);border-radius:8px;margin-bottom:10px;background:var(--surface);transition:border-color .15s,background-color .15s}
+.mrow{display:grid;gap:10px;align-items:center;grid-template-columns:32px 1.6fr 90px 92px 116px 32px;grid-template-areas:"chk desc qty unit price del" "chk tot tot tot tot del";padding:10px;border:1px solid var(--border);border-radius:8px;margin-bottom:10px;background:var(--surface);transition:border-color .15s,background-color .15s}
 .mrow.included{border-color:var(--primary-500);background:var(--accent-light)}
-.m-chk{grid-area:chk}.m-desc{grid-area:desc}.m-qty{grid-area:qty}.m-unit{grid-area:unit}.m-price{grid-area:price}
-.m-del{grid-area:del;background:none;border:none;color:var(--text-muted);font-size:18px;cursor:pointer;line-height:1}
+.m-chk{grid-area:chk}
+.m-desc{grid-area:desc}
+.m-del{grid-area:del;background:none;border:none;color:var(--text-muted);font-size:18px;cursor:pointer;line-height:1;align-self:center}
 .m-del:hover{color:var(--danger)}
+.m-field{min-width:0}
+.f-qty{grid-area:qty}.f-unit{grid-area:unit}.f-price{grid-area:price}
+.m-field input{width:100%}
+.m-lab{display:none;font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.m-total{grid-area:tot;display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text-muted);padding-top:5px;border-top:1px dashed var(--border);margin-top:2px}
+.m-total strong{color:var(--heading-accent);font-size:12.5px}
 @media (max-width:640px){
-.mrow{grid-template-columns:1fr 1fr 1fr;grid-template-areas:"chk chk del" "desc desc desc" "qty unit price";gap:8px;padding:12px}
+.mrow{grid-template-columns:1fr 1fr 1fr;grid-template-areas:"chk chk del" "desc desc desc" "qty unit price" "tot tot tot";gap:8px;padding:12px}
 .m-chk::after{content:'Incluir';font-size:12px;font-weight:600;color:var(--text-muted)}
 .m-del{justify-self:end}
 .mrow input{min-height:42px;font-size:14px}
+.m-lab{display:block}
+.m-total{justify-content:space-between;font-size:12px}
+.m-total strong{font-size:14px}
 }
 .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;font-size:13px;min-width:600px}
@@ -566,19 +576,31 @@ $('#inPrice').addEventListener('input',function(){$('#inPrice').dataset.auto='0'
 $('#chkIva').addEventListener('change',recalc);
 $('#cSeller').value=LS.get('jh_seller','');
 $('#cSeller').addEventListener('input',function(){LS.set('jh_seller',$('#cSeller').value);});
-function mrowHTML(x){return '<div class="mrow'+(x.checked?' included':'')+(hasPrice(x)?' priced':'')+'"><label class="chk m-chk"><input type="checkbox" class="m-inc"'+(x.checked?' checked':'')+'></label><input class="m-desc" value="'+esc(x.desc)+'" placeholder="Descripción del trabajo"><input class="m-qty" type="number" min="0" value="'+(x.qty||'')+'" placeholder="Cant."><input class="m-unit" value="'+esc(x.unit||'und')+'"><input class="m-price" type="number" min="0" value="'+(x.price||'')+'" placeholder="Precio"><button class="m-del" title="Quitar">&times;</button></div>';}
+function mrowHTML(x){return '<div class="mrow'+(x.checked?' included':'')+(hasPrice(x)?' priced':'')+'">'+
+'<label class="chk m-chk"><input type="checkbox" class="m-inc"'+(x.checked?' checked':'')+'></label>'+
+'<input class="m-desc" value="'+esc(x.desc)+'" placeholder="Descripción del trabajo">'+
+'<button class="m-del" title="Quitar">&times;</button>'+
+'<div class="m-field f-qty"><span class="m-lab">Cantidad</span><input class="m-qty" type="number" min="0" value="'+(x.qty||'')+'" placeholder="0"></div>'+
+'<div class="m-field f-unit"><span class="m-lab">Unidad</span><input class="m-unit" value="'+esc(x.unit||'und')+'"></div>'+
+'<div class="m-field f-price"><span class="m-lab">Precio unit.</span><input class="m-price" type="number" min="0" value="'+(x.price||'')+'" placeholder="0"></div>'+
+'<div class="m-total">Total del ítem: <strong class="m-total-val">$0</strong></div>'+
+'</div>';}
 function openExtrasModal(){ensureAllFixed();$('#extrasModalList').innerHTML=sortExtras(currentExtras.filter(function(x){return !isFixed(x.desc);})).map(mrowHTML).join('');modalTotals();$('#extrasModal').classList.remove('hidden');document.body.style.overflow='hidden';}
 function closeExtrasModal(){$('#extrasModal').classList.add('hidden');document.body.style.overflow='';}
 function rowData(r){return {desc:r.querySelector('.m-desc').value,qty:num(r.querySelector('.m-qty').value),unit:r.querySelector('.m-unit').value,price:num(r.querySelector('.m-price').value),checked:r.querySelector('.m-inc').checked};}
-function modalTotals(){var tot=0;document.querySelectorAll('#extrasModalList .mrow').forEach(function(r){if(r.querySelector('.m-inc').checked){tot+=num(r.querySelector('.m-qty').value)*num(r.querySelector('.m-price').value);}});$('#othersTotal').textContent=fmt(tot);}
+function modalTotals(){var tot=0;document.querySelectorAll('#extrasModalList .mrow').forEach(function(r){
+var q=num(r.querySelector('.m-qty').value),p=num(r.querySelector('.m-price').value);
+var tv=r.querySelector('.m-total-val');if(tv){tv.textContent=fmt(q*p);}
+if(r.querySelector('.m-inc').checked){tot+=q*p;}});
+$('#othersTotal').textContent=fmt(tot);}
 $('#btnOpenExtras').addEventListener('click',openExtrasModal);
 $('#btnCloseExtras').addEventListener('click',closeExtrasModal);
 $('#btnCancelExtras').addEventListener('click',closeExtrasModal);
 $('#extrasModal').addEventListener('click',function(e){if(e.target===this)closeExtrasModal();});
-$('#extrasModal').addEventListener('change',function(e){if(e.target.classList.contains('m-inc')){e.target.closest('.mrow').classList.toggle('included',e.target.checked);}});
+$('#extrasModal').addEventListener('change',function(e){if(e.target.classList.contains('m-inc')){e.target.closest('.m-row,.mrow').classList.toggle('included',e.target.checked);}});
 $('#extrasModal').addEventListener('input',function(e){modalTotals();var row=e.target.closest('.mrow');if(row&&e.target.classList.contains('m-price')){row.classList.toggle('priced',num(e.target.value)>0);}});
 $('#extrasModalList').addEventListener('click',function(e){if(e.target.classList.contains('m-del')){e.target.closest('.mrow').remove();modalTotals();}});
-$('#btnAddExtraModal').addEventListener('click',function(){$('#extrasModalList').insertAdjacentHTML('beforeend',mrowHTML({desc:'',qty:'',unit:'und',price:0,checked:true}));});
+$('#btnAddExtraModal').addEventListener('click',function(){$('#extrasModalList').insertAdjacentHTML('beforeend',mrowHTML({desc:'',qty:'',unit:'und',price:0,checked:true}));modalTotals();});
 $('#btnApplyExtras').addEventListener('click',function(){var rows=[];document.querySelectorAll('#extrasModalList .mrow').forEach(function(r){rows.push(rowData(r));});
 var fixed=currentExtras.filter(function(x){return isFixed(x.desc);});
 currentExtras=fixed.concat(rows);closeExtrasModal();recalc();toast('Trabajos extras aplicados');});
