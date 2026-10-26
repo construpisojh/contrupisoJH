@@ -152,13 +152,15 @@ tr.row-priced td{background:rgba(5,150,105,.06)}
 .m-total{grid-area:tot;display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text-muted);padding-top:5px;border-top:1px dashed var(--border);margin-top:2px}
 .m-total strong{color:var(--heading-accent);font-size:12.5px}
 @media (max-width:640px){
-.mrow{grid-template-columns:1fr 1fr 1fr;grid-template-areas:"chk chk del" "desc desc desc" "qty unit price" "tot tot tot";gap:8px;padding:12px}
-.m-chk::after{content:'Incluir';font-size:12px;font-weight:600;color:var(--text-muted)}
-.m-del{justify-self:end}
-.mrow input{min-height:42px;font-size:14px}
-.m-lab{display:block}
-.m-total{justify-content:space-between;font-size:12px}
-.m-total strong{font-size:14px}
+.mrow{grid-template-columns:1fr 1fr;grid-template-areas:"chk del" "desc desc" "qty unit" "price tot";gap:10px;padding:14px}
+.m-chk::after{content:'Incluir';font-size:12.5px;font-weight:600;color:var(--text-muted)}
+.m-del{justify-self:end;font-size:22px}
+.mrow input{min-height:46px;font-size:16px;padding:10px 12px}
+.mrow input[type="number"]::-webkit-outer-spin-button,.mrow input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.mrow input[type="number"]{-moz-appearance:textfield;appearance:textfield}
+.m-lab{display:block;font-size:10.5px;margin-bottom:5px}
+.m-total{justify-content:space-between;align-items:center;font-size:12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:0 12px;min-height:46px;margin-top:0}
+.m-total strong{font-size:15px}
 }
 .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;font-size:13px;min-width:600px}
@@ -597,7 +599,7 @@ $('#btnOpenExtras').addEventListener('click',openExtrasModal);
 $('#btnCloseExtras').addEventListener('click',closeExtrasModal);
 $('#btnCancelExtras').addEventListener('click',closeExtrasModal);
 $('#extrasModal').addEventListener('click',function(e){if(e.target===this)closeExtrasModal();});
-$('#extrasModal').addEventListener('change',function(e){if(e.target.classList.contains('m-inc')){e.target.closest('.m-row,.mrow').classList.toggle('included',e.target.checked);}});
+$('#extrasModal').addEventListener('change',function(e){if(e.target.classList.contains('m-inc')){e.target.closest('.mrow').classList.toggle('included',e.target.checked);}});
 $('#extrasModal').addEventListener('input',function(e){modalTotals();var row=e.target.closest('.mrow');if(row&&e.target.classList.contains('m-price')){row.classList.toggle('priced',num(e.target.value)>0);}});
 $('#extrasModalList').addEventListener('click',function(e){if(e.target.classList.contains('m-del')){e.target.closest('.mrow').remove();modalTotals();}});
 $('#btnAddExtraModal').addEventListener('click',function(){$('#extrasModalList').insertAdjacentHTML('beforeend',mrowHTML({desc:'',qty:'',unit:'und',price:0,checked:true}));modalTotals();});
